@@ -1,6 +1,6 @@
 {
   "name": "codex-scope-inspector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deterministic, read-only inspector for Codex instructions and configuration provenance.",
   "bin": {
     "codex-scope": "dist/cli.js"

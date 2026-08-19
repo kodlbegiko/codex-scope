@@ -208,3 +208,59 @@ test("project_root_markers controls root detection and an empty list makes cwd t
   });
   assert.equal(cwdRoot.projectRoot, child);
 });
+
+
+test("CODEX_HOME is not double-loaded as a project layer when cwd is the home directory", () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "codex-scope-codex-home-"));
+  const homeDir = path.join(temp, "home");
+  const codexHome = path.join(homeDir, ".codex");
+  fs.mkdirSync(codexHome, { recursive: true });
+  fs.writeFileSync(path.join(codexHome, "config.toml"), 'approval_policy = "never"\n');
+
+  const result = resolveConfig({
+    cwd: homeDir,
+    codexHome,
+    trust: "unknown",
+    invocationComplete: true,
+    cliOverrides: [],
+    systemConfigPath: path.join(temp, "missing-system.toml"),
+    managedConfigPaths: [],
+  });
+
+  const approval = result.values.approval_policy;
+  assert.equal(approval.state, "resolved");
+  assert.equal(approval.effectiveValue, "never");
+  assert.equal(approval.winner?.type, "user");
+  assert.equal(approval.conditional.length, 0);
+  assert.deepEqual(result.projectConfigPaths, []);
+  assert.doesNotMatch(result.warnings.join("\n"), /Project trust is unknown/);
+});
+
+test("CODEX_HOME inside a project tree is skipped only as a project layer", () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "codex-scope-codex-home-project-"));
+  const project = path.join(temp, "project");
+  const child = path.join(project, "child");
+  const codexHome = path.join(project, ".codex");
+  fs.mkdirSync(path.join(project, ".git"), { recursive: true });
+  fs.mkdirSync(codexHome, { recursive: true });
+  fs.mkdirSync(path.join(child, ".codex"), { recursive: true });
+  fs.writeFileSync(path.join(codexHome, "config.toml"), 'approval_policy = "on-request"\n');
+  fs.writeFileSync(path.join(child, ".codex", "config.toml"), 'approval_policy = "never"\n');
+
+  const result = resolveConfig({
+    cwd: child,
+    codexHome,
+    trust: "trusted",
+    invocationComplete: true,
+    cliOverrides: [],
+    systemConfigPath: path.join(temp, "missing-system.toml"),
+    managedConfigPaths: [],
+  });
+
+  const approval = result.values.approval_policy;
+  assert.equal(approval.effectiveValue, "never");
+  assert.equal(approval.winner?.type, "project");
+  assert.equal(approval.shadowed.filter((source) => source.type === "user").length, 1);
+  assert.equal(approval.shadowed.filter((source) => source.type === "project").length, 0);
+  assert.deepEqual(result.projectConfigPaths, [path.join(child, ".codex", "config.toml")]);
+});

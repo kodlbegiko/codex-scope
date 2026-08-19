@@ -2,7 +2,7 @@
 
 ## Target
 
-Codex Scope V0.1.0 targets the **current stable OpenAI Codex documentation available on 2026-08-19**, with current public `openai/codex` implementation evidence used to disambiguate supported edge cases.
+Codex Scope V0.1.1 targets the **current stable OpenAI Codex documentation available on 2026-08-19**, with current public `openai/codex` implementation evidence used to disambiguate supported edge cases.
 
 A local Codex CLI was **not installed in the execution environment**, so this implementation does not claim compatibility with a detected local Codex version and did not run paid/token-consuming Codex sessions.
 
@@ -20,7 +20,7 @@ A local Codex CLI was **not installed in the execution environment**, so this im
 | User config | Supported | `$CODEX_HOME/config.toml`. |
 | Unix system config | Supported | `/etc/codex/config.toml`; test harness can inject an isolated path. |
 | Windows system config | Unsupported | V0.1 does not claim a Windows system layer. |
-| Project `.codex/config.toml` root → cwd | Supported | Explicit trust gate required; documented protected machine-local keys are ignored even when trusted. |
+| Project `.codex/config.toml` root → cwd | Supported | Explicit trust gate required; `$CODEX_HOME` is skipped during project-layer traversal; documented protected machine-local keys are ignored even when trusted. |
 | Project trust | Partially supported | Explicit `trusted`, `untrusted`, or `unknown`; no automatic trust-state detection. |
 | Profile files | Supported | `$CODEX_HOME/<name>.config.toml` via `--profile`. |
 | Known `-c/--config` overrides | Supported | Repeatable; highest modeled precedence. |

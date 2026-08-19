@@ -19,6 +19,7 @@ Source priority for V0.1 is: current official OpenAI Codex documentation, then c
 | `project_doc_fallback_filenames` defaults to `[]` | Official config schema/docs | Supported | Applied after `AGENTS.md`. |
 | Project root markers default to `.git` | Official advanced config/schema evidence | Supported | If no marker is found, V0.1 uses cwd as root. |
 | Project configs load root → cwd, closest wins | Official config docs | Supported | Only when trust is explicitly `trusted`. |
+| `$CODEX_HOME` is not loaded again as a project `.codex` layer | `openai/codex` config-loader implementation | Supported | Paths are compared using normalized/canonicalized best-effort identity, including when `$CODEX_HOME` sits inside a project tree. Regression-tested. |
 | Protected machine-local keys in project config are ignored | Official Config Reference | Supported | Includes provider/auth-adjacent, profile-selection, notify, and OTEL keys listed by current docs. |
 | Untrusted project skips project `.codex/config.toml` | Official config docs | Supported | `unknown` trust keeps candidates conditional and final affected values unresolved. |
 | Config precedence: CLI > closest project > profile > user > system > modeled defaults | Official config docs | Supported | Repeated CLI `-c` overrides use later occurrence precedence. Only defaults listed below are modeled. |
@@ -96,5 +97,6 @@ Implementation evidence:
 - `https://github.com/openai/codex/tree/main/codex-rs`
 - global instructions: `codex-rs/codex-home/src/instructions/mod.rs`
 - project instruction/config loading: current `openai/codex` main implementation inspected on the evidence date above
+- `$CODEX_HOME` project-layer exclusion: `openai/codex` commit `dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a` ("Skip loading codex home as project layer")
 
 Implementation links are evidence snapshots in time, not a claim that `main` equals every stable Codex release.
