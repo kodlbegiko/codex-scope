@@ -12,8 +12,8 @@ Gate:
 
 - published npm version matches the intended release;
 - `npx --yes --package=codex-scope-inspector@<version> codex-scope --version` succeeds outside the repo;
-- `codex-scope inspect` succeeds outside the repo;
-- README status matches the public release;
+- `npx --yes --package=codex-scope-inspector@<version> codex-scope inspect` succeeds outside the repo;
+- README status matches the public release line and points to an authoritative latest-version source;
 - repository description/topics/social preview are set or explicitly tracked as manual settings work.
 
 Do not proceed if package execution or version metadata is inconsistent.
