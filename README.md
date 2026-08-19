@@ -1,5 +1,9 @@
 # Codex Scope
 
+[![npm version](https://img.shields.io/npm/v/codex-scope-inspector.svg)](https://www.npmjs.com/package/codex-scope-inspector)
+[![CI](https://github.com/kodlbegiko/codex-scope/actions/workflows/ci.yml/badge.svg)](https://github.com/kodlbegiko/codex-scope/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/kodlbegiko/codex-scope.svg)](LICENSE)
+
 > **Know which Codex instructions and config win — before you start a session.**
 
 Codex Scope is a deterministic, read-only CLI that explains the supported Codex instruction chain and configuration precedence: **what is active, where it came from, why it won, and what is still unknown.**
@@ -9,6 +13,30 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 > **Status:** V0.1.x is the current public release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
+
+## Try it in 60 seconds
+
+From any Codex project directory:
+
+```bash
+npx --yes --package=codex-scope-inspector codex-scope inspect
+```
+
+Then ask why one supported config value won:
+
+```bash
+npx --yes --package=codex-scope-inspector codex-scope why approval_policy
+```
+
+Look for three things:
+
+1. **winner** — the highest-precedence applicable source Codex Scope can prove from the supplied inputs;
+2. **shadowed / ignored** — files or values that were found but do not win;
+3. **unresolved** — an input is missing or conditional, so Codex Scope refuses to pretend the final answer is certain.
+
+`unresolved` is not a crash or a failed scan. It is the explicit result when unseen invocation/profile/trust state could still change the answer.
+
+If the first run is confusing, or Codex behaves differently from the report, submit a **sanitized** [first-run feedback issue](https://github.com/kodlbegiko/codex-scope/issues/new?template=first_run_feedback.md) or [real-world conformance case](https://github.com/kodlbegiko/codex-scope/issues/new?template=real_world_case.md).
 
 ## See the answer, not the layer stack
 
@@ -198,6 +226,8 @@ The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping
 ## Contributing
 
 Accuracy bugs are especially valuable. If Codex Scope resolves something differently from current Codex behavior, please use the bug-report template and provide a minimal **sanitized** reproduction.
+
+For first-run friction — confusing output, unclear wording, or uncertainty about what command to try next — use the [first-run feedback template](https://github.com/kodlbegiko/codex-scope/issues/new?template=first_run_feedback.md).
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`SECURITY.md`](SECURITY.md).
 
