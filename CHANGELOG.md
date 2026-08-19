@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Derive CLI and compatibility self-reported version from `package.json` so `--version` and JSON compatibility metadata cannot drift independently.
+
 ### Changed
 
 - Reframe the public README around a 10-second problem/proof/quickstart flow and a factual comparison with native Codex diagnostics.
