@@ -14,7 +14,7 @@ If user config, a selected profile, project config, and AGENTS files disagree, y
 
 ```bash
 npx --yes --package=codex-scope-inspector codex-scope inspect
-codex-scope why approval_policy
+npx --yes --package=codex-scope-inspector codex-scope why approval_policy
 ```
 
 The output focuses on:
