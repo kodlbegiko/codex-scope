@@ -6,7 +6,7 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.1.1 is the current public release. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.1.x is the current public release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
