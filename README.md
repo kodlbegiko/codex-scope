@@ -1,164 +1,207 @@
 # Codex Scope
 
-> **See what Codex will actually use here — and why.**
+> **See what Codex will use here — where it came from, and what is still unknown.**
 
-Codex Scope is a deterministic, read-only inspector for Codex instructions, configuration, hooks, and their provenance.
+Codex Scope is a deterministic, read-only CLI for inspecting the Codex instruction chain and supported configuration precedence.
 
-**No LLM calls · No API key · No token spend · No hook execution**
+**No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> 🚧 **Early development:** the CLI is not released yet. This repository currently documents the product direction and implementation plan.
+> **Status:** V0.1.0 is the first public release. It intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 
-## Why this exists
+> **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
-Codex behavior can depend on several layers at once:
+## The problem
 
-```text
-~/.codex/AGENTS.md
-repo/AGENTS.md
-repo/frontend/AGENTS.override.md
+Codex behavior can change because of several layers at once: global and project `AGENTS.md` files, project-local config, profiles, user/system config, trust, and invocation overrides.
 
-~/.codex/config.toml
-repo/.codex/config.toml
-profiles
-CLI overrides
-system config
-
-hooks.json
-inline hooks
-plugins
-project trust
-```
-
-That creates simple questions that are surprisingly hard to answer:
-
-- Which instructions are active in **this directory**?
-- Which config value actually wins?
-- Which hooks will load?
-- Which value was shadowed or ignored?
-- Why is Codex behaving differently in `frontend/` and `backend/`?
-
-Codex Scope turns those layers into one explainable view.
-
-## Target UX
-
-```text
-$ codex-scope inspect
-
-CODEX SCOPE
-────────────────────────────────────────
-Target
-  /Users/sean/project/frontend
-
-Instructions
-  ✓ ~/.codex/AGENTS.md
-  ✓ ./AGENTS.md
-  ✓ ./frontend/AGENTS.override.md
-  ○ ./frontend/AGENTS.md
-    ignored: AGENTS.override.md wins in this directory
-
-Config
-  approval_policy = on-request
-  source: ./.codex/config.toml:18
-
-  sandbox_mode = workspace-write
-  source: profile:dev
-
-Hooks
-  SessionStart   2
-  PreToolUse     3
-  Stop           1
-
-Warnings
-  ⚠ 2 shadowed values
-  ⚠ 1 project layer depends on trust state
-```
-
-And when you only care about one value:
-
-```text
-$ codex-scope why approval_policy
-
-approval_policy = on-request
-
-winner
-  ./.codex/config.toml:18
-
-overrides
-  profile:dev
-  ~/.codex/config.toml:21
-```
-
-## Planned commands
+Codex Scope answers four practical questions:
 
 ```text
 codex-scope inspect
 codex-scope instructions
 codex-scope config
-codex-scope hooks
 codex-scope why <key>
-codex-scope diff <dir-a> <dir-b>
-codex-scope snapshot --json
 ```
 
-Every machine-readable command is planned to support JSON output.
+It does not guess missing invocation state. If you did not tell Codex Scope whether the inspected invocation is complete, the result stays `unresolved` even when a file-derived winner is visible.
+
+## Quickstart
+
+Install from npm:
+
+```bash
+npm install -g codex-scope-inspector
+codex-scope inspect
+```
+
+Or run without a global install:
+
+```bash
+npx --yes codex-scope-inspector inspect
+```
+
+### Build from source
+
+Prerequisites: Node.js 20+ and TypeScript 5.8+ available as `tsc` for source builds.
+
+```bash
+npm ci
+npm run build
+node dist/cli.js inspect
+```
+
+To inspect a specific repository and assert the known invocation state is complete:
+
+```bash
+node dist/cli.js inspect \
+  --cwd /path/to/repo \
+  --trust trusted \
+  --invocation-complete
+```
+
+If Codex is launched with a profile or config override, supply the same known inputs:
+
+```bash
+node dist/cli.js why approval_policy \
+  --cwd /path/to/repo \
+  --profile dev \
+  -c 'sandbox_mode="workspace-write"' \
+  --trust trusted \
+  --invocation-complete
+```
+
+Current Codex profiles are modeled as `$CODEX_HOME/<name>.config.toml`, not as a legacy profile table.
+
+## Real deterministic demo
+
+The repository includes a fixture where user config, a `dev` profile, and project config disagree:
+
+```bash
+node dist/cli.js why approval_policy \
+  --cwd fixtures/demo/conflict/project \
+  --codex-home fixtures/demo/conflict/home \
+  --profile dev \
+  --trust trusted \
+  --invocation-complete
+```
+
+Output:
+
+```text
+approval_policy = on-request
+state: resolved
+
+winner
+  ./.codex/config.toml:1
+
+shadowed
+  .../home/dev.config.toml:1
+  .../home/config.toml:1
+
+reason
+  Highest-precedence applicable known source wins.
+```
+
+Without `--trust` and `--invocation-complete`, Codex Scope does not pretend the project layer or future Codex CLI overrides are known:
+
+```text
+state: unresolved
+
+conditional
+  ./.codex/config.toml:1
+
+missing
+  Codex invocation overrides/profile state were not declared complete
+  Project trust state is unknown for one or more candidate project values
+```
+
+## Commands
+
+### `codex-scope inspect`
+
+Concise overview: target, project root, instruction sources, important config, unresolved state, and warnings.
+
+### `codex-scope instructions [path]`
+
+Explains global and project instruction discovery, ignored sources, configured fallback filenames, and cumulative project instruction byte usage.
+
+### `codex-scope config`
+
+Shows supported configuration values with winner, shadowed/ignored/conditional sources, and missing information. Parsed keys outside the V0.1 semantic subset are labeled `unsupported` rather than silently treated as valid Codex settings.
+
+### `codex-scope why <key>`
+
+Shows one supported config decision chain in detail.
+
+All four commands support `--json` with a versioned `codex-scope.v0.1` schema marker.
+
+## Known invocation inputs
+
+```text
+--trust trusted|untrusted|unknown
+--profile <name>
+-c, --config <key=value>   repeatable
+--invocation-complete
+--codex-home <path>
+--cwd <path>
+```
+
+`--invocation-complete` is deliberately explicit. Without it, “no override supplied to Codex Scope” is **not** treated as “Codex definitely has no invocation override.”
+
+## Safety contract
+
+Normal inspection:
+
+- reads only the files needed for the supported Codex resolution path;
+- performs no LLM or OpenAI API calls;
+- performs no runtime network requests;
+- never executes discovered hooks;
+- never mutates the inspected project, Codex config, or `AGENTS.md` files;
+- redacts secret-like config keys in terminal and JSON output.
+
+Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.1.
 
 ## Accuracy contract
 
-Codex Scope should never pretend to know more than it can prove.
+A result is classified as one of:
 
-Every result should be classified as one of:
+```text
+resolved     deterministically known from supplied inputs
+unresolved   a required input is missing or conditional
+unsupported  Codex behavior exists outside V0.1's modeled subset
+ignored      a discovered source is excluded by Codex semantics
+shadowed     a valid source loses precedence
+```
 
-- **resolved** — deterministically derived from known inputs
-- **unresolved** — a required input is missing, such as an invocation override or trust state
-- **unsupported** — Codex behavior exists, but this version of Codex Scope does not model it yet
+The resolver follows current official Codex documentation first and uses current `openai/codex` implementation evidence to pin edge cases that documentation does not fully specify. The exact supported surface and evidence date are recorded in [`docs/semantics.md`](docs/semantics.md) and [`docs/compatibility.md`](docs/compatibility.md).
 
-If a CLI override was not supplied to Codex Scope, it must not claim to know that override. If a trust decision cannot be determined safely, it must say so.
+## Development
 
-## Design principles
+```bash
+npm run lint
+npm run format:check
+npm run typecheck
+npm test
+npm run build
+npm run check
+```
 
-1. **Deterministic first** — no LLM judge or AI guesswork.
-2. **Provenance first** — every effective value should answer “where did this come from?”
-3. **Read-only by default** — inspection must not mutate the repository or Codex configuration.
-4. **Never execute discovered hooks** — inspect hook definitions; do not run them.
-5. **Secret-safe output** — redact sensitive-looking values instead of dumping configuration blindly.
-6. **Version-aware** — Codex behavior changes; compatibility must be explicit and tested.
-7. **One useful command first** — `codex-scope inspect` should provide value without reading documentation.
+The conformance fixtures are intentionally small. Resolver changes should add or update a fixture tied to evidence rather than broaden behavior by guesswork.
 
-## What Codex Scope is not
+## V0.1 non-goals
 
-Codex Scope is **not**:
+V0.1 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, cross-agent behavior, structured/granular approval policy semantics, the full Codex config schema, or managed enterprise constraints. It also does not execute hooks. Planned expansion remains in [`ROADMAP.md`](ROADMAP.md).
 
-- an AGENTS.md AI optimizer
-- a prompt-writing assistant
-- a token dashboard
-- a replacement for Codex
-- a hook runner
-- a generic linter with dozens of subjective rules
+## Official evidence
 
-The core asset is a **Codex-compatible resolution engine**.
+- OpenAI Codex AGENTS instructions documentation
+- OpenAI Codex configuration basics / precedence documentation
+- OpenAI Codex advanced configuration documentation
+- OpenAI Codex CLI reference
+- `openai/codex` implementation for instruction discovery and configuration loading
 
-## Roadmap
+Precise evidence notes and compatibility boundaries are maintained in `docs/` so the README stays usable.
 
-The public implementation plan lives in [`ROADMAP.md`](./ROADMAP.md).
+## License
 
-The first release is intentionally narrow: instructions, configuration, provenance, explanations, JSON output, and conformance tests. Hooks, directory diffs, compatibility snapshots, CI integration, and broader Codex environment inspection follow after the core resolver is trustworthy.
-
-## Why accuracy matters more than feature count
-
-A tool that says “this is what Codex sees” is only useful if that statement can be trusted. Codex Scope will prioritize conformance fixtures and reproducible evidence over shipping many partially-correct integrations.
-
-## Contributing
-
-The project is still at the architecture stage. Once the first implementation lands, the repository will add contribution guidelines, issue templates, compatibility fixtures, and clearly scoped `good first issue` tasks.
-
-If you have a real Codex configuration that behaves unexpectedly, that kind of reproducible case will be especially valuable.
-
-## Official Codex references
-
-- AGENTS.md discovery: https://developers.openai.com/codex/agent-configuration/agents-md
-- Config precedence: https://developers.openai.com/codex/config-basic
-- Hooks: https://developers.openai.com/codex/hooks
-
----
-
-**Codex Scope** — make the effective Codex environment explainable.
+Licensed under the [Apache License 2.0](LICENSE).
