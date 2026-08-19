@@ -11,7 +11,7 @@ npx --yes --package=codex-scope-inspector codex-scope inspect
 3/ For a supported key:
 
 ```bash
-codex-scope why approval_policy
+npx --yes --package=codex-scope-inspector codex-scope why approval_policy
 ```
 
 It shows the winning source, shadowed/ignored sources, provenance, and what is still unresolved instead of guessing.

@@ -8,7 +8,7 @@ The roadmap is evidence-gated. A feature appearing here does not authorize imple
 
 ## Shipped — V0.1.x foundation
 
-Current public baseline: **v0.1.1**.
+Current public line: **V0.1.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch.
 
 Shipped surfaces:
 

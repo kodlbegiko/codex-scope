@@ -14,7 +14,7 @@ Example:
 
 ```bash
 npx --yes --package=codex-scope-inspector codex-scope inspect
-codex-scope why approval_policy
+npx --yes --package=codex-scope-inspector codex-scope why approval_policy
 ```
 
 For the supported subset it reports the winning source, shadowed/ignored sources, provenance, and anything that is still unresolved rather than guessing.
