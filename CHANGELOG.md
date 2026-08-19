@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.1.2 — 2026-08-19
+
+Release-readiness and self-reporting correctness patch.
+
 ### Fixed
 
 - Derive CLI and compatibility self-reported version from `package.json` so `--version` and JSON compatibility metadata cannot drift independently.
