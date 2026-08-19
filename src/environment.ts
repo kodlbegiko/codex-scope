@@ -1,9 +1,10 @@
 import { resolveInstructions } from "./agents";
 import { resolveConfig, valueAsNumber, valueAsStringArray } from "./config";
 import type { EffectiveCodexEnvironment, ResolveOptions } from "./types";
+import { VERSION } from "./version";
 
 const COMPATIBILITY = {
-  codexScopeVersion: "0.1.0",
+  codexScopeVersion: VERSION,
   target: "Current stable OpenAI Codex documentation plus openai/codex implementation evidence observed on 2026-08-19",
   evidenceDate: "2026-08-19",
   localCodexDetected: false,

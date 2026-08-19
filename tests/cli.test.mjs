@@ -34,6 +34,9 @@ test("inspect --json emits versioned machine contract", () => {
   assert.equal(parsed.schemaVersion, "codex-scope.v0.1");
   assert.equal(parsed.command, "inspect");
   assert.equal(parsed.result.config.approval_policy.effectiveValue, "on-request");
+  const pkg = JSON.parse(fs.readFileSync(path.resolve("package.json"), "utf8"));
+  assert.equal(parsed.compatibility.codexScopeVersion, pkg.version);
+  assert.equal(parsed.result.compatibility.codexScopeVersion, pkg.version);
 });
 
 test("why explains winner and shadowed sources", () => {
@@ -174,7 +177,7 @@ test("parse errors do not echo malformed secret values", () => {
   fs.mkdirSync(path.join(project, ".git"), { recursive: true });
   fs.mkdirSync(path.join(project, ".codex"), { recursive: true });
   fs.mkdirSync(home, { recursive: true });
-  fs.writeFileSync(path.join(project, ".codex", "config.toml"), "api_key = sk-super-secret-value,\n");
+  fs.writeFileSync(path.join(project, ".codex", "config.toml"), "api_key = sk-super-secret-value,\\n");
   try {
     const result = run([
       "config",
