@@ -6,7 +6,7 @@ Codex Scope is a deterministic, read-only CLI for inspecting the Codex instructi
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.1.0 is the first public release. It intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.1.1 is the current public release. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
@@ -34,10 +34,12 @@ npm install -g codex-scope-inspector
 codex-scope inspect
 ```
 
+If your system blocks global npm installs, use `npx` instead of `sudo npm install -g`.
+
 Or run without a global install:
 
 ```bash
-npx --yes codex-scope-inspector inspect
+npx --yes --package=codex-scope-inspector codex-scope inspect
 ```
 
 ### Build from source

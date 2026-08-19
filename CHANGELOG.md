@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-08-19
+
+Compatibility and onboarding hotfix.
+
+### Fixed
+
+- Skip `$CODEX_HOME` when traversing project `.codex` layers, matching current Codex behavior and preventing home-directory invocations from inventing project-trust uncertainty.
+- Add regression coverage for home-directory invocation and for `$CODEX_HOME` located inside a project tree.
+- Correct the no-install `npx` Quickstart when the npm package name differs from the CLI binary name.
+
 ## 0.1.0 — 2026-08-19
 
 First public release of Codex Scope.

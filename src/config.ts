@@ -1,6 +1,6 @@
 const os = require("node:os");
 import { CodexScopeError } from "./errors";
-import { isFile, path, readText } from "./fs-utils";
+import { isFile, path, readText, samePathBestEffort } from "./fs-utils";
 import { flattenToml, parseOverride, parseToml } from "./toml";
 import type {
   ResolveOptions,
@@ -329,7 +329,12 @@ export function detectProjectRoot(cwd: string, markers: string[]): string {
   }
 }
 
-function projectLayers(projectRoot: string, cwd: string, trust: TrustState): { layers: Layer[]; paths: string[] } {
+function projectLayers(
+  projectRoot: string,
+  cwd: string,
+  codexHome: string,
+  trust: TrustState,
+): { layers: Layer[]; paths: string[] } {
   const directories: string[] = [];
   const rel = path.relative(projectRoot, cwd);
   let current = projectRoot;
@@ -344,7 +349,9 @@ function projectLayers(projectRoot: string, cwd: string, trust: TrustState): { l
   const layers: Layer[] = [];
   const paths: string[] = [];
   directories.forEach((directory, index) => {
-    const configPath = path.join(directory, ".codex", "config.toml");
+    const dotCodexPath = path.join(directory, ".codex");
+    if (samePathBestEffort(dotCodexPath, codexHome)) return;
+    const configPath = path.join(dotCodexPath, "config.toml");
     if (!isFile(configPath)) return;
     paths.push(configPath);
     const applicable = trust === "trusted";
@@ -375,7 +382,7 @@ export function resolveConfig(options: ResolveOptions): ConfigResolution {
   const baseValues = resolveCandidates(candidatesFromLayers(base), options.invocationComplete);
   const markers = extractStringArray(baseValues.project_root_markers, [".git"]);
   const projectRoot = detectProjectRoot(options.cwd, markers);
-  const project = projectLayers(projectRoot, options.cwd, options.trust);
+  const project = projectLayers(projectRoot, options.cwd, options.codexHome, options.trust);
 
   const fullLayers: Layer[] = [];
   for (const layer of base) {

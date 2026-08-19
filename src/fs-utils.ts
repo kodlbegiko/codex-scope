@@ -52,6 +52,22 @@ export function normalizeExistingDirectory(input: string): string {
   return fs.realpathSync(absolute);
 }
 
+export function normalizePathBestEffort(input: string): string {
+  const absolute = path.resolve(input);
+  try {
+    const resolved = fs.realpathSync.native ? fs.realpathSync.native(absolute) : fs.realpathSync(absolute);
+    return process.platform === "win32" ? resolved.toLowerCase() : resolved;
+  } catch (error: any) {
+    if (error?.code !== "ENOENT" && error?.code !== "ENOTDIR") throw error;
+    const normalized = path.normalize(absolute);
+    return process.platform === "win32" ? normalized.toLowerCase() : normalized;
+  }
+}
+
+export function samePathBestEffort(left: string, right: string): boolean {
+  return normalizePathBestEffort(left) === normalizePathBestEffort(right);
+}
+
 export function parentDirectories(start: string): string[] {
   const result: string[] = [];
   let current = path.resolve(start);

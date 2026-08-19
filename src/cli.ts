@@ -7,7 +7,7 @@ import { normalizeExistingDirectory } from "./fs-utils";
 import { renderConfig, renderInspect, renderInstructions, renderJson, renderWhy } from "./render";
 import type { TrustState } from "./types";
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 type Command = "inspect" | "instructions" | "config" | "why";
 
