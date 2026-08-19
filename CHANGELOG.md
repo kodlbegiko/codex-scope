@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Reframe the public README around a 10-second problem/proof/quickstart flow and a factual comparison with native Codex diagnostics.
+- Reorder the roadmap around real-world conformance and compatibility evidence instead of leading with volatile Hooks semantics.
+- Add a current-upstream AGENTS/CODEX_HOME parity fixture, safer issue templates, a deterministic demo script, and post-v0.1.1 strategy evidence.
+
 ## 0.1.1 — 2026-08-19
 
 Compatibility and onboarding hotfix.

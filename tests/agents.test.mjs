@@ -16,7 +16,7 @@ function env(caseName, relativeCwd, extra = {}) {
     codexHome: path.join(base, "home"),
     trust: "trusted",
     invocationComplete: true,
-    cliOverrides: [],
+    cliOverrides: ['project_root_markers=[".fixture-root"]'],
     ...extra,
   });
 }
@@ -64,8 +64,23 @@ test("unknown invocation state is explicit for instruction discovery", () => {
     codexHome: path.join(base, "home"),
     trust: "trusted",
     invocationComplete: false,
-    cliOverrides: [],
+    cliOverrides: ['project_root_markers=[".fixture-root"]'],
   });
   assert.equal(result.instructions.state, "unresolved");
   assert.ok(result.instructions.missingInformation.length > 0);
+});
+
+test("current upstream parity: CODEX_HOME AGENTS.md can also appear as project instructions", () => {
+  const base = path.resolve("fixtures/real-world/codex-34193/home-project");
+  const result = buildEnvironment({
+    cwd: base,
+    codexHome: base,
+    trust: "trusted",
+    invocationComplete: true,
+    cliOverrides: [],
+  });
+  const active = result.instructions.active.filter((source) => source.filename === "AGENTS.md");
+  assert.equal(active.length, 2);
+  assert.deepEqual(active.map((source) => source.scope), ["global", "project"]);
+  assert.equal(active[0].path, active[1].path);
 });
