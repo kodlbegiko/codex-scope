@@ -1,0 +1,48 @@
+{
+  "name": "codex-scope-inspector",
+  "version": "0.1.0",
+  "description": "Deterministic, read-only inspector for Codex instructions and configuration provenance.",
+  "bin": {
+    "codex-scope": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "node scripts/lint.mjs",
+    "format:check": "node scripts/format-check.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodlbegiko/codex-scope.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kodlbegiko/codex-scope/issues"
+  },
+  "homepage": "https://github.com/kodlbegiko/codex-scope#readme",
+  "keywords": [
+    "codex",
+    "openai",
+    "cli",
+    "configuration",
+    "agents-md",
+    "provenance",
+    "debugging"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0"
+}
