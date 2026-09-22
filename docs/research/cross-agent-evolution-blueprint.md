@@ -2,7 +2,33 @@
 
 Status: **research direction; not an implementation commitment**
 
-This document describes how Codex Scope could evolve from a Codex-specific resolver into an evidence-based cross-agent effective-context debugger without weakening its deterministic, read-only safety contract.
+This document describes how Codex Scope should evolve from a Codex-specific resolver into a **conformance-first compatibility infrastructure project**, with the existing user-facing CLI remaining a thin diagnostic surface over the same evidence base. Cross-agent support remains a later extension of the conformance model, not the immediate product goal.
+
+## Strategic revision — 2026-09-22
+
+The previous version of this blueprint put a 30-day external-user Demand Gate in front of the next architectural phase. That gate was useful for testing a user-facing cross-agent product hypothesis, but it over-weighted distribution for the maintainer environment Codex Scope currently has.
+
+The project will now optimize first for **ecosystem importance that can be demonstrated through reproducible technical evidence**, rather than for broad early adoption.
+
+The new primary loop is:
+
+```text
+upstream Codex docs / source / releases
+                ↓
+      explicit semantic rule
+                ↓
+    reproducible conformance fixture
+                ↓
+       deterministic test / CI
+                ↓
+ compatibility or behavior-drift result
+                ↓
+  upstream issue / fix / evidence update
+                ↓
+       Codex Scope compatibility record
+```
+
+This does **not** mean users, downloads, issues, or stars are irrelevant. They remain useful secondary evidence. They are no longer the gate that authorizes core conformance work.
 
 ## 1. Problem
 
@@ -168,38 +194,28 @@ Unresolved
 
 ## 7. Phased plan
 
-### Phase 0 — 30-day Demand Gate
+### Phase 0 — Codex conformance foundation
 
-Do not refactor the core or build a second adapter until the cross-agent product hypothesis clears a market-evidence gate.
+Do not make a second adapter or broad user acquisition the prerequisite for progress. The first job is to turn Codex Scope's existing resolver, fixtures, research, and CI into a maintainable **Codex semantics conformance corpus**.
 
-Minimum evidence — **all required**:
+Minimum evidence before broadening scope:
 
-- at least 5 unrelated external target users from at least 3 repos/orgs;
-- at least 3 real repositories using at least 2 coding agents;
-- at least 2 reproducible cross-agent structural drift cases;
-- the drift is not merely model non-adherence;
-- native diagnostics cannot individually answer the complete cross-agent question;
-- at least 2 users run a zero-install prototype or provide a sanitized fixture;
-- at least 1 repeat interaction: a second test, issue, fixture, or bug report.
+- at least 20 explicit Codex semantic rules represented by deterministic fixtures;
+- each rule records upstream documentation and/or implementation evidence, evidence date, tested version or commit, expected behavior, and unsupported boundaries;
+- at least 3 historical or current upstream behavior changes are represented as regression fixtures;
+- CI can distinguish expected compatibility, behavior drift, unsupported state, and tool failure;
+- the corpus can be reproduced from a clean checkout without LLM calls or runtime network access during inspection;
+- at least 1 real upstream discrepancy, regression, or ambiguity is converted into a high-quality issue, patch, or evidence correction.
 
 Strong evidence:
 
-- at least 10 external users across 5 repos/orgs;
-- at least 5 reproducible drift cases;
-- at least 3 repeat users;
-- at least 2 inbound issues/fixtures;
-- at least 1 external PR or conformance contribution;
-- at least 1 CI/local-script integration.
+- at least 50 conformance fixtures across instructions, config precedence, trust/project-root behavior, profiles/overrides, and compatibility boundaries;
+- multiple upstream Codex releases or commits tracked over time;
+- at least 3 externally verifiable upstream issues, fixes, or documentation corrections informed by the corpus;
+- a machine-readable compatibility matrix generated from checked-in evidence;
+- at least one release caused by a verified upstream semantic change rather than a planned feature milestone.
 
-Kill signals after 30 days:
-
-- fewer than 3 meaningful external users actually used the prototype;
-- zero reproducible cross-agent structural drift cases;
-- more than 70% of observed pain is instruction adherence rather than resolution;
-- users mainly want sync/generation and will not adopt an inspector;
-- most valuable state is runtime/model-only and cannot be inspected reliably under the deterministic/no-network contract.
-
-If the Demand Gate fails, remain Codex-first and invest in distribution, conformance, or maintenance rather than adapter architecture.
+Stop or narrow this direction if repeated work shows that the important state is predominantly runtime/model-only and cannot be reproduced under the deterministic/no-network contract, or if native Codex diagnostics expose the same evidence more authoritatively with no remaining conformance gap.
 
 ### Phase A — neutralize the core without changing behavior
 
@@ -235,13 +251,11 @@ Exit gate:
 
 ### Phase C — second-agent research spike
 
-The second agent is selected **after** the Demand Gate.
+The second agent is selected **after the Codex conformance foundation is useful on its own**. Cross-agent work is an extension of the evidence model, not the reason the evidence model exists.
 
 Current research preference: **Gemini CLI** as the correctness-first engineering candidate because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior can test path/applicability uncertainty without abandoning the deterministic contract.
 
-This is not a commitment. Use the following override:
-
-> If the 30-day Demand Gate produces at least twice as many real Codex+Claude cases as Codex+Gemini cases, select Claude Code instead. User evidence outranks architecture preference.
+Claude Code remains a demand-relevant alternative, but no user-count threshold automatically selects it. The deciding factors are evidence quality, reproducibility, maintenance cost, and whether the adapter can preserve the same deterministic contract.
 
 For Gemini, research surfaces include:
 
@@ -341,64 +355,67 @@ A rename requires:
 
 ## 10. Success measures
 
-Prefer evidence of diagnostic value over raw feature count.
+Prefer **reproducible ecosystem evidence** over raw feature count or early distribution.
 
 Evidence priority:
 
 ```text
-repeat users
-> real repository integrations
-> external conformance cases
-> external issues / pull requests
-> unique successful runs
+confirmed upstream regressions / semantic changes captured by fixtures
+> upstream issues / fixes / documentation corrections
+> compatibility coverage across versions
+> deterministic conformance fixtures with evidence metadata
+> external conformance contributions
+> repeat users / real repository integrations
 > package downloads
 > stars
 ```
 
-### Phase 1 — authorize a second adapter
+### Phase 1 — establish Codex conformance value
 
 Require:
 
-- at least 10 external unique users;
-- at least 3 meaningful feedback cases;
-- at least 2 repeat users;
-- at least 1 external case converted into a regression fixture.
+- at least 20 evidence-backed semantic fixtures;
+- at least 3 behavior-change or regression fixtures;
+- a documented compatibility/evidence record for the supported Codex surface;
+- at least 1 verified upstream discrepancy, regression, or ambiguity converted into an issue, patch, or evidence correction;
+- zero known false-certainty release blockers in the supported subset.
 
-### Phase 2 — ship cross-agent compare as a durable surface
+### Phase 2 — authorize a second adapter
 
 Require:
 
-- at least 5 real repositories;
-- at least 3 confirmed structural drift cases;
-- at least 3 repeat users;
-- at least 1 CI/local integration;
-- zero known false-certainty release blockers.
+- the Codex conformance corpus is stable enough to serve as a reference implementation;
+- at least 50 total conformance fixtures or equivalent coverage evidence;
+- compatibility boundaries are version-aware and machine-readable;
+- at least 3 externally verifiable upstream interactions or corrections, or equivalent evidence that the corpus matters beyond its own repository;
+- the candidate second agent has sufficiently inspectable semantics to reproduce the same evidence standard.
 
-### Phase 3 — authorize sustained expansion
+External user demand may accelerate this phase, but lack of broad adoption alone does not block it.
+
+### Phase 3 — authorize sustained cross-agent expansion
 
 Before a third adapter, rename, or team product, require:
 
-- at least 25 active external users/repos;
-- at least 10 repeat users;
-- at least 5 CI integrations;
-- at least 3 organizations;
-- at least 5 external issues/PRs/fixtures;
-- organic referrals.
+- two conformance-backed adapters with documented compatibility boundaries;
+- at least 5 proven cross-agent structural differences or drift cases;
+- at least 3 external issues/PRs/fixtures or upstream interactions across the project;
+- evidence that maintaining another adapter adds diagnostic or ecosystem value rather than only filename coverage;
+- acceptable maintenance cost across consecutive upstream releases.
 
-Downloads and stars are useful secondary adoption signals, but they do not replace correctness or repeat-use evidence.
+Downloads, stars, and repeat users remain useful secondary signals, but they do not replace correctness, reproducibility, or ecosystem contribution.
 
 ## 11. Kill criteria
 
 | Review point | Trigger | Action |
 | --- | --- | --- |
-| 30 days | fewer than 3 meaningful external users | stop new cross-agent features; return to Codex-only maintenance/distribution |
-| 30–45 days | fewer than 2 reproducible cross-agent drift cases | do not perform adapter architecture refactor |
-| 30 days after second adapter | fewer than 3 repeat users and zero integrations | do not build a third adapter |
-| two consecutive upstream releases | more than 50% of valuable state becomes non-deterministically inspectable | freeze/drop that adapter |
-| monthly per agent | maintenance exceeds one developer-day with no adoption growth | freeze/drop that adapter |
-| 60–90 days | native tools cover at least 80% of observed use cases and compare sees no use | return to Codex-only / conformance niche |
+| 2 consecutive upstream Codex releases | corpus detects no meaningful semantic surface and adds no reusable evidence | narrow the supported surface instead of expanding fixture count |
+| evidence review | a claimed rule cannot be reproduced from official docs, source, or deterministic behavior | mark unsupported/unresolved; do not encode it as an oracle |
+| 2 consecutive upstream releases | more than 50% of valuable state becomes non-deterministically inspectable | freeze or narrow that adapter |
+| monthly per agent | maintenance exceeds one developer-day without new compatibility, regression, or ecosystem evidence | freeze/drop that adapter |
+| native-tool review | native diagnostics provide the same authoritative evidence with no remaining compatibility gap | deprecate the redundant surface |
+| cross-agent review | fewer than 2 proven structural differences after a serious second-adapter spike | do not build compare/third-adapter surfaces |
 | observed case mix | at least 70% are model-adherence problems | do not pivot the deterministic core into an LLM policy judge |
-| user interviews | at least 50% reject an extra CLI and no CI need appears | stop the standalone cross-agent product hypothesis |
+| security review | evidence collection requires fetching secrets, executing hooks/plugins/MCP, or mutating inspected repos | keep that surface unresolved/unsupported |
 
 ## 12. Primary risks
 
@@ -415,12 +432,12 @@ Downloads and stars are useful secondary adoption signals, but they do not repla
 
 ## 13. Decision record
 
-The previous strategy rejected broad cross-agent expansion because shallow breadth offered weak differentiation. This blueprint changes the hypothesis, not the quality bar:
+The previous strategy rejected broad cross-agent expansion because shallow breadth offered weak differentiation. The 2026-09-22 revision keeps that quality bar but changes the immediate optimization target:
 
-> Cross-agent work is worth validating only if it extends Codex Scope's deterministic provenance model and can expose proven effective-context drift that no single-agent native diagnostic can explain.
+> Codex Scope should first become a reproducible Codex conformance and compatibility corpus. Cross-agent work is justified only when it extends that evidence model without weakening determinism or provenance.
 
-Until that hypothesis passes the gates above, Codex Scope remains a Codex-first resolver.
+The user-facing CLI remains useful, but it is no longer the only or primary source of project value. Ecosystem contribution may be demonstrated through regression detection, compatibility evidence, upstream issues/fixes, and a maintained semantics corpus even before broad adoption exists.
 
-Current product decision as of 2026-09-22: **B — continue Codex Scope, but perform demand validation before formal cross-agent implementation.**
+Current product decision as of 2026-09-22: **C — conformance-first. Build Codex compatibility/regression infrastructure now; treat external adoption as secondary evidence and cross-agent adapters as a later extension.**
 
-See [market-product-research-interim-2026-09-22.md](market-product-research-interim-2026-09-22.md) for the current market evidence, competitor snapshot, second-agent decision aid, distribution plan, and 30-day execution plan.
+See [market-product-research-interim-2026-09-22.md](market-product-research-interim-2026-09-22.md) for the earlier demand-validation analysis. Its market findings remain useful, but the Demand Gate no longer controls whether Codex conformance work proceeds.
