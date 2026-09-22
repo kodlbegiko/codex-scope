@@ -16,8 +16,8 @@ This file tracks implementation state from checked-in code and reproducible evid
 - [x] Current upstream source pinned to `openai/codex@94174e44cbc54cece45f6052328ca0c2cd7a8a2a`
 - [x] 2026-09-22 evidence freshness review
 - [x] False-certainty corrections found during the review: project instruction trust gating and legacy approval-policy classification
-- [ ] Full clean-checkout CI run on the Phase 0 PR
-- [ ] Current upstream feedback-loop interaction after CI validates the reproduction
+- [x] Full clean-checkout CI run on the Phase 0 PR
+- [x] Current upstream feedback-loop interaction: source-level recheck posted to `openai/codex#34193` after green CI
 
 ### Current exit-gate accounting
 
@@ -27,13 +27,13 @@ This file tracks implementation state from checked-in code and reproducible evid
 | ≥3 regression/change fixtures | 4 records in `conformance/regressions.json` | satisfied |
 | Machine-readable evidence metadata | `conformance/manifest.json` + schemas | satisfied |
 | Machine-readable compatibility matrix | generated `conformance/compatibility-matrix.json` | satisfied |
-| Deterministic clean-checkout reproduction | GitHub Actions PR run | pending |
-| Corpus/schema/expected-output/regression/matrix validation | `scripts/conformance-check.mjs` + generator check | implemented; CI pending |
+| Deterministic clean-checkout reproduction | GitHub Actions PR run #31 from a fresh checkout | satisfied |
+| Corpus/schema/expected-output/regression/matrix validation | `scripts/conformance-check.mjs` + generator check | satisfied |
 | supported / unsupported / unresolved separation | explicit expected outcomes + CI taxonomy | satisfied |
-| zero known false-certainty blocker | trust and approval-policy drift fixed in this branch | satisfied after current audit; CI pending |
-| meaningful upstream interaction | existing #34193 discrepancy re-verified; follow-up waits for green CI | pending |
+| zero known false-certainty blocker | trust and approval-policy drift fixed in this branch; CI green | satisfied |
+| meaningful upstream interaction | current-main source recheck posted to `openai/codex#34193`, linked to PR #13 | satisfied |
 
-Phase 0 is therefore **not yet declared exit-gate complete** in this file.
+Phase 0 therefore satisfies the **current Phase 0 exit gate (9/9 tracked gates)**. This does not freeze the corpus; future upstream changes are expected to create deliberate behavior drift and evidence updates.
 
 ## Phase A — adapter-ready neutral core
 
