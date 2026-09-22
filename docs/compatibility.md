@@ -2,9 +2,30 @@
 
 ## Target
 
-Codex Scope V0.1.1 targets the **current stable OpenAI Codex documentation available on 2026-08-19**, with current public `openai/codex` implementation evidence used to disambiguate supported edge cases.
+Codex Scope V0.1.x targets the explicitly supported instruction/configuration subset recorded in the conformance corpus.
 
-A local Codex CLI was **not installed in the execution environment**, so this implementation does not claim compatibility with a detected local Codex version and did not run paid/token-consuming Codex sessions.
+Current evidence snapshot:
+
+```text
+evidence date:          2026-09-22
+openai/codex commit:    94174e44cbc54cece45f6052328ca0c2cd7a8a2a
+tested Codex version:   unknown
+resolver version:       codex-resolver.v0.1
+```
+
+A local Codex binary version was not safely detected for this evidence pass. Codex Scope does **not** shell out to Codex or infer its version from configuration shape. The machine-readable record therefore keeps `tested_codex_version = "unknown"`.
+
+See [`../conformance/compatibility-matrix.json`](../conformance/compatibility-matrix.json).
+
+## Conformance outcome taxonomy
+
+| Outcome | Meaning in CI |
+|---|---|
+| `compatible` | Deterministic assertions matched the pinned supported/fail-closed behavior. |
+| `behavior_drift` | A deterministic expected assertion no longer matches. CI fails distinctly. |
+| `unsupported` | The case intentionally reaches a known semantic boundary. This is not a generic test failure. |
+| `unresolved` | Missing or conditional inputs intentionally prevent a final compatibility claim. This is not a generic test failure. |
+| `tool_error` | The corpus, fixture, or harness failed before a semantic result could be evaluated. CI fails distinctly. |
 
 ## Support matrix
 
@@ -12,36 +33,51 @@ A local Codex CLI was **not installed in the execution environment**, so this im
 |---|---|---|
 | `CODEX_HOME` | Supported | Environment default plus explicit inspection override. |
 | Global `AGENTS.override.md` / `AGENTS.md` | Supported | First non-empty global source. |
-| Project root → cwd instruction discovery | Supported | `.git` default marker plus configured markers. |
-| Project `AGENTS.override.md` / `AGENTS.md` | Supported | First existing candidate per directory. |
-| Configured fallback instruction filenames | Supported | Ordered after built-in filenames. |
+| Project root → cwd instruction discovery | Supported | One selected candidate per directory. |
+| Project instruction trust gating | Supported | Untrusted = ignored; unknown trust = unresolved/conditional, never active. |
+| Project override/base/fallback precedence | Supported | Current source pins existing-file selection behavior. |
 | Empty instruction files | Supported | Global and project semantics intentionally differ. |
-| Cumulative project instruction byte limit | Supported | Deterministic byte truncation covered by fixture. |
+| Cumulative project instruction byte limit | Supported | Deterministic truncation fixture. |
 | User config | Supported | `$CODEX_HOME/config.toml`. |
-| Unix system config | Supported | `/etc/codex/config.toml`; test harness can inject an isolated path. |
-| Windows system config | Unsupported | V0.1 does not claim a Windows system layer. |
-| Project `.codex/config.toml` root → cwd | Supported | Explicit trust gate required; `$CODEX_HOME` is skipped during project-layer traversal; documented protected machine-local keys are ignored even when trusted. |
-| Project trust | Partially supported | Explicit `trusted`, `untrusted`, or `unknown`; no automatic trust-state detection. |
-| Profile files | Supported | `$CODEX_HOME/<name>.config.toml` via `--profile`. |
-| Known `-c/--config` overrides | Supported | Repeatable; highest modeled precedence. |
-| Unknown invocation state | Supported | Remains `unresolved` until `--invocation-complete`. |
-| Common decision keys | Partially supported | `approval_policy` string modes, `sandbox_mode`, `model`, and `model_provider`; granular approval policy is unsupported. |
-| Other config keys | Unsupported semantics | Parsed provenance may be shown, but V0.1 does not claim schema/effective-value compatibility for them. |
-| Built-in Codex defaults | Partially supported | Only three resolver-critical documented defaults are modeled. |
+| Unix system config | Supported subset | `/etc/codex/config.toml`; test harness injects an isolated path. |
+| Windows system config | Unsupported | No V0.1 system-layer claim. |
+| Project `.codex/config.toml` root → cwd | Supported | Explicit trust gate; CODEX_HOME excluded from project traversal. |
+| Project trust | Partially supported | Explicit trusted/untrusted/unknown; no automatic detection. |
+| Profile-v2 files | Supported | `$CODEX_HOME/<name>.config.toml`; Codex 0.134.0+ boundary. |
+| Known `-c/--config` overrides | Supported | Repeatable; later duplicate wins. |
+| Unknown invocation state | Unresolved | Remains unresolved until `--invocation-complete`. |
+| `approval_policy=on-request/never` | Supported | Current string modes modeled by V0.1. |
+| `approval_policy=untrusted` | Unsupported current semantics | Historical value; current docs say no longer supported. |
+| `approval_policy=on-failure` | Unsupported current semantics | Deprecated upstream. |
+| Structured/granular approval policy | Unsupported | Parsed value may be visible, but V0.1 does not validate semantics. |
+| Other config keys | Unsupported semantics | Provenance may be shown without semantic compatibility claim. |
+| Built-in Codex defaults | Partially supported | Only three resolver-critical defaults are modeled. |
 | Full TOML 1.0 grammar | Partially supported | Safe common subset; unsupported syntax fails closed. |
-| Managed/enterprise config and `requirements.toml` | Unsupported | Deferred; no guessed enforcement behavior. |
-| Hooks inspection | Unsupported | V0.1 never executes hooks. |
+| Managed/cloud/enterprise constraints | Unsupported / unresolved boundary | Presence can invalidate a complete local-layer claim. |
+| Hooks inspection/execution | Unsupported | V0.1 never executes hooks. |
 | MCP/plugins/rules | Unsupported | Deferred. |
-| Network/telemetry/update checks | Unsupported by design | Inspection has no network code. |
+| Runtime network/telemetry/update checks | Unsupported by design | Inspection has no runtime network code. |
+| Automatic Codex version detection | Unsupported by design in V0.1 | Unknown is retained instead of shelling out or guessing. |
+
+## Regression / behavior-change evidence
+
+The machine-readable regression corpus currently records:
+
+1. `CODEX_HOME` project-layer exclusion fixed upstream by commit `dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a`;
+2. open current discrepancy `openai/codex#34193` for duplicate AGENTS when CODEX_HOME is also project root;
+3. profile-v2 selection change documented for Codex 0.134.0+;
+4. removal of the historical `approval_policy="untrusted"` current-support claim.
+
+See [`../conformance/regressions.json`](../conformance/regressions.json).
 
 ## Version claim
 
 The supported claim is intentionally narrow:
 
-> Codex Scope V0.1 models the instruction-discovery and configuration-precedence subset listed in this file, against the evidence basis dated 2026-08-19.
+> Codex Scope V0.1 models only the rules listed in its evidence-dated corpus. The current source snapshot is pinned, while the tested installed Codex version remains unknown.
 
 It does **not** claim “100% Codex compatible.”
 
 ## Known parser boundary
 
-If an applicable config uses unsupported TOML syntax, Codex Scope exits with a parse error and explains that it stopped rather than guessing. This can reject a configuration that Codex itself accepts; that is a known V0.1 limitation and is safer than silently producing a wrong effective configuration.
+If an applicable config uses unsupported TOML syntax, Codex Scope exits with a parse error and explains that it stopped rather than guessing. This can reject configuration that Codex itself accepts; that is a known V0.1 limitation.

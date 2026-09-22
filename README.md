@@ -197,6 +197,27 @@ The exact supported surface and evidence date are recorded in:
 
 The conformance suite intentionally records evidence. Resolver changes should add or update a focused fixture rather than broaden behavior by guesswork.
 
+## Conformance corpus
+
+Phase 0 keeps the evidence used by the resolver in machine-readable form:
+
+- `conformance/manifest.json` — semantic rules, evidence, fixture probes, assertions, and supported/unsupported boundaries;
+- `conformance/regressions.json` — upstream fixes, behavior changes, and current discrepancies that must not silently regress;
+- `conformance/compatibility-matrix.json` — generated compatibility record for the pinned evidence snapshot.
+
+Validate the checked-in corpus after building:
+
+```bash
+npm run conformance:matrix:check
+npm run conformance:validate
+```
+
+Conformance validation distinguishes `compatible`, `behavior_drift`, `unsupported`, `unresolved`, and `tool_error`. Expected `unsupported` or `unresolved` cases are evidence, not generic test failures.
+
+The current matrix intentionally records the tested Codex binary version as `unknown`; Codex Scope does not shell out to Codex or infer a version from config shape.
+
+See [`docs/conformance-status.md`](docs/conformance-status.md) for the implementation gate.
+
 ## Build from source
 
 Prerequisites: Node.js 20+ and TypeScript 5.8+ available as `tsc` for source builds.
@@ -219,7 +240,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.1 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints.
+Codex Scope V0.1 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.1 reports those historical values as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 

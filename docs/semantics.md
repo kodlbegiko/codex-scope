@@ -1,35 +1,53 @@
 # Codex Scope V0.1 semantics ledger
 
-Evidence captured: **2026-08-19**.
+Evidence captured: **2026-09-22**.
 
-Source priority for V0.1 is: current official OpenAI Codex documentation, then current public `openai/codex` implementation evidence for edge cases, then this repository's roadmap. If these disagree, the higher source wins.
+Pinned implementation snapshot: `openai/codex@94174e44cbc54cece45f6052328ca0c2cd7a8a2a`.
+
+Source priority is current official OpenAI Codex documentation, then pinned public `openai/codex` implementation evidence for details the docs do not fully specify, then this repository's own historical expectations. If reality changes, the conformance corpus changes with it.
+
+The machine-readable source of truth for this snapshot is [`../conformance/manifest.json`](../conformance/manifest.json).
 
 ## Modeled rules
 
 | Behavior | Evidence basis | V0.1 | Caveat |
 |---|---|---:|---|
-| `CODEX_HOME` defaults to `~/.codex` | Official Codex docs | Supported | `--codex-home` exists for deterministic inspection/testing. |
-| Global instructions check `AGENTS.override.md`, then `AGENTS.md` | Official docs + `codex-home/src/instructions/mod.rs` | Supported | Global lookup selects the first **non-empty** readable candidate. |
-| Project instructions traverse project root → cwd | Official docs + `openai/codex` implementation | Supported | One candidate is discovered per directory. |
-| Project candidate order is override → AGENTS → configured fallbacks | Official docs + implementation | Supported | Duplicate/empty fallback names are ignored by Codex Scope. |
-| Project selection is based on first **existing** candidate | `openai/codex` implementation | Supported | Therefore an empty `AGENTS.override.md` blocks same-directory `AGENTS.md`, then contributes no text. Regression-tested. |
-| Empty global candidate falls through | `openai/codex` implementation | Supported | Differs from project selection behavior above. |
-| `project_doc_max_bytes` defaults to 32768 | Official docs/schema evidence | Supported | Project-document budget only; global instructions are outside this budget. |
-| Project instruction byte budget is cumulative root → cwd | `openai/codex` implementation | Supported | This pins an implementation detail where public wording can be read as per-file. Regression-tested. |
-| `project_doc_fallback_filenames` defaults to `[]` | Official config schema/docs | Supported | Applied after `AGENTS.md`. |
-| Project root markers default to `.git` | Official advanced config/schema evidence | Supported | If no marker is found, V0.1 uses cwd as root. |
+| `CODEX_HOME` defaults to `~/.codex` and can be explicitly supplied | Official Codex docs | Supported | `--codex-home` exists for deterministic inspection/testing. |
+| Global instructions check `AGENTS.override.md`, then `AGENTS.md` | Official docs + `codex-home/src/instructions/mod.rs` | Supported | Global lookup selects the first non-empty readable candidate. |
+| Empty global override falls through to global `AGENTS.md` | Pinned upstream source | Supported | Read failures are not treated as empty. |
+| Project instructions traverse project root → cwd | Official docs + pinned `agents_md.rs` | Supported | One candidate is discovered per directory. |
+| Project candidate order is override → AGENTS → configured fallbacks | Official docs + pinned source | Supported | V0.1 models safe plain fallback filenames. |
+| Project selection is based on first existing candidate | Pinned `agents_md.rs` | Supported | An empty `AGENTS.override.md` blocks same-directory `AGENTS.md`, then contributes no text. Public wording about skipping empty files does not spell out this filename-reconsideration detail. |
+| Explicitly untrusted project skips project instruction contribution | Pinned `agents_md.rs` + trust docs | Supported | Global instructions can remain active. |
+| Unknown project trust | Accuracy contract + upstream trust behavior | Unresolved | Project candidates are reported `unresolved`, never promoted to active. |
+| `project_doc_max_bytes` defaults to 32768 | Official docs/schema | Supported | Project-document budget only. |
+| Project instruction byte budget is cumulative root → cwd | Official schema + pinned source | Supported | Regression-oriented fixture pins truncation across directories. |
+| `project_doc_fallback_filenames` defaults to `[]` | Official config reference/source | Supported | Applied after built-in filenames. |
+| Project root markers default to `.git` | Official config reference | Supported | If no marker is found, V0.1 uses cwd as the diagnostic root. |
 | Project configs load root → cwd, closest wins | Official config docs | Supported | Only when trust is explicitly `trusted`. |
-| `$CODEX_HOME` is not loaded again as a project `.codex` layer | `openai/codex` config-loader implementation | Supported | Paths are compared using normalized/canonicalized best-effort identity, including when `$CODEX_HOME` sits inside a project tree. Regression-tested. |
-| Protected machine-local keys in project config are ignored | Official Config Reference | Supported | Includes provider/auth-adjacent, profile-selection, notify, and OTEL keys listed by current docs. |
-| Untrusted project skips project `.codex/config.toml` | Official config docs | Supported | `unknown` trust keeps candidates conditional and final affected values unresolved. |
-| Config precedence: CLI > closest project > profile > user > system > modeled defaults | Official config docs | Supported | Repeated CLI `-c` overrides use later occurrence precedence. Only defaults listed below are modeled. |
-| Profile selected by `--profile <name>` uses `$CODEX_HOME/<name>.config.toml` | Official CLI/config docs | Supported | Missing selected profile fails safely instead of silently ignoring it. |
-| `-c/--config key=value` parses the value as TOML | Official CLI docs | Supported subset | Parser supports the safe V0.1 TOML subset documented below. |
-| Missing invocation state must remain explicit | Product accuracy contract + CLI semantics | Supported | `--invocation-complete` is the assertion boundary. |
+| `$CODEX_HOME` is not loaded again as a project `.codex` layer | Upstream fix commit `dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a` | Supported | Normalized/canonical best-effort identity; regression-tested. |
+| Protected machine-local project keys are ignored | Official config reference | Supported subset | V0.1 pins its documented protected-prefix set to this evidence date. |
+| Untrusted project skips project config | Official config/security docs | Supported | `unknown` trust keeps project values conditional and affected values unresolved. |
+| Local modeled precedence: CLI > closest project > profile > user > system > defaults | Official config docs | Supported subset | Managed/cloud constraints can change the full runtime answer and remain outside this local subset. |
+| Profile selection uses `$CODEX_HOME/<name>.config.toml` | Official docs for Codex 0.134.0+ | Supported | Legacy `[profiles.<name>]` selection is historical, not current modeled behavior. |
+| Repeated `-c/--config` overrides | Official CLI semantics | Supported | Later supplied override wins in the modeled invocation list. |
+| Missing invocation state | Product accuracy contract + CLI semantics | Unresolved | `--invocation-complete` is the assertion boundary. |
+| Missing selected profile | Current profile-v2 boundary | Fail closed | V0.1 raises `PROFILE_NOT_FOUND`. |
+| `approval_policy="on-request"` / `"never"` | Current config reference | Supported | Structured/granular policy remains outside V0.1 semantic validation. |
+| `approval_policy="untrusted"` | Current config/security docs | Unsupported | Historical value; current Codex documentation says it is no longer supported. |
+| `approval_policy="on-failure"` | Current config reference | Unsupported | Deprecated upstream; provenance is preserved without claiming current semantics. |
+| Unknown config keys | V0.1 boundary | Unsupported semantics | Parsed provenance may be shown, but semantic compatibility is not claimed. |
+| Malformed / unsupported TOML syntax | V0.1 safety boundary | Fail closed | V0.1 deliberately prefers rejection to plausible partial resolution. |
+
+## Current upstream discrepancy: CODEX_HOME / AGENTS duplication
+
+`openai/codex#34193` remains open on this evidence date. Its reproduction shows that when `CODEX_HOME`, project root, and cwd are the same directory, the same canonical `AGENTS.md` can contribute once as global instructions and again as project instructions.
+
+The pinned current source still assembles user instructions separately from project-discovered entries without canonical-path deduplication across those two sources. Codex Scope therefore records the duplicate as **implementation parity, not desired behavior**. If upstream fixes it, the fixture must intentionally drift and be updated.
 
 ## Defaults modeled
 
-V0.1 only hard-codes defaults with a defensible evidence basis that are required by its own resolver:
+V0.1 hard-codes only resolver-critical defaults with a defensible evidence basis:
 
 ```text
 project_doc_max_bytes = 32768
@@ -37,66 +55,46 @@ project_doc_fallback_filenames = []
 project_root_markers = [".git"]
 ```
 
-V0.1 semantically validates and claims support for the resolver-critical keys above plus these common decision keys:
+V0.1 semantically validates the resolver-critical keys above plus this narrow decision-key set:
 
 ```text
-approval_policy   (documented string modes)
+approval_policy
 sandbox_mode
 model
 model_provider
 ```
 
-Other parsed keys may still appear with provenance, but are labeled `unsupported` rather than being presented as semantically verified Codex values. Structured/granular `approval_policy` is parsed but labeled `unsupported` in V0.1.
-
-`why <key>` returns unresolved if no supported source/default exists.
+Other parsed keys may appear with provenance but are labeled `unsupported`.
 
 ## TOML support boundary
 
-The zero-runtime-dependency parser supports the constructs needed for common Codex config:
+The zero-runtime-dependency parser supports the constructs needed for common modeled Codex config: strings, booleans, numbers, dates/datetimes preserved as strings, arrays, inline tables, standard tables, dotted keys, comments, and multiline arrays/inline tables.
 
-- basic and literal strings;
-- booleans;
-- integers and floats;
-- dates/datetimes preserved as strings;
-- arrays;
-- inline tables;
-- standard tables (`[a.b]`);
-- dotted keys;
-- comments;
-- multiline arrays/inline tables.
-
-V0.1 deliberately **fails closed** on unsupported/ambiguous syntax such as array-of-tables (`[[...]]`) and TOML features not implemented by the parser. It does not continue with a partial plausible config.
+V0.1 deliberately **fails closed** on unsupported or ambiguous syntax such as array-of-tables and other TOML features it has not implemented. This can reject valid Codex TOML and is a documented compatibility limitation.
 
 ## Resolution semantics
 
-A known source can be visible without being the final answer.
+A source can be visible without being a final answer.
 
-For example, with trust `unknown`:
+With trust `unknown`, a higher-precedence project config remains conditional and the value is `unresolved`. For instructions, project sources are likewise not marked active when trust is unknown.
 
-```text
-user config:     approval_policy = never
-project config:  approval_policy = on-request  (conditional)
-```
-
-Codex Scope reports the user value as the known-so-far winner but marks the key `unresolved`, because trust can activate the higher project source.
-
-Likewise, unless `--invocation-complete` is supplied, unseen Codex invocation inputs can still supersede file-derived values.
+Unless `--invocation-complete` is supplied, unseen invocation/profile inputs can still supersede file-derived values, so affected results remain unresolved.
 
 ## Evidence links
 
 Official documentation:
 
-- `https://developers.openai.com/codex/agent-configuration/agents-md`
-- `https://developers.openai.com/codex/config-basic`
-- `https://developers.openai.com/codex/config-advanced`
-- `https://developers.openai.com/codex/config-reference`
-- `https://developers.openai.com/codex/cli/reference`
+- https://developers.openai.com/codex/agent-configuration/agents-md
+- https://developers.openai.com/codex/config-file/config-basic
+- https://developers.openai.com/codex/config-file/config-advanced
+- https://developers.openai.com/codex/config-file/config-reference
+- https://developers.openai.com/codex/cli/reference
+- https://developers.openai.com/codex/security
 
-Implementation evidence:
+Pinned implementation evidence:
 
-- `https://github.com/openai/codex/tree/main/codex-rs`
-- global instructions: `codex-rs/codex-home/src/instructions/mod.rs`
-- project instruction/config loading: current `openai/codex` main implementation inspected on the evidence date above
-- `$CODEX_HOME` project-layer exclusion: `openai/codex` commit `dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a` ("Skip loading codex home as project layer")
-
-Implementation links are evidence snapshots in time, not a claim that `main` equals every stable Codex release.
+- https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs
+- https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs
+- https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs
+- https://github.com/openai/codex/commit/dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a
+- https://github.com/openai/codex/issues/34193
