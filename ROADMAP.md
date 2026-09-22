@@ -28,83 +28,82 @@ Shipped surfaces:
 
 V0.1.x intentionally does **not** claim full Codex compatibility.
 
-## Product direction — evidence-based cross-agent context diagnostics
+## Product direction — Codex conformance first, cross-agent later
 
-Repositories increasingly contain overlapping instructions and settings for Codex, Claude Code, Cursor, Gemini CLI, OpenCode, and other coding agents. The opportunity is not another rules generator or synchronization tool. It is a read-only diagnostic that can answer:
+Codex Scope's primary near-term role is to become **reproducible conformance and compatibility infrastructure for Codex instruction/configuration semantics**.
 
-- which sources are discovered for a specific agent and working context;
-- which sources are active, shadowed, ignored, conditional, or available only on demand;
-- which conclusions are proven and which depend on runtime, task, trust, policy, or model decisions;
-- where two supported agents have a proven effective-context difference.
+The user-facing CLI remains a supported diagnostic surface, but the core asset is the checked-in evidence corpus:
 
-Cross-agent work must preserve these constraints:
+- explicit semantic rules;
+- deterministic fixtures;
+- upstream documentation/source references;
+- evidence dates and tested versions/commits;
+- compatibility boundaries;
+- regression and behavior-drift detection;
+- reproducible upstream issues, fixes, and documentation corrections.
 
-1. **Depth before breadth.** One conformance-backed adapter is more valuable than many filename scanners.
-2. **Per-agent evidence.** Every modeled rule records its upstream source, evidence date, fixture, and compatibility boundary.
-3. **No false “agent sees” claims.** Task-dependent or model-selected rules remain conditional or unresolved unless the required context is supplied.
-4. **Read-only by default.** Codex Scope does not generate, synchronize, or rewrite agent configuration.
-5. **No semantic guessing.** Arbitrary prose is not converted into normalized commands or policy claims by regex or hidden LLM calls.
-6. **Backward compatibility.** Existing Codex commands and versioned JSON remain stable through any internal adapter refactor.
+Cross-agent support remains a valid later direction for Claude Code, Gemini CLI, Cursor, OpenCode, and others, but only as an extension of this evidence model. The project will not trade semantic depth for agent count.
 
-See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the proposed architecture, gates, and phased validation plan.
+Core constraints remain:
 
-## NOW — trust and adoption foundation
+1. **Evidence before breadth.** Every modeled rule needs reproducible upstream support.
+2. **No false certainty.** Runtime/task/model-dependent state remains conditional, unresolved, or unsupported.
+3. **Read-only deterministic core.** No LLM calls, runtime network dependency, hook/plugin/MCP execution, or inspected-repo mutation.
+4. **Compatibility awareness.** Supported claims are tied to evidence dates and version/commit boundaries where possible.
+5. **Backward compatibility.** Existing Codex commands and the V0.1 JSON contract remain stable while the conformance core evolves.
 
-### 0. 30-day cross-agent Demand Gate
+See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the revised conformance-first architecture and gates.
 
-The current product decision is **B: continue Codex Scope, but validate demand before formal cross-agent adapter development**.
+## NOW — Codex conformance foundation
 
-Do not start the adapter-core refactor solely because it is architecturally attractive. Before Phase A, require all of:
+The current product decision is **C: conformance-first**.
 
-- at least 5 unrelated external target users across at least 3 repos/orgs;
-- at least 3 real repositories using at least 2 coding agents;
-- at least 2 reproducible cross-agent **structural** drift cases;
-- at least 2 users willing to run a zero-install prototype or provide a sanitized fixture;
-- at least 1 repeat interaction: a second test, issue, fixture, or bug report;
-- evidence that native single-agent diagnostics cannot answer the complete cross-agent question.
+External adoption is useful evidence but is **not** the gate for core progress. The immediate goal is to turn confirmed Codex semantics and upstream behavior changes into a durable regression/compatibility corpus.
 
-Stop formal cross-agent work if, after 30 days, fewer than 3 meaningful external users actually use the prototype, no reproducible structural drift is found, or the observed pain is mostly model non-adherence rather than resolution.
+### 0. Conformance harness and evidence ledger
 
-See [the 2026-09-22 market/product research snapshot](docs/research/market-product-research-interim-2026-09-22.md) for the evidence, adoption gates, kill criteria, and 30-day plan.
+Priorities:
 
-### 1. Real-world Codex conformance corpus
+- formalize fixture metadata for agent, surface, evidence source, evidence date, upstream version/commit, expected behavior, and unsupported boundaries;
+- expand deterministic fixtures for instructions, config precedence, project/trust behavior, profiles/overrides, and CODEX_HOME interactions;
+- distinguish compatibility success, behavior drift, unsupported state, unresolved state, and tool failure in CI;
+- keep evidence reproducible from a clean checkout;
+- convert verified upstream discrepancies into high-quality upstream issues, patches, or documentation corrections.
 
-Convert confirmed current Codex semantics and merged bug fixes into small deterministic fixtures with evidence metadata.
+Initial evidence gate:
 
-Required fixture metadata:
+- at least 20 explicit semantic fixtures;
+- at least 3 regression/behavior-change fixtures;
+- at least 1 verified upstream discrepancy, ambiguity, issue, patch, or evidence correction;
+- zero known false-certainty blockers in the supported subset.
+
+### 1. Compatibility matrix
+
+Generate a machine-readable record of what Codex Scope has actually tested, including evidence date and version/commit boundaries. Unknown versions remain unknown; configuration shape is not used as a version guess.
+
+### 2. Preserve the CLI as a thin diagnostic surface
+
+Keep the existing `inspect`, `instructions`, `config`, and `why` commands stable. User feedback remains valuable, but new CLI features do not outrank conformance coverage.
+
+### 3. Ecosystem contribution loop
+
+Prefer this maintenance loop:
 
 ```text
-agent
-source
-evidence_date
-upstream_version_or_channel
-upstream_behavior
-expected_scope_behavior
-reason_for_fixture
+upstream change
+→ reproduce semantics
+→ fixture/test
+→ detect drift or ambiguity
+→ upstream issue/fix/docs correction
+→ compatibility record
+→ release when warranted
 ```
 
-Unresolved issue speculation is never a test oracle by itself.
-
-### 2. Public onboarding
-
-Make the repository answer within one viewport:
-
-```text
-What problem is this?
-What command do I run?
-What proof do I get?
-Why not just use native diagnostics?
-```
-
-Maintain one reproducible real demo rather than fabricated screenshots.
-
-### 3. Real feedback
-
-Prioritize reproducible resolution mismatches, sanitized real-world cases, and external usage evidence over feature-count milestones.
+This produces externally verifiable maintainer evidence without requiring broad early user acquisition.
 
 ## NEXT — adapter-ready core and compatibility awareness
 
-The next implementation candidate, **only after the Demand Gate passes**, is an internal architecture seam, not immediate support for many agents.
+The next implementation candidate, **after the Codex conformance foundation is useful on its own**, is an internal architecture seam, not immediate support for many agents.
 
 Research/design goals:
 
@@ -125,11 +124,11 @@ Implementation requires an evidence-backed design, fixtures, and a new decision 
 
 ## VALIDATION CANDIDATE — one second agent
 
-After the Demand Gate and adapter seam are proven, validate the cross-agent thesis with **one** additional agent.
+After the Codex conformance corpus and adapter seam are proven, validate the cross-agent thesis with **one** additional agent.
 
 The current correctness-first engineering candidate is **Gemini CLI** because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior is complex enough to test the neutral model. This is not an implementation commitment.
 
-**Demand override:** if the 30-day validation produces at least twice as many real Codex+Claude cases as Codex+Gemini cases, prefer Claude Code despite the harder runtime/JIT and closed-implementation boundary. Market evidence outranks adapter convenience.
+Claude Code remains a demand-relevant alternative, but no user-count threshold automatically selects it. Choose the second adapter using evidence quality, reproducibility, maintenance cost, upstream inspectability, and whether the deterministic contract can be preserved.
 
 An adapter is not accepted until it has:
 
@@ -241,6 +240,6 @@ Effective agent context
 └── hooks metadata (evidence-gated, never executed)
 ```
 
-The moat is not agent count or feature count. It is independently reproducible evidence that each adapter matches the behavior it claims to model, and an honest boundary around everything it cannot prove.
+The moat is not agent count, feature count, or early star count. It is independently reproducible evidence that each supported semantic rule matches the behavior it claims to model, plus an honest compatibility boundary around everything the project cannot prove.
 
 See [`docs/research/post-v0.1.1-strategy.md`](docs/research/post-v0.1.1-strategy.md) for the original V0.1 decision matrix and [`docs/research/market-product-research-interim-2026-09-22.md`](docs/research/market-product-research-interim-2026-09-22.md) for the current demand-validation decision.
