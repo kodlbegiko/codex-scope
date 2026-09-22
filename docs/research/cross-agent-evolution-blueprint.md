@@ -168,6 +168,39 @@ Unresolved
 
 ## 7. Phased plan
 
+### Phase 0 — 30-day Demand Gate
+
+Do not refactor the core or build a second adapter until the cross-agent product hypothesis clears a market-evidence gate.
+
+Minimum evidence — **all required**:
+
+- at least 5 unrelated external target users from at least 3 repos/orgs;
+- at least 3 real repositories using at least 2 coding agents;
+- at least 2 reproducible cross-agent structural drift cases;
+- the drift is not merely model non-adherence;
+- native diagnostics cannot individually answer the complete cross-agent question;
+- at least 2 users run a zero-install prototype or provide a sanitized fixture;
+- at least 1 repeat interaction: a second test, issue, fixture, or bug report.
+
+Strong evidence:
+
+- at least 10 external users across 5 repos/orgs;
+- at least 5 reproducible drift cases;
+- at least 3 repeat users;
+- at least 2 inbound issues/fixtures;
+- at least 1 external PR or conformance contribution;
+- at least 1 CI/local-script integration.
+
+Kill signals after 30 days:
+
+- fewer than 3 meaningful external users actually used the prototype;
+- zero reproducible cross-agent structural drift cases;
+- more than 70% of observed pain is instruction adherence rather than resolution;
+- users mainly want sync/generation and will not adopt an inspector;
+- most valuable state is runtime/model-only and cannot be inspected reliably under the deterministic/no-network contract.
+
+If the Demand Gate fails, remain Codex-first and invest in distribution, conformance, or maintenance rather than adapter architecture.
+
 ### Phase A — neutralize the core without changing behavior
 
 Deliverables:
@@ -202,16 +235,30 @@ Exit gate:
 
 ### Phase C — second-agent research spike
 
-Claude Code is the leading candidate, not a committed target.
+The second agent is selected **after** the Demand Gate.
 
-Research surfaces:
+Current research preference: **Gemini CLI** as the correctness-first engineering candidate because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior can test path/applicability uncertainty without abandoning the deterministic contract.
 
-- project and global `CLAUDE.md`;
+This is not a commitment. Use the following override:
+
+> If the 30-day Demand Gate produces at least twice as many real Codex+Claude cases as Codex+Gemini cases, select Claude Code instead. User evidence outranks architecture preference.
+
+For Gemini, research surfaces include:
+
+- global/project `GEMINI.md` and hierarchical context behavior;
+- target/path/JIT applicability;
+- settings and precedence;
+- MCP declarations where merge/discovery semantics are documented;
+- version-specific and runtime-only state.
+
+For Claude, the alternative research surface includes:
+
+- `CLAUDE.md` / AGENTS.md fallback behavior and version boundaries;
 - `.claude/rules/` and path-scoped applicability;
 - user, project, local, and managed settings;
 - permissions;
 - MCP declarations;
-- version-specific and runtime-only state.
+- runtime/JIT states that may remain unresolved or unsupported.
 
 Exit gate:
 
@@ -294,18 +341,66 @@ A rename requires:
 
 ## 10. Success measures
 
-Prefer evidence of diagnostic value over raw feature count:
+Prefer evidence of diagnostic value over raw feature count.
 
-- externally reported resolution mismatches reproduced as fixtures;
-- real repositories using JSON/CI output;
-- proven configuration drift found before an agent session;
-- compatibility regressions detected by adapter evidence tests;
-- external issues or pull requests that improve semantic accuracy;
-- users choosing the tool despite native diagnostics because cross-agent provenance answers a distinct question.
+Evidence priority:
 
-Downloads and stars are useful adoption signals, but they do not replace correctness evidence.
+```text
+repeat users
+> real repository integrations
+> external conformance cases
+> external issues / pull requests
+> unique successful runs
+> package downloads
+> stars
+```
 
-## 11. Primary risks
+### Phase 1 — authorize a second adapter
+
+Require:
+
+- at least 10 external unique users;
+- at least 3 meaningful feedback cases;
+- at least 2 repeat users;
+- at least 1 external case converted into a regression fixture.
+
+### Phase 2 — ship cross-agent compare as a durable surface
+
+Require:
+
+- at least 5 real repositories;
+- at least 3 confirmed structural drift cases;
+- at least 3 repeat users;
+- at least 1 CI/local integration;
+- zero known false-certainty release blockers.
+
+### Phase 3 — authorize sustained expansion
+
+Before a third adapter, rename, or team product, require:
+
+- at least 25 active external users/repos;
+- at least 10 repeat users;
+- at least 5 CI integrations;
+- at least 3 organizations;
+- at least 5 external issues/PRs/fixtures;
+- organic referrals.
+
+Downloads and stars are useful secondary adoption signals, but they do not replace correctness or repeat-use evidence.
+
+## 11. Kill criteria
+
+| Review point | Trigger | Action |
+| --- | --- | --- |
+| 30 days | fewer than 3 meaningful external users | stop new cross-agent features; return to Codex-only maintenance/distribution |
+| 30–45 days | fewer than 2 reproducible cross-agent drift cases | do not perform adapter architecture refactor |
+| 30 days after second adapter | fewer than 3 repeat users and zero integrations | do not build a third adapter |
+| two consecutive upstream releases | more than 50% of valuable state becomes non-deterministically inspectable | freeze/drop that adapter |
+| monthly per agent | maintenance exceeds one developer-day with no adoption growth | freeze/drop that adapter |
+| 60–90 days | native tools cover at least 80% of observed use cases and compare sees no use | return to Codex-only / conformance niche |
+| observed case mix | at least 70% are model-adherence problems | do not pivot the deterministic core into an LLM policy judge |
+| user interviews | at least 50% reject an extra CLI and no CI need appears | stop the standalone cross-agent product hypothesis |
+
+## 12. Primary risks
 
 | Risk | Mitigation |
 | --- | --- |
@@ -318,10 +413,14 @@ Downloads and stars are useful adoption signals, but they do not replace correct
 | Rename fragments users | Defer naming until product proof and provide aliases/migration |
 | Remote config violates safety contract | Report declarations without fetching content |
 
-## 12. Decision record
+## 13. Decision record
 
 The previous strategy rejected broad cross-agent expansion because shallow breadth offered weak differentiation. This blueprint changes the hypothesis, not the quality bar:
 
 > Cross-agent work is worth validating only if it extends Codex Scope's deterministic provenance model and can expose proven effective-context drift that no single-agent native diagnostic can explain.
 
 Until that hypothesis passes the gates above, Codex Scope remains a Codex-first resolver.
+
+Current product decision as of 2026-09-22: **B — continue Codex Scope, but perform demand validation before formal cross-agent implementation.**
+
+See [market-product-research-interim-2026-09-22.md](market-product-research-interim-2026-09-22.md) for the current market evidence, competitor snapshot, second-agent decision aid, distribution plan, and 30-day execution plan.
