@@ -29,6 +29,7 @@ export function buildEnvironment(options: ResolveOptions): EffectiveCodexEnviron
     projectByteLimit: maxBytes,
     invocationComplete: options.invocationComplete,
     configUncertainty,
+    trust: options.trust,
   });
 
   const warnings = [...configResult.warnings, ...instructions.warnings];

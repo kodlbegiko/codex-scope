@@ -1,5 +1,5 @@
 import { directoriesFromRoot, fileSize, isFile, path, readBuffer, readBufferLimit } from "./fs-utils";
-import type { InstructionReport, InstructionSource } from "./types";
+import type { InstructionReport, InstructionSource, TrustState } from "./types";
 
 function uniqueNames(fallbacks: string[]): string[] {
   const result: string[] = [];
@@ -92,6 +92,7 @@ export function resolveInstructions(input: {
   projectByteLimit: number;
   invocationComplete: boolean;
   configUncertainty: boolean;
+  trust: TrustState;
 }): InstructionReport {
   const sources: InstructionSource[] = [];
   const warnings: string[] = [];
@@ -117,6 +118,30 @@ export function resolveInstructions(input: {
     const selectedPath = path.join(directory, selectedName);
     const bytes = fileSize(selectedPath);
     const precedence = 2000 + directoryIndex * 100 - selectedIndex;
+
+    if (input.trust === "untrusted") {
+      sources.push({
+        path: selectedPath,
+        scope: "project",
+        directory,
+        filename: selectedName,
+        state: "ignored",
+        bytes,
+        includedBytes: 0,
+        precedence,
+        reason: "Project instructions are ignored because the project is explicitly untrusted.",
+      });
+      pushIgnoredExisting(
+        sources,
+        candidateNames,
+        selectedIndex + 1,
+        directory,
+        "project",
+        precedence - 1,
+        "Project instructions are ignored because the project is explicitly untrusted.",
+      );
+      return;
+    }
 
     if (remaining <= 0) {
       sources.push({
@@ -173,18 +198,24 @@ export function resolveInstructions(input: {
     totalProjectBytes += includedBytes;
     remaining -= includedBytes;
     const truncated = bytes > includedBytes;
+    const sourceState = input.trust === "unknown" ? "unresolved" : "resolved";
     sources.push({
       path: selectedPath,
       scope: "project",
       directory,
       filename: selectedName,
-      state: "resolved",
+      state: sourceState,
       bytes,
       includedBytes,
       precedence,
-      reason: truncated
-        ? `Active project instruction source, truncated by cumulative ${input.projectByteLimit}-byte project budget.`
-        : "Active project instruction source.",
+      reason:
+        input.trust === "unknown"
+          ? truncated
+            ? `Project trust is unknown; this source would be active if trusted and is truncated by the cumulative ${input.projectByteLimit}-byte project budget.`
+            : "Project trust is unknown; this source would be active if the project is trusted."
+          : truncated
+            ? `Active project instruction source, truncated by cumulative ${input.projectByteLimit}-byte project budget.`
+            : "Active project instruction source.",
       truncated,
     });
     pushIgnoredExisting(
@@ -203,6 +234,9 @@ export function resolveInstructions(input: {
 
   if (!input.invocationComplete) {
     missingInformation.push("Invocation overrides/profile state are not declared complete and can change instruction-related config.");
+  }
+  if (input.trust === "unknown") {
+    missingInformation.push("Project trust is unknown; project instruction sources are conditional on the project becoming trusted.");
   }
   if (input.configUncertainty) {
     missingInformation.push("Instruction discovery settings are derived from config with unresolved trust/invocation state.");

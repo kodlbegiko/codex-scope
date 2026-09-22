@@ -29,6 +29,7 @@
     "codex.instructions.project_doc_default_limit",
     "codex.instructions.project_root_markers",
     "codex.instructions.project_root_to_cwd",
+    "codex.instructions.untrusted_project_skips_project",
     "codex.invocation.missing_profile"
   ],
   "unsupported_rules": [
@@ -39,6 +40,7 @@
   "unresolved_rules": [
     "codex.compatibility.unknown_version",
     "codex.config.unknown_trust",
+    "codex.instructions.unknown_project_trust",
     "codex.invocation.incomplete"
   ],
   "unknown_areas": [

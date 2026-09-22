@@ -725,6 +725,136 @@
       "regression": true
     },
     {
+      "rule_id": "codex.instructions.untrusted_project_skips_project",
+      "agent": "codex",
+      "surface": "trust",
+      "description": "Explicitly untrusted projects do not contribute project AGENTS instruction sources.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/security"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "Global instructions may remain active, but discovered project instruction candidates are ignored and do not enter the active chain.",
+      "supported_boundary": "Explicit trust=untrusted diagnostic input with local filesystem instruction discovery.",
+      "unsupported_boundary": "Codex Scope does not infer trust from runtime UI state or repository history.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project/frontend",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "untrusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where_all": {
+            "scope": "project"
+          },
+          "operator": "length_equals",
+          "value": 0
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where_all": {
+            "scope": "project",
+            "state": "ignored"
+          },
+          "operator": "length_equals",
+          "value": 3
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.instructions.unknown_project_trust",
+      "agent": "codex",
+      "surface": "trust",
+      "description": "Unknown project trust must not be converted into active project instructions.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/security"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "Global instructions remain known, project instruction candidates are unresolved, and the instruction report remains unresolved.",
+      "supported_boundary": "Explicit trust=unknown diagnostic state.",
+      "unsupported_boundary": "No runtime trust prompt or trust-state discovery is executed.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project/frontend",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "unknown",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unresolved"
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where_all": {
+            "scope": "project"
+          },
+          "operator": "length_equals",
+          "value": 0
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where_all": {
+            "scope": "project",
+            "state": "unresolved"
+          },
+          "operator": "length_equals",
+          "value": 2
+        }
+      ],
+      "expected_outcome": "unresolved",
+      "regression": true
+    },
+    {
       "rule_id": "codex.config.user_config",
       "agent": "codex",
       "surface": "config",
