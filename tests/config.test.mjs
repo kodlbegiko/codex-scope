@@ -264,3 +264,20 @@ test("CODEX_HOME inside a project tree is skipped only as a project layer", () =
   assert.equal(approval.shadowed.filter((source) => source.type === "project").length, 0);
   assert.deepEqual(result.projectConfigPaths, [path.join(child, ".codex", "config.toml")]);
 });
+
+test("removed approval_policy=untrusted is explicit unsupported state", () => {
+  const result = resolveConfig(options("policy-legacy"));
+  const approval = result.values.approval_policy;
+  assert.equal(approval.effectiveValue, "untrusted");
+  assert.equal(approval.state, "unsupported");
+  assert.match(approval.reason, /no longer supported/);
+});
+
+test("deprecated approval_policy=on-failure keeps provenance but is unsupported", () => {
+  const result = resolveConfig(options("policy-legacy", "", { profile: "legacy" }));
+  const approval = result.values.approval_policy;
+  assert.equal(approval.effectiveValue, "on-failure");
+  assert.equal(approval.winner?.type, "profile");
+  assert.equal(approval.state, "unsupported");
+  assert.match(approval.reason, /deprecated/);
+});

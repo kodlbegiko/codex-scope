@@ -1,0 +1,64 @@
+{
+  "schema_version": "codex-scope.regressions.v1",
+  "evidence_date": "2026-09-22",
+  "upstream": {
+    "repository": "openai/codex",
+    "current_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+  },
+  "cases": [
+    {
+      "regression_id": "codex-config-home-project-layer-exclusion",
+      "rule_id": "codex.config.codex_home_project_layer_exclusion",
+      "kind": "upstream_fix",
+      "historical_behavior": "Before openai/codex #10207, CODEX_HOME could be rediscovered and loaded as a project .codex layer, duplicating the same config source.",
+      "current_behavior": "Since commit dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a, project-layer traversal skips CODEX_HOME using absolute and best-effort canonical path identity.",
+      "why_regression_case": "A resolver that double-loads CODEX_HOME can change precedence, trust warnings, and provenance.",
+      "evidence": [
+        "https://github.com/openai/codex/issues/9932",
+        "https://github.com/openai/codex/commit/dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a"
+      ],
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-agents-home-project-root-duplication",
+      "rule_id": "codex.instructions.codex_home_project_root_duplication",
+      "kind": "current_upstream_discrepancy",
+      "historical_behavior": "codex-cli 0.144.6 reproduction in openai/codex #34193 showed one canonical AGENTS.md contributing once as global instructions and again as project instructions.",
+      "current_behavior": "The issue remains open and current source at 94174e44cbc54cece45f6052328ca0c2cd7a8a2a still assembles user instructions separately from project-discovered entries without cross-source canonical-path deduplication.",
+      "why_regression_case": "Codex Scope must track current implementation parity without treating the duplication as desired semantics; an upstream fix should intentionally flip this fixture.",
+      "evidence": [
+        "https://github.com/openai/codex/issues/34193",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+      ],
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-profile-v2-file-selection",
+      "rule_id": "codex.config.profile_precedence",
+      "kind": "upstream_behavior_change",
+      "historical_behavior": "Older Codex profile selection used legacy profile tables in config.toml.",
+      "current_behavior": "Official documentation states that as of Codex 0.134.0, --profile selects a separate CODEX_HOME/<name>.config.toml file and no longer reads the legacy [profiles.<name>] table.",
+      "why_regression_case": "Reintroducing legacy table selection would silently change the effective layer stack and violate the current profile-v2 boundary.",
+      "evidence": [
+        "https://developers.openai.com/codex/config-file/config-advanced",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/protocol/src/config_types.rs"
+      ],
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-approval-policy-untrusted-removed",
+      "rule_id": "codex.config.approval_policy_untrusted_removed",
+      "kind": "upstream_semantic_change",
+      "historical_behavior": "The legacy approval_policy=\"untrusted\" value existed in older Codex semantics and Codex Scope previously classified it as supported.",
+      "current_behavior": "Current official Codex documentation says approval_policy=\"untrusted\" is no longer supported; trust is configured separately.",
+      "why_regression_case": "Continuing to report the historical value as resolved current semantics is false certainty and can mislead compatibility checks.",
+      "evidence": [
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ],
+      "expected_result": "unsupported"
+    }
+  ]
+}
