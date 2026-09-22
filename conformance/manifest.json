@@ -1,0 +1,1662 @@
+{
+  "schema_version": "codex-scope.conformance.v1",
+  "evidence_date": "2026-09-22",
+  "resolver_version": "codex-resolver.v0.1",
+  "upstream": {
+    "repository": "openai/codex",
+    "commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+    "tested_codex_version": "unknown"
+  },
+  "outcome_taxonomy": {
+    "compatible": "All deterministic assertions for a supported or fail-closed contract matched.",
+    "behavior_drift": "A deterministic assertion no longer matches the pinned expected behavior.",
+    "unsupported": "The case intentionally reaches a known semantic boundary Codex Scope does not claim to resolve.",
+    "unresolved": "Known missing or conditional inputs intentionally prevent a final compatibility claim.",
+    "tool_error": "The conformance harness or fixture failed before a semantic result could be evaluated."
+  },
+  "rules": [
+    {
+      "rule_id": "codex.instructions.codex_home_env",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "CODEX_HOME selects the Codex home used for global instruction and user-config discovery.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md",
+          "https://developers.openai.com/codex/config-file/config-basic"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs",
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "An explicit CODEX_HOME environment value is used instead of ~/.codex.",
+      "supported_boundary": "Codex Scope models CODEX_HOME and its explicit --codex-home inspection override.",
+      "unsupported_boundary": "Home-directory discovery beyond CODEX_HOME and platform-specific environment policy is not inferred.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "default_codex_home",
+          "env_codex_home": "fixtures/agents/root-child/home"
+        }
+      },
+      "assertions": [
+        {
+          "path": [],
+          "operator": "ends_with",
+          "value": "fixtures/agents/root-child/home"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.global_override_precedence",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Global AGENTS.override.md has precedence over global AGENTS.md when non-empty.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+        ]
+      },
+      "expected_behavior": "The first non-empty global candidate in override/base order is active and the lower candidate is ignored.",
+      "supported_boundary": "Readable local files under the supplied Codex home.",
+      "unsupported_boundary": "Transient read errors and host-managed instruction providers are outside the deterministic local-file model.",
+      "fixture": {
+        "path": "fixtures/agents/global-precedence",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/global-precedence/project",
+          "codex_home": "fixtures/agents/global-precedence/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.override.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "resolved"
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "ignored"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.global_agents_base",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Global AGENTS.md is active when no higher-precedence non-empty global override is selected.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+        ]
+      },
+      "expected_behavior": "AGENTS.md is active as the global instruction source.",
+      "supported_boundary": "Readable AGENTS.md under supplied Codex home.",
+      "unsupported_boundary": "Host-provided remote/account instruction sources are not modeled.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.global_empty_override_falls_through",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "An empty global AGENTS.override.md does not block a non-empty global AGENTS.md.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+        ]
+      },
+      "expected_behavior": "The empty override is ignored and the base global AGENTS.md is selected.",
+      "supported_boundary": "Empty means whitespace-only after decoding.",
+      "unsupported_boundary": "Read failures are not treated as empty.",
+      "fixture": {
+        "path": "fixtures/agents/global-empty",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/global-empty/project",
+          "codex_home": "fixtures/agents/global-empty/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.override.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "ignored"
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.project_root_to_cwd",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Project instruction discovery walks from the detected project root toward cwd.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "One selected project instruction source per applicable directory is ordered root to cwd.",
+      "supported_boundary": "Filesystem hierarchy between the deterministic project root and cwd.",
+      "unsupported_boundary": "Runtime environment overlays and remote executor filesystems are not modeled.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project/frontend",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "operator": "length_equals",
+          "value": 3
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "project"
+          },
+          "property": "filename",
+          "operator": "equals",
+          "value": "AGENTS.md"
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "frontend"
+          },
+          "property": "filename",
+          "operator": "equals",
+          "value": "AGENTS.override.md"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.per_directory_override_precedence",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Within one project directory AGENTS.override.md is discovered before AGENTS.md.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "The override is active and the ordinary AGENTS.md in the same directory is ignored.",
+      "supported_boundary": "Filename discovery precedence only; prose semantics are not compared.",
+      "unsupported_boundary": "Model adherence to either instruction file is outside inspection.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project/frontend",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "frontend",
+            "filename": "AGENTS.override.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "resolved"
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "frontend",
+            "filename": "AGENTS.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "ignored"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.fallback_filename",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Configured project_doc_fallback_filenames are considered after built-in project instruction names.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "TEAM.md is selected when no override or AGENTS.md exists in the directory.",
+      "supported_boundary": "Safe plain fallback filenames supplied by config.",
+      "unsupported_boundary": "Path-like fallback entries and executor-specific invalid filenames are outside the V0.1 fallback parser contract.",
+      "fixture": {
+        "path": "fixtures/agents/fallback",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/fallback/project/child",
+          "codex_home": "fixtures/agents/fallback/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "fallbackFilenames"
+          ],
+          "operator": "array_equals",
+          "value": [
+            "TEAM.md"
+          ]
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "project",
+            "filename": "TEAM.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.empty_project_override_blocks_fallback",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Project discovery chooses the first existing filename before reading content; an empty override therefore blocks same-directory lower candidates but contributes no text.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "The empty AGENTS.override.md is ignored after selection and AGENTS.md is also ignored because it lost discovery precedence.",
+      "supported_boundary": "Pinned to current openai/codex implementation evidence where metadata discovery precedes content filtering.",
+      "unsupported_boundary": "If upstream changes discovery to skip empty project candidates before filename selection, this rule must become behavior_drift and be updated.",
+      "fixture": {
+        "path": "fixtures/agents/empty-override",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/empty-override/project/child",
+          "codex_home": "fixtures/agents/empty-override/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "project",
+            "filename": "AGENTS.override.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "ignored"
+        },
+        {
+          "path": [
+            "instructions",
+            "sources"
+          ],
+          "where": {
+            "scope": "project",
+            "filename": "AGENTS.md"
+          },
+          "property": "state",
+          "operator": "equals",
+          "value": "ignored"
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "operator": "length_equals",
+          "value": 0
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.instructions.project_doc_default_limit",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "project_doc_max_bytes defaults to 32768 bytes.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "With no overriding value the project instruction byte limit is 32768.",
+      "supported_boundary": "Resolver-critical built-in default at the pinned evidence commit.",
+      "unsupported_boundary": "Future upstream defaults outside the evidence boundary must be re-verified.",
+      "fixture": {
+        "path": "fixtures/agents/root-child",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/root-child/project",
+          "codex_home": "fixtures/agents/root-child/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "projectByteLimit"
+          ],
+          "operator": "equals",
+          "value": 32768
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.cumulative_byte_limit",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "project_doc_max_bytes is a cumulative project-document budget from root toward cwd.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/agent-configuration/agents-md",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A 10-byte budget includes 9 bytes from root and only 1 byte from the child file.",
+      "supported_boundary": "Project-document bytes only; global user instructions are outside this project budget.",
+      "unsupported_boundary": "Multi-environment host contributions beyond the local filesystem resolver are not modeled.",
+      "fixture": {
+        "path": "fixtures/agents/size-limit",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/agents/size-limit/project/child",
+          "codex_home": "fixtures/agents/size-limit/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[\".fixture-root\"]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "totalProjectBytes"
+          ],
+          "operator": "equals",
+          "value": 10
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "child"
+          },
+          "property": "includedBytes",
+          "operator": "equals",
+          "value": 1
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "project",
+            "directory_suffix": "child"
+          },
+          "property": "truncated",
+          "operator": "equals",
+          "value": true
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.instructions.project_root_markers",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "project_root_markers controls nearest-ancestor project-root discovery.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference",
+          "https://developers.openai.com/codex/config-file/config-advanced"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "A configured .scope-root marker establishes the project root above cwd.",
+      "supported_boundary": "Explicit local marker configuration that Codex Scope can parse deterministically.",
+      "unsupported_boundary": "Trust inference from repository state is not performed.",
+      "fixture": {
+        "path": "fixtures/config/root-markers",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/root-markers/project/a/b",
+          "codex_home": "fixtures/config/root-markers/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "projectRoot"
+          ],
+          "operator": "ends_with",
+          "value": "fixtures/config/root-markers/project"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.instructions.codex_home_project_root_duplication",
+      "agent": "codex",
+      "surface": "instructions",
+      "description": "Current upstream can include one physical AGENTS.md twice when CODEX_HOME is also project root/cwd.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "codex-cli 0.144.6 reproduction + current main 94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+        ]
+      },
+      "expected_behavior": "The same path appears as both global and project active instruction sources.",
+      "supported_boundary": "Implementation-parity fixture for open upstream issue #34193; this is not desired behavior.",
+      "unsupported_boundary": "Do not preserve duplication after upstream canonical-path deduplication lands.",
+      "fixture": {
+        "path": "fixtures/real-world/codex-34193/home-project",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/real-world/codex-34193/home-project",
+          "codex_home": "fixtures/real-world/codex-34193/home-project",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where_all": {
+            "filename": "AGENTS.md"
+          },
+          "operator": "length_equals",
+          "value": 2
+        },
+        {
+          "path": [
+            "instructions",
+            "active"
+          ],
+          "where": {
+            "scope": "global",
+            "filename": "AGENTS.md"
+          },
+          "property": "path",
+          "operator": "same_as_match",
+          "match": {
+            "scope": "project",
+            "filename": "AGENTS.md"
+          },
+          "match_property": "path"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.config.user_config",
+      "agent": "codex",
+      "surface": "config",
+      "description": "User configuration is loaded from CODEX_HOME/config.toml.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "The user approval_policy candidate participates in resolution.",
+      "supported_boundary": "Supported V0.1 config keys and safe TOML subset.",
+      "unsupported_boundary": "Full Codex config schema and full TOML grammar remain unsupported.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "untrusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "user"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "on-request"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.system_config",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Unix system config participates below user/project/profile/CLI layers.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "When it is the only explicit approval source, the injected system config wins.",
+      "supported_boundary": "Deterministic Unix-style system path supplied by the test harness.",
+      "unsupported_boundary": "Windows system-config location is not claimed by V0.1.",
+      "fixture": {
+        "path": "fixtures/config/system",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/system/project",
+          "codex_home": "fixtures/config/system/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "system_config_path": "fixtures/config/system/system.toml"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "system"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.project_config_trusted",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Trusted project .codex/config.toml participates in config resolution.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "A trusted project approval_policy can supersede the user layer.",
+      "supported_boundary": "Explicit trust input only.",
+      "unsupported_boundary": "Codex Scope does not auto-detect trust from runtime state.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "project"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.closest_project_wins",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Project config is layered root to cwd and the closest applicable project layer wins.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "The nested app/.codex/config.toml beats the project-root .codex/config.toml.",
+      "supported_boundary": "Trusted local project config layers.",
+      "unsupported_boundary": "Managed/cloud constraints that can override or constrain results remain unresolved/unsupported.",
+      "fixture": {
+        "path": "fixtures/config/layering",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/layering/project/app",
+          "codex_home": "fixtures/config/layering/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "dev"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "project"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "path"
+          ],
+          "operator": "ends_with",
+          "value": "project/app/.codex/config.toml"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.profile_precedence",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Selected profile file participates above user config and below project/CLI layers.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/config-file/config-advanced",
+          "https://developers.openai.com/codex/cli/reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "sandbox_mode from the selected dev profile wins over the user config when project does not override it.",
+      "supported_boundary": "Codex 0.134.0+ profile-v2 separate file semantics modeled as CODEX_HOME/<name>.config.toml.",
+      "unsupported_boundary": "Legacy [profiles.name] table selection is not modeled as current behavior.",
+      "fixture": {
+        "path": "fixtures/config/layering",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/layering/project/app",
+          "codex_home": "fixtures/config/layering/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "dev"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "profile"
+        },
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "workspace-write"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.config.cli_precedence",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Known -c/--config overrides have the highest modeled local precedence.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/cli/reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "CLI approval_policy=never wins over project/profile/user/system/default candidates.",
+      "supported_boundary": "Explicitly supplied CLI override list only.",
+      "unsupported_boundary": "Unseen invocation flags remain unresolved unless invocation_complete is asserted.",
+      "fixture": {
+        "path": "fixtures/config/layering",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/layering/project/app",
+          "codex_home": "fixtures/config/layering/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "profile": "dev",
+          "cli_overrides": [
+            "approval_policy=\"never\""
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "cli"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.repeated_cli_override",
+      "agent": "codex",
+      "surface": "config",
+      "description": "For repeated CLI overrides of the same key, the later supplied value wins.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/cli/reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "The second approval_policy override wins.",
+      "supported_boundary": "Ordering of the explicitly supplied repeated -c values.",
+      "unsupported_boundary": "Shell/launcher transformations outside the supplied argv are not inferred.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "untrusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "approval_policy=\"on-request\"",
+            "approval_policy=\"never\""
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.untrusted_project",
+      "agent": "codex",
+      "surface": "trust",
+      "description": "Project-scoped configuration is ignored for an explicitly untrusted project.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/security"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "The user value remains effective and the project candidate is ignored.",
+      "supported_boundary": "Explicit trust=untrusted input.",
+      "unsupported_boundary": "Trust discovery and UI decisions are not performed by Codex Scope.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "untrusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "user"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "ignored"
+          ],
+          "operator": "length_equals",
+          "value": 1
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.unknown_trust",
+      "agent": "codex",
+      "surface": "trust",
+      "description": "Unknown project trust keeps project candidates conditional and affected values unresolved.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic",
+          "https://developers.openai.com/codex/security"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "A known-so-far user winner is retained but the final approval_policy state is unresolved.",
+      "supported_boundary": "Explicit trust=unknown diagnostic state.",
+      "unsupported_boundary": "Codex Scope does not guess trust from repository contents.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "unknown",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unresolved"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "conditional"
+          ],
+          "operator": "length_equals",
+          "value": 1
+        }
+      ],
+      "expected_outcome": "unresolved",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.protected_machine_local_key",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Protected machine-local keys in project config are ignored.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader",
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "Project model_provider is ignored and the user model_provider remains effective.",
+      "supported_boundary": "Current documented/project-protected prefix set modeled by V0.1.",
+      "unsupported_boundary": "Future protected keys outside the evidence date are not inferred automatically.",
+      "fixture": {
+        "path": "fixtures/config/protected",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/protected/project",
+          "codex_home": "fixtures/config/protected/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "model_provider",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "user"
+        },
+        {
+          "path": [
+            "values",
+            "model_provider",
+            "ignored"
+          ],
+          "operator": "length_equals",
+          "value": 1
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.unsupported_key",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Parsed config keys outside the modeled semantic subset are labeled unsupported rather than claimed effective.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "reasoning_effort is visible with provenance but state=unsupported.",
+      "supported_boundary": "Safe parsing/provenance can exceed semantic support.",
+      "unsupported_boundary": "Codex Scope does not claim semantic validation for arbitrary Codex config keys.",
+      "fixture": {
+        "path": "fixtures/config/unsupported",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/unsupported/project",
+          "codex_home": "fixtures/config/unsupported/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "reasoning_effort",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unsupported"
+        }
+      ],
+      "expected_outcome": "unsupported",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.malformed_toml_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Malformed or unsupported TOML stops configuration resolution instead of guessing.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-basic"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "The fixture raises CONFIG_PARSE_ERROR.",
+      "supported_boundary": "V0.1 zero-dependency safe TOML subset.",
+      "unsupported_boundary": "Valid TOML syntax outside the subset may be rejected even when Codex accepts it.",
+      "fixture": {
+        "path": "fixtures/config/malformed",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/malformed/project",
+          "codex_home": "fixtures/config/malformed/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "expected_error_code": "CONFIG_PARSE_ERROR"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.codex_home_project_layer_exclusion",
+      "agent": "codex",
+      "surface": "config",
+      "description": "CODEX_HOME is excluded from project .codex config traversal so the same config is not loaded twice.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a + current main",
+        "source": [
+          "https://github.com/openai/codex/commit/dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a",
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "The root .codex directory used as CODEX_HOME appears only as user config; a nested child project config can still win.",
+      "supported_boundary": "Normalized/canonical best-effort local path identity.",
+      "unsupported_boundary": "Filesystem identity races and exotic mount behavior are outside the deterministic boundary.",
+      "fixture": {
+        "path": "fixtures/config/codex-home-project",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/codex-home-project/project/child",
+          "codex_home": "fixtures/config/codex-home-project/project/.codex",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "projectConfigPaths"
+          ],
+          "operator": "array_length_equals",
+          "value": 1
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "path"
+          ],
+          "operator": "ends_with",
+          "value": "project/child/.codex/config.toml"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "shadowed"
+          ],
+          "where_all": {
+            "type": "project"
+          },
+          "operator": "length_equals",
+          "value": 0
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.invocation.incomplete",
+      "agent": "codex",
+      "surface": "invocation",
+      "description": "Missing invocation/profile override completeness is preserved as unresolved.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/cli/reference",
+          "https://developers.openai.com/codex/config-file/config-basic"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "Affected supported values and instruction discovery remain unresolved until invocation_complete is asserted.",
+      "supported_boundary": "Explicit diagnostic completeness boundary.",
+      "unsupported_boundary": "Codex Scope does not inspect parent launchers, aliases, or future runtime flags.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "environment",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "untrusted",
+          "invocation_complete": false,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "config",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unresolved"
+        },
+        {
+          "path": [
+            "instructions",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unresolved"
+        }
+      ],
+      "expected_outcome": "unresolved",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.invocation.missing_profile",
+      "agent": "codex",
+      "surface": "invocation",
+      "description": "An explicitly selected profile file that is missing fails closed.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-advanced",
+          "https://developers.openai.com/codex/cli/reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "The fixture raises PROFILE_NOT_FOUND rather than silently ignoring the requested profile.",
+      "supported_boundary": "Explicit profile-v2 file selection.",
+      "unsupported_boundary": "Runtime-generated or remote profile sources are not inferred.",
+      "fixture": {
+        "path": "fixtures/config/untrusted",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/untrusted/project",
+          "codex_home": "fixtures/config/untrusted/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "profile": "does-not-exist",
+          "cli_overrides": [],
+          "expected_error_code": "PROFILE_NOT_FOUND"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.approval_policy_untrusted_removed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "The historical approval_policy=\"untrusted\" string is no longer a supported current Codex approval policy.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference",
+          "https://developers.openai.com/codex/security"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "Codex Scope labels the explicit historical value unsupported instead of presenting it as a current resolved policy.",
+      "supported_boundary": "Evidence reflects current docs on 2026-09-22.",
+      "unsupported_boundary": "Historical Codex releases may have accepted this value; no version inference is performed.",
+      "fixture": {
+        "path": "fixtures/config/policy-legacy",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/policy-legacy/project",
+          "codex_home": "fixtures/config/policy-legacy/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unsupported"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "untrusted"
+        }
+      ],
+      "expected_outcome": "unsupported",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.config.approval_policy_on_failure_deprecated",
+      "agent": "codex",
+      "surface": "config",
+      "description": "approval_policy=\"on-failure\" is deprecated and is not claimed as current supported semantics by Codex Scope.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A selected profile carrying on-failure is labeled unsupported.",
+      "supported_boundary": "Conservative current-surface classification; provenance remains visible.",
+      "unsupported_boundary": "This does not claim that every historical/current binary rejects the deprecated value.",
+      "fixture": {
+        "path": "fixtures/config/policy-legacy",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/policy-legacy/project",
+          "codex_home": "fixtures/config/policy-legacy/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "profile": "legacy",
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unsupported"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "on-failure"
+        }
+      ],
+      "expected_outcome": "unsupported",
+      "regression": true
+    },
+    {
+      "rule_id": "codex.compatibility.unknown_version",
+      "agent": "codex",
+      "surface": "compatibility",
+      "description": "Codex version remains unknown unless supplied or safely detected; configuration shape is not used as a version guess.",
+      "evidence_date": "2026-09-22",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/cli/reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The compatibility matrix records tested_codex_version as unknown while pinning the tested upstream commit.",
+      "supported_boundary": "Static evidence commit is known; installed Codex binary version was not deterministically detected in this inspection environment.",
+      "unsupported_boundary": "No shell-out or heuristic version inference is allowed in the deterministic core.",
+      "fixture": {
+        "path": "conformance/compatibility-matrix.json",
+        "probe": {
+          "kind": "json_file",
+          "path": "conformance/compatibility-matrix.json"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "tested_codex_version"
+          ],
+          "operator": "equals",
+          "value": "unknown"
+        },
+        {
+          "path": [
+            "tested_upstream_commit"
+          ],
+          "operator": "equals",
+          "value": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+        }
+      ],
+      "expected_outcome": "unresolved",
+      "regression": false
+    }
+  ]
+}
