@@ -4,7 +4,7 @@ Codex Scope grows by making one promise increasingly reliable:
 
 > **Given a working directory and known invocation inputs, explain what can be proven about the instructions and configuration an AI coding agent will use, where each value came from, why it won, and what remains unknown.**
 
-Codex remains the fully modeled foundation. Cross-agent work is a gated evolution of the same provenance model, not permission to replace semantic depth with filename detection.
+Codex remains the conformance-backed foundation for its explicitly supported V0.1 subset. Cross-agent work is a gated evolution of the same provenance model, not permission to replace semantic depth with filename detection.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
@@ -50,6 +50,23 @@ See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-age
 
 ## NOW — trust and adoption foundation
 
+### 0. 30-day cross-agent Demand Gate
+
+The current product decision is **B: continue Codex Scope, but validate demand before formal cross-agent adapter development**.
+
+Do not start the adapter-core refactor solely because it is architecturally attractive. Before Phase A, require all of:
+
+- at least 5 unrelated external target users across at least 3 repos/orgs;
+- at least 3 real repositories using at least 2 coding agents;
+- at least 2 reproducible cross-agent **structural** drift cases;
+- at least 2 users willing to run a zero-install prototype or provide a sanitized fixture;
+- at least 1 repeat interaction: a second test, issue, fixture, or bug report;
+- evidence that native single-agent diagnostics cannot answer the complete cross-agent question.
+
+Stop formal cross-agent work if, after 30 days, fewer than 3 meaningful external users actually use the prototype, no reproducible structural drift is found, or the observed pain is mostly model non-adherence rather than resolution.
+
+See [the 2026-09-22 market/product research snapshot](docs/research/market-product-research-interim-2026-09-22.md) for the evidence, adoption gates, kill criteria, and 30-day plan.
+
 ### 1. Real-world Codex conformance corpus
 
 Convert confirmed current Codex semantics and merged bug fixes into small deterministic fixtures with evidence metadata.
@@ -87,7 +104,7 @@ Prioritize reproducible resolution mismatches, sanitized real-world cases, and e
 
 ## NEXT — adapter-ready core and compatibility awareness
 
-The next implementation candidate is an internal architecture seam, not immediate support for many agents.
+The next implementation candidate, **only after the Demand Gate passes**, is an internal architecture seam, not immediate support for many agents.
 
 Research/design goals:
 
@@ -108,7 +125,11 @@ Implementation requires an evidence-backed design, fixtures, and a new decision 
 
 ## VALIDATION CANDIDATE — one second agent
 
-After the adapter seam is proven, validate the cross-agent thesis with **one** additional agent. Claude Code is the leading research candidate because it has documented project/global instruction, rule, settings, permission, and MCP surfaces that meaningfully test the neutral model.
+After the Demand Gate and adapter seam are proven, validate the cross-agent thesis with **one** additional agent.
+
+The current correctness-first engineering candidate is **Gemini CLI** because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior is complex enough to test the neutral model. This is not an implementation commitment.
+
+**Demand override:** if the 30-day validation produces at least twice as many real Codex+Claude cases as Codex+Gemini cases, prefer Claude Code despite the harder runtime/JIT and closed-implementation boundary. Market evidence outranks adapter convenience.
 
 An adapter is not accepted until it has:
 
@@ -128,8 +149,8 @@ Potential surfaces:
 
 ```text
 codex-scope agents
-codex-scope compare codex claude
-codex-scope compare codex claude --json
+codex-scope compare codex <second-agent>
+codex-scope compare codex <second-agent> --json
 ```
 
 Candidate proven differences include:
@@ -167,7 +188,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Cursor, Gemini CLI, and OpenCode are research candidates, not promised support. Each requires its own decision gate.
+Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is the current provisional second-adapter candidate, not promised support. Every adapter requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 
@@ -222,4 +243,4 @@ Effective agent context
 
 The moat is not agent count or feature count. It is independently reproducible evidence that each adapter matches the behavior it claims to model, and an honest boundary around everything it cannot prove.
 
-See [`docs/research/post-v0.1.1-strategy.md`](docs/research/post-v0.1.1-strategy.md) for the original V0.1 decision matrix.
+See [`docs/research/post-v0.1.1-strategy.md`](docs/research/post-v0.1.1-strategy.md) for the original V0.1 decision matrix and [`docs/research/market-product-research-interim-2026-09-22.md`](docs/research/market-product-research-interim-2026-09-22.md) for the current demand-validation decision.
