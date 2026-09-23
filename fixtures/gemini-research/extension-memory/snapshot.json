@@ -1,0 +1,26 @@
+{
+  "schema_version": "codex-scope.gemini-extension-memory-snapshot.v1",
+  "extensions": [
+    {
+      "name": "active-b",
+      "is_active": true,
+      "context_files": [
+        "fixtures/gemini-research/extension-memory/active-b/GEMINI.md"
+      ]
+    },
+    {
+      "name": "inactive",
+      "is_active": false,
+      "context_files": [
+        "fixtures/gemini-research/extension-memory/inactive/GEMINI.md"
+      ]
+    },
+    {
+      "name": "active-a",
+      "is_active": true,
+      "context_files": [
+        "fixtures/gemini-research/extension-memory/active-a/GEMINI.md"
+      ]
+    }
+  ]
+}

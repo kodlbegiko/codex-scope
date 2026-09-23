@@ -16,7 +16,7 @@ test("Gemini research semantic probes are deterministic", () => {
     parsed.schema_version,
     "codex-scope.agent-research-probe-run.v1",
   );
-  assert.deepEqual(parsed.counts, { pass: 6, fail: 0 });
+  assert.deepEqual(parsed.counts, { pass: 10, fail: 0 });
 
   const jit = parsed.results.find(
     (item) => item.probe_id === "gemini.instructions.jit_target",
@@ -48,4 +48,20 @@ test("Gemini research semantic probes are deterministic", () => {
     (item) => item.id === "no-trust-source",
   );
   assert.equal(unknownCase.actual.outcome, "unresolved");
+
+  const userProject = parsed.results.find((item) => item.probe_id === "gemini.instructions.user_project_memory_precedence");
+  assert.deepEqual(userProject.actual.cases.preferred, ["fixtures/gemini-research/user-project-memory/preferred/MEMORY.md"]);
+  assert.deepEqual(userProject.actual.cases.legacy, ["fixtures/gemini-research/user-project-memory/legacy/GEMINI.md"]);
+
+  const extension = parsed.results.find((item) => item.probe_id === "gemini.instructions.extension_memory_snapshot");
+  assert.equal(extension.actual.execution_attempted, false);
+  assert.equal(extension.actual.classification, "conditional");
+
+  const mcp = parsed.results.find((item) => item.probe_id === "gemini.instructions.mcp_runtime_boundary");
+  assert.deepEqual(mcp.actual, { declared: true, classification: "unsupported", execution_attempted: false, effective_content_resolved: false });
+
+  const imports = parsed.results.find((item) => item.probe_id === "gemini.instructions.memory_import_fail_closed");
+  assert.deepEqual(imports.actual.candidates, ["./shared.md"]);
+  assert.equal(imports.actual.classification, "unresolved");
+  assert.equal(imports.actual.expanded, false);
 });

@@ -207,3 +207,8 @@ Phase C exit gate: FAIL
 
 This is an intentional conformance-first stop, not a reason to weaken the gate
 or ship a filename-only adapter.
+
+
+## Additional instruction-channel boundaries — 2026-09-23
+
+Pinned `MemoryContextManager` and `memoryDiscovery` evidence is now encoded as deterministic research boundaries. User-project memory source selection is supported from an explicit project-memory directory; extension memory is inspectable only from an inert already-materialized activation snapshot; MCP-provided instruction content is unsupported because it is runtime client-manager output; and detected local memory imports fail closed as unresolved rather than being ignored. No extension or MCP code is executed.

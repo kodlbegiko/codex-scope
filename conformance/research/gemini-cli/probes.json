@@ -119,6 +119,100 @@
       "expected": {
         "case_count": 9
       }
+    },
+    {
+      "probe_id": "gemini.instructions.user_project_memory_precedence",
+      "rules": [
+        "gemini.instructions.user_project_memory"
+      ],
+      "kind": "user_project_memory",
+      "input": {
+        "cases": [
+          {
+            "id": "preferred",
+            "directory": "fixtures/gemini-research/user-project-memory/preferred",
+            "context_filenames": [
+              "GEMINI.md"
+            ]
+          },
+          {
+            "id": "legacy",
+            "directory": "fixtures/gemini-research/user-project-memory/legacy",
+            "context_filenames": [
+              "GEMINI.md"
+            ]
+          },
+          {
+            "id": "empty",
+            "directory": "fixtures/gemini-research/user-project-memory/empty",
+            "context_filenames": [
+              "GEMINI.md"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "cases": {
+          "preferred": [
+            "fixtures/gemini-research/user-project-memory/preferred/MEMORY.md"
+          ],
+          "legacy": [
+            "fixtures/gemini-research/user-project-memory/legacy/GEMINI.md"
+          ],
+          "empty": []
+        }
+      }
+    },
+    {
+      "probe_id": "gemini.instructions.extension_memory_snapshot",
+      "rules": [
+        "gemini.instructions.extension_memory"
+      ],
+      "kind": "extension_memory_snapshot",
+      "input": {
+        "snapshot_path": "fixtures/gemini-research/extension-memory/snapshot.json"
+      },
+      "expected": {
+        "classification": "conditional",
+        "available": [
+          "fixtures/gemini-research/extension-memory/active-a/GEMINI.md",
+          "fixtures/gemini-research/extension-memory/active-b/GEMINI.md"
+        ],
+        "execution_attempted": false
+      }
+    },
+    {
+      "probe_id": "gemini.instructions.mcp_runtime_boundary",
+      "rules": [
+        "gemini.instructions.mcp_instructions"
+      ],
+      "kind": "mcp_boundary",
+      "input": {
+        "declaration_path": "fixtures/gemini-research/mcp-memory/declaration.json"
+      },
+      "expected": {
+        "declared": true,
+        "classification": "unsupported",
+        "execution_attempted": false,
+        "effective_content_resolved": false
+      }
+    },
+    {
+      "probe_id": "gemini.instructions.memory_import_fail_closed",
+      "rules": [
+        "gemini.instructions.memory_imports"
+      ],
+      "kind": "memory_import_boundary",
+      "input": {
+        "memory_path": "fixtures/gemini-research/imports/GEMINI.md"
+      },
+      "expected": {
+        "candidates": [
+          "./shared.md"
+        ],
+        "classification": "unresolved",
+        "expanded": false
+      }
     }
   ]
 }

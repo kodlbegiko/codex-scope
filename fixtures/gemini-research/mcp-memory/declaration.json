@@ -1,0 +1,8 @@
+{
+  "schema_version": "codex-scope.gemini-mcp-declaration.v1",
+  "declared": true,
+  "servers": [
+    "fixture-server"
+  ],
+  "content": null
+}

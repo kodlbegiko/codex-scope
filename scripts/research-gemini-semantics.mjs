@@ -93,6 +93,22 @@ function resolveTrustProvenance(input) {
   return { outcome: "unresolved", is_trusted: null, source: null };
 }
 
+function findConservativeLocalImportCandidates(content) {
+  const candidates = [];
+  let inFence = false;
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("```")) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const match = trimmed.match(/^@(\.\.?\/[^\s]+)\s*$/);
+    if (match) candidates.push(match[1]);
+  }
+  return candidates;
+}
+
 function runProbe(probe) {
   if (probe.kind === "instruction_hierarchy") {
     const workspace = upwardContextFiles(
@@ -171,6 +187,42 @@ function runProbe(probe) {
       probe.probe_id + ".case_count",
     );
     return { cases: results };
+  }
+
+  if (probe.kind === "user_project_memory") {
+    const actualCases = {};
+    for (const item of probe.input.cases) {
+      const preferred = path.join(item.directory, "MEMORY.md").replaceAll("\\", "/");
+      let selected = [];
+      if (fs.existsSync(repoPath(preferred))) selected = [preferred];
+      else selected = item.context_filenames.map((filename) => path.join(item.directory, filename).replaceAll("\\", "/")).filter((candidate) => fs.existsSync(repoPath(candidate)));
+      actualCases[item.id] = selected;
+    }
+    assertEqual(actualCases, probe.expected.cases, probe.probe_id + ".cases");
+    return { cases: actualCases };
+  }
+
+  if (probe.kind === "extension_memory_snapshot") {
+    const snapshot = readJson(probe.input.snapshot_path);
+    const available = snapshot.extensions.filter((extension) => extension.is_active === true).flatMap((extension) => extension.context_files).map((candidate) => candidate.replaceAll("\\", "/")).filter((candidate, index, all) => all.indexOf(candidate) === index).sort();
+    const actual = { classification: "conditional", available, execution_attempted: false };
+    assertEqual(actual, probe.expected, probe.probe_id);
+    return actual;
+  }
+
+  if (probe.kind === "mcp_boundary") {
+    const declaration = readJson(probe.input.declaration_path);
+    const actual = { declared: declaration.declared === true, classification: "unsupported", execution_attempted: false, effective_content_resolved: false };
+    assertEqual(actual, probe.expected, probe.probe_id);
+    return actual;
+  }
+
+  if (probe.kind === "memory_import_boundary") {
+    const content = fs.readFileSync(repoPath(probe.input.memory_path), "utf8");
+    const candidates = findConservativeLocalImportCandidates(content);
+    const actual = { candidates, classification: candidates.length > 0 ? "unresolved" : "supported", expanded: false };
+    assertEqual(actual, probe.expected, probe.probe_id);
+    return actual;
   }
 
   if (probe.kind === "settings_precedence") {
