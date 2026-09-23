@@ -498,6 +498,50 @@ function validateExternalEvidence(ledger) {
   return { interactions: urls.size, required, status: expectedStatus };
 }
 
+function validateAdapterGateState(manifest, externalEvidenceResult) {
+  if (
+    manifest.adapter_readiness !== "blocked" &&
+    externalEvidenceResult.status !== "pass"
+  ) {
+    fail(
+      "adapter readiness requires external evidence gate status=pass; received " +
+        externalEvidenceResult.status,
+    );
+  }
+
+  if (
+    manifest.adapter_readiness === "implemented" &&
+    manifest.implementation_status !== "implemented"
+  ) {
+    fail(
+      "adapter_readiness=implemented requires implementation_status=implemented",
+    );
+  }
+  if (
+    manifest.implementation_status === "implemented" &&
+    manifest.adapter_readiness !== "implemented"
+  ) {
+    fail(
+      "implementation_status=implemented requires adapter_readiness=implemented",
+    );
+  }
+
+  if (manifest.adapter_readiness === "implemented") {
+    for (const requiredPath of [
+      "src/adapters/gemini.ts",
+      "tests/gemini-adapter.test.mjs",
+      "fixtures/gemini-adapter/adapter-options.json",
+    ]) {
+      if (!fs.existsSync(repoPath(requiredPath))) {
+        fail(
+          "implemented Gemini adapter requires checked-in artifact: " +
+            requiredPath,
+        );
+      }
+    }
+  }
+}
+
 function validateResearchManifest(manifest, schema, realRepositories) {
   assertSchema(manifest, schema, "agent research manifest");
 
@@ -676,6 +720,7 @@ try {
     realRepositories,
   );
   const result = validateResearchManifest(manifest, schema, realRepositories);
+  validateAdapterGateState(manifest, externalEvidenceResult);
   console.log(
     "research:gemini:validate: ok " +
       Object.entries(result.counts)
