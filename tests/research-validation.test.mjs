@@ -248,7 +248,7 @@ test("Gemini research validation rejects dishonest external evidence gate status
   withJson(
     sourceExternalEvidence,
     (ledger) => {
-      ledger.gate.status = "pass";
+      ledger.gate.status = ledger.gate.status === "pass" ? "fail" : "pass";
     },
     (externalEvidencePath) => {
       const result = run(sourceManifest, undefined, { externalEvidencePath });
