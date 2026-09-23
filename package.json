@@ -19,13 +19,14 @@
     "lint": "node scripts/lint.mjs",
     "format:check": "node scripts/format-check.mjs",
     "test": "npm run build && node --test tests/*.test.mjs",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run conformance:matrix:check && npm run conformance:validate && npm run research:gemini:validate",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run conformance:matrix:check && npm run conformance:validate && npm run research:gemini:validate && npm run research:gemini:assert",
     "prepack": "npm run build",
     "conformance:validate": "node scripts/conformance-check.mjs",
     "conformance:validate:json": "node scripts/conformance-check.mjs --json",
     "conformance:matrix": "node scripts/generate-compatibility.mjs --write",
     "conformance:matrix:check": "node scripts/generate-compatibility.mjs --check",
-    "research:gemini:validate": "node scripts/research-gemini-check.mjs"
+    "research:gemini:validate": "node scripts/research-gemini-check.mjs",
+    "research:gemini:assert": "node scripts/research-gemini-semantics.mjs"
   },
   "engines": {
     "node": ">=20"
