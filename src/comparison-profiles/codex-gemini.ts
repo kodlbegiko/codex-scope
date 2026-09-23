@@ -281,7 +281,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["gemini.instructions.workspace_hierarchy"],
         missingReason:
           "No active Gemini workspace instruction record is available for this fixture.",
-        select: selectProjectInstructionContext("project_trust"),
+        select: selectProjectInstructionContext("workspace_trust"),
         project: projectFilenames,
       },
     },
@@ -301,7 +301,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["gemini.instructions.workspace_hierarchy"],
         missingReason:
           "No active Gemini workspace instruction record is available for this fixture.",
-        select: selectProjectInstructionContext("project_trust"),
+        select: selectProjectInstructionContext("workspace_trust"),
         project: projectEntrypointExists,
       },
     },
