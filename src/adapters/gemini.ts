@@ -115,7 +115,7 @@ function isWithin(root: string, candidate: string): boolean {
 
 function readJsonObject(filePath?: string): Record<string, unknown> {
   if (!filePath) return {};
-  const parsed: unknown = JSON.parse(fs.readFileSync(normalize(filePath), "utf8"));
+  const parsed: unknown = JSON.parse(readText(normalize(filePath)));
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
     throw new Error("Expected JSON object: " + filePath);
   }
@@ -514,7 +514,7 @@ function upwardContextFiles(
   while (true) {
     const found = filenames
       .map((filename) => path.join(current, filename))
-      .filter((candidate) => fs.existsSync(candidate));
+      .filter((candidate) => isFile(candidate));
     results.unshift(...found);
 
     if (current === stop) break;
@@ -560,10 +560,10 @@ function selectUserProjectMemory(
 ): string[] {
   const root = normalize(directory);
   const preferred = path.join(root, "MEMORY.md");
-  if (fs.existsSync(preferred)) return [preferred];
+  if (isFile(preferred)) return [preferred];
   return contextFilenames
     .map((filename) => path.join(root, filename))
-    .filter((candidate) => fs.existsSync(candidate));
+    .filter((candidate) => isFile(candidate));
 }
 
 function extensionMemoryRecord(snapshotPath: string): NeutralInspectionRecord {
@@ -664,7 +664,7 @@ function findConservativeLocalImportCandidates(content: string): string[] {
 function importRecord(memoryPath: string): NeutralInspectionRecord {
   const absolutePath = normalize(memoryPath);
   const candidates = findConservativeLocalImportCandidates(
-    fs.readFileSync(absolutePath, "utf8"),
+    readText(absolutePath),
   );
   return {
     agent: "gemini",
@@ -736,7 +736,7 @@ function buildInspection(
   const conditionalInstructionPaths: string[] = [];
 
   const globalPath = path.join(normalize(options.geminiHome), "GEMINI.md");
-  if (fs.existsSync(globalPath)) {
+  if (isFile(globalPath)) {
     activeInstructionPaths.push(globalPath);
     records.push(
       instructionFileRecord(
