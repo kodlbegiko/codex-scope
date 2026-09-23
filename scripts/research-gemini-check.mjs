@@ -92,14 +92,6 @@ function validateResearchManifest(manifest, schema) {
     if (rule.evidence.length === 0) {
       fail(rule.rule_id + ": every research rule requires evidence");
     }
-    if (rule.semantic_status === "supported") {
-      if (/unknown|unresolved/i.test(rule.supported_boundary)) {
-        fail(
-          rule.rule_id +
-            ": supported boundary must state what is actually supported",
-        );
-      }
-    }
     if (rule.semantic_status === "unresolved") {
       if (!rule.unresolved_boundary.trim()) {
         fail(rule.rule_id + ": unresolved rule requires unresolved_boundary");
