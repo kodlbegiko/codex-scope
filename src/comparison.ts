@@ -472,11 +472,16 @@ function validateRecord(
     fail(label + " side agents must match agent_a and agent_b");
   }
 
-  const classification = enumValue(
-    record.classification,
-    COMPARISON_CLASSIFICATIONS,
-    label + ".classification",
-  );
+  if (
+    typeof record.classification !== "string" ||
+    !COMPARISON_CLASSIFICATIONS.includes(
+      record.classification as ComparisonClassification,
+    )
+  ) {
+    fail("unknown classification " + String(record.classification));
+  }
+  const classification =
+    record.classification as ComparisonClassification;
   const normalizedRelation = enumValue(
     record.normalized_relation,
     RELATIONS,
