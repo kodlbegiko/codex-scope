@@ -8,9 +8,9 @@ Codex remains the conformance-backed foundation for its explicitly supported V0.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
-## Shipped — V0.1.x Codex foundation
+## Shipped — V0.2.x Codex conformance foundation
 
-Current public line: **V0.1.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch.
+Current release line: **V0.2.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.2 preserves the V0.1 semantic subset and JSON contract while exposing the evidence boundary added in Phases A and B.
 
 Shipped surfaces:
 
@@ -25,8 +25,11 @@ Shipped surfaces:
 - fail-closed TOML/config handling for the modeled subset
 - read-only, no-model, no-runtime-network inspection
 - conformance-oriented fixtures
+- a 32-rule semantic corpus and 4 regression/change records
+- generated compatibility matrix and `compatibility` command
+- neutral static adapter seam for evidence-gated expansion
 
-V0.1.x intentionally does **not** claim full Codex compatibility.
+V0.2.x intentionally does **not** claim full Codex compatibility.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -77,7 +80,7 @@ Initial evidence gate:
 - at least 1 verified upstream discrepancy, ambiguity, issue, patch, or evidence correction;
 - zero known false-certainty blockers in the supported subset.
 
-Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). As of the 2026-09-22 Phase 0 branch, the corpus contains 32 explicit semantic rules and 4 regression/change records; the gate is not considered complete until the full CI run and upstream-interaction check are green.
+Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). The shipped corpus contains 32 explicit semantic rules and 4 regression/change records; the Phase B implementation and review fixes pass the full clean-checkout CI suite.
 
 ### 1. Compatibility matrix
 
@@ -118,7 +121,7 @@ Phase B now makes the compatibility boundary deterministic and queryable:
 - generated matrix drift remains a CI failure;
 - the existing four commands and `codex-scope.v0.1` JSON stay backward compatible.
 
-Clean-checkout CI run #37 validates the Phase B implementation before this documentation update.
+The Phase B implementation and follow-up review fixes are validated by clean-checkout CI on the release line.
 
 ## NEXT — Phase C second-agent research spike
 
