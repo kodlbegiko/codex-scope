@@ -1,0 +1,9 @@
+{
+  "schema_version": "codex-scope.external-user-cases.v1",
+  "gate": {
+    "required_verified_cases": 3,
+    "verified_count": 0,
+    "status": "blocked"
+  },
+  "cases": []
+}

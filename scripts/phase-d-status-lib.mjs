@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { validateExternalUserCasesLedger } from "./external-user-cases-lib.mjs";
+
 function readJson(root, relativePath) {
   return JSON.parse(
     fs.readFileSync(path.resolve(root, relativePath), "utf8"),
@@ -45,6 +47,10 @@ export function loadPhaseDStatusState(root = process.cwd()) {
   return {
     root,
     status: readJson(root, "conformance/comparison/phase-d-status.json"),
+    externalLedger: readJson(
+      root,
+      "conformance/comparison/external-user-cases.json",
+    ),
     structuralLedger: readJson(
       root,
       "conformance/comparison/structural-differences.json",
@@ -410,19 +416,25 @@ export function validatePhaseDStatusState(state) {
   }
 
   const external = status.external_proof_of_value;
+  const externalLedger = validateExternalUserCasesLedger(
+    state.externalLedger,
+  );
   expectEqual(
     external.required_external_user_cases,
-    3,
+    externalLedger.required,
     "external_proof_of_value.required_external_user_cases",
   );
-  const externalPassed =
-    external.verified_external_user_cases >=
-    external.required_external_user_cases;
+  expectEqual(
+    external.verified_external_user_cases,
+    externalLedger.verified_count,
+    "external_proof_of_value.verified_external_user_cases",
+  );
   expectEqual(
     external.status,
-    externalPassed ? "pass" : "blocked",
+    externalLedger.status,
     "external_proof_of_value.status",
   );
+  const externalPassed = externalLedger.status === "pass";
   expectEqual(
     status.phase_status,
     externalPassed ? "complete" : "blocked_external_proof",
