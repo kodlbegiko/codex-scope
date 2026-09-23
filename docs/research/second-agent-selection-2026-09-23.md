@@ -1,15 +1,16 @@
 # Phase C second-agent selection — 2026-09-23
 
-Status: **research spike; no second-agent adapter is authorized by this document**
+Status: **Phase C complete; Gemini adapter authorized and implemented for the bounded deterministic subset**
 
 ## Decision
 
 Phase C selects **Gemini CLI** as the single research candidate.
 
-This is not an adapter-completion claim. The selection means Gemini CLI is the
-only second agent whose semantics should be expanded into the Phase C evidence
-corpus until the research exit gate is either satisfied or evidence quality
-proves insufficient.
+Gemini CLI is the second agent carried through the full Phase C evidence and
+implementation gate. The adapter is intentionally narrower than Gemini CLI as a
+whole: it implements only the deterministic subset authorized by the pinned
+corpus, preserves unresolved and unsupported boundaries, and does not infer live
+runtime state.
 
 The decision is evidence-driven:
 
@@ -128,16 +129,16 @@ state is supplied explicitly or otherwise covered by a deterministic supported
 input. If that input is absent, the adapter must return `unresolved`; it must
 not choose `true` or `false` from the conflicting evidence.
 
-## Research-only fixture policy
+## Fixture policy
 
-The `fixtures/gemini-research/` directory contains inert files representing
-hierarchical context, layered settings, and an untrusted-workspace case. They
-are not proof that a Gemini adapter exists. Their purpose is to make the
-research claims concrete and ready for deterministic adapter tests if the
-remaining evidence gate is later satisfied.
+The `fixtures/gemini-research/` directory remains the evidence corpus for
+hierarchy, layered settings, trust, JIT, user-project memory, extension
+snapshots, MCP declarations, imports, and sanitized real repositories.
+`fixtures/gemini-adapter/` supplies the adapter contract input. All fixtures
+are inert.
 
-No fixture contains hooks, executable configuration, MCP servers, plugin code,
-or network-dependent behavior.
+No fixture contains hooks, executable configuration, live MCP servers, plugin
+execution, or network-dependent behavior.
 
 ## Deterministic research validation
 
@@ -157,57 +158,56 @@ state:
 - JIT descendant context is only asserted from an explicit target path and is
   not pre-activated in the pre-session result.
 
-Pinned `MemoryContextManager` evidence also shows that a complete Gemini
-instruction surface includes channels beyond the current filesystem-context
-subset: extension memory, user-project memory, and MCP-provided instructions.
-Those channels remain outside the supported research subset and must not be
-silently omitted by a formal adapter.
+Pinned `MemoryContextManager` evidence also covers instruction channels beyond
+the basic filesystem hierarchy. The implemented adapter resolves user-project
+memory only from an explicit directory snapshot, reports extension memory only
+from an inert already-materialized activation snapshot, and reports MCP
+instruction content as unsupported without connecting to any server.
 
-Memory-import evidence is also pinned: imports are recursively processed,
-bounded by project-root/path validation and a maximum depth. The current spike
-does not implement that processor. A future adapter must either model it
-deterministically or fail closed when potential imports can change the effective
-instruction result.
+Memory-import evidence remains intentionally fail-closed. The adapter detects
+the conservative local-import subset covered by the corpus, does not recursively
+expand imports, and reports effective content as unresolved when a candidate can
+change the instruction set.
 
-## Adapter authorization gate
+## Phase C completion gate
 
-Do **not** add `src/adapters/gemini.ts` yet.
+The Phase C authorization and implementation gates are satisfied:
 
-The folder-trust discrepancy and JIT boundary are now sufficiently bounded for
-continued research, but the repository's actual blueprint imposes stronger
-authorization gates that are not yet satisfied:
-
-- Phase C requires at least **three sanitized real repositories** validating
-  useful output; none are currently recorded in the Phase C corpus;
-- the Codex conformance manifest currently contains **32 rules**, while the
-  blueprint's second-adapter authorization gate requires at least 50 total
-  conformance fixtures or equivalent coverage evidence; equivalent coverage has
-  not been demonstrated;
-- three externally verifiable upstream interactions/corrections, or equivalent
-  evidence that the corpus matters beyond this repository, are not recorded as
-  satisfied;
-- extension memory, user-project memory, and MCP instruction channels still
-  need an explicit supported/unsupported boundary;
-- trust provenance still lacks a deterministic assertion for the selected
-  subset.
-
-These blockers are also machine-readable in
-`conformance/research/gemini-cli/manifest.json`. Adapter readiness must remain
-`blocked` while any open blocker exists.
+- pinned official documentation, source, and upstream-test evidence are recorded;
+- the machine-recalculated corpus contains 32 Codex rule cases plus 27 Gemini
+  deterministic cases, for 59 total against the 50-case authorization threshold;
+- three sanitized public repositories validate useful Gemini output;
+- three distinct externally verifiable upstream interactions are recorded in
+  `conformance/research/external-evidence.json`;
+- Folder Trust's omitted-setting default remains explicitly `unresolved`, while
+  explicit values and provenance are deterministic;
+- JIT context is only resolved from an explicit target/access path inside a
+  trusted root and remains conditional before access;
+- user-project memory, extension memory, MCP instructions, and memory imports
+  retain their supported/unresolved/unsupported boundaries;
+- `src/adapters/gemini.ts` implements the authorized subset without model calls,
+  runtime network access, subprocess probing, extension execution, or MCP
+  execution;
+- `tests/gemini-adapter.test.mjs` verifies adapter behavior and
+  `scripts/research-gemini-check.mjs` rejects stale coverage, dishonest gate
+  state, missing implementation artifacts, and loss of the external-evidence
+  threshold after authorization.
 
 Current result:
 
 ```text
 Phase C research infrastructure: PASS
-Folder-trust ambiguity: BOUNDED, default remains UNRESOLVED
-JIT explicit-target boundary: PASS
-Gemini adapter authorization: BLOCKED
-Phase C exit gate: FAIL
+3 sanitized real repositories: PASS
+Second-adapter corpus authorization: PASS (59 / 50)
+Folder-trust omitted default: UNRESOLVED, safely bounded
+External evidence: PASS (3 / 3)
+Gemini adapter authorization: PASS
+Gemini adapter implementation: PASS
+Phase C exit gate: PASS
 ```
 
-This is an intentional conformance-first stop, not a reason to weaken the gate
-or ship a filename-only adapter.
-
+Phase D may now build on the neutral adapter seam. Phase C does not authorize
+human-facing cross-agent comparison semantics or additional agents.
 
 ## Additional instruction-channel boundaries — 2026-09-23
 
