@@ -84,3 +84,36 @@ test("current upstream parity: CODEX_HOME AGENTS.md can also appear as project i
   assert.deepEqual(active.map((source) => source.scope), ["global", "project"]);
   assert.equal(active[0].path, active[1].path);
 });
+
+test("untrusted project instructions are discovered but not activated", () => {
+  const base = path.join(root, "root-child");
+  const result = buildEnvironment({
+    cwd: path.join(base, "project", "frontend"),
+    codexHome: path.join(base, "home"),
+    trust: "untrusted",
+    invocationComplete: true,
+    cliOverrides: ['project_root_markers=[".fixture-root"]'],
+  });
+  assert.deepEqual(result.instructions.active.map((source) => source.scope), ["global"]);
+  const projectSources = result.instructions.sources.filter((source) => source.scope === "project");
+  assert.ok(projectSources.length > 0);
+  assert.ok(projectSources.every((source) => source.state === "ignored"));
+});
+
+test("unknown project trust keeps project instruction sources unresolved", () => {
+  const base = path.join(root, "root-child");
+  const result = buildEnvironment({
+    cwd: path.join(base, "project", "frontend"),
+    codexHome: path.join(base, "home"),
+    trust: "unknown",
+    invocationComplete: true,
+    cliOverrides: ['project_root_markers=[".fixture-root"]'],
+  });
+  assert.equal(result.instructions.state, "unresolved");
+  assert.deepEqual(result.instructions.active.map((source) => source.scope), ["global"]);
+  const unresolved = result.instructions.sources.filter(
+    (source) => source.scope === "project" && source.state === "unresolved",
+  );
+  assert.equal(unresolved.length, 2);
+  assert.match(result.instructions.missingInformation.join(" "), /trust/i);
+});

@@ -1,9 +1,10 @@
 # openai/codex #34193 parity fixture
 
 - source: https://github.com/openai/codex/issues/34193
-- source implementation: https://github.com/openai/codex/blob/main/codex-rs/core/src/agents_md.rs
-- evidence date: 2026-08-19
+- source implementation: https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs
+- evidence date: 2026-09-22
 - upstream issue status on evidence date: OPEN
+- pinned upstream commit: `94174e44cbc54cece45f6052328ca0c2cd7a8a2a`
 
 ## Current implementation behavior being recorded
 

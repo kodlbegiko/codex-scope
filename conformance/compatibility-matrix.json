@@ -1,0 +1,96 @@
+{
+  "schema_version": "codex-scope.compatibility.v1",
+  "codex_scope_version": "0.1.2",
+  "resolver_version": "codex-resolver.v0.1",
+  "evidence_date": "2026-09-22",
+  "tested_codex_version": "unknown",
+  "tested_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+  "supported_rules": [
+    "codex.config.cli_precedence",
+    "codex.config.closest_project_wins",
+    "codex.config.codex_home_project_layer_exclusion",
+    "codex.config.malformed_toml_fail_closed",
+    "codex.config.profile_precedence",
+    "codex.config.project_config_trusted",
+    "codex.config.protected_machine_local_key",
+    "codex.config.repeated_cli_override",
+    "codex.config.system_config",
+    "codex.config.untrusted_project",
+    "codex.config.user_config",
+    "codex.instructions.codex_home_env",
+    "codex.instructions.codex_home_project_root_duplication",
+    "codex.instructions.cumulative_byte_limit",
+    "codex.instructions.empty_project_override_blocks_fallback",
+    "codex.instructions.fallback_filename",
+    "codex.instructions.global_agents_base",
+    "codex.instructions.global_empty_override_falls_through",
+    "codex.instructions.global_override_precedence",
+    "codex.instructions.per_directory_override_precedence",
+    "codex.instructions.project_doc_default_limit",
+    "codex.instructions.project_root_markers",
+    "codex.instructions.project_root_to_cwd",
+    "codex.instructions.untrusted_project_skips_project",
+    "codex.invocation.missing_profile"
+  ],
+  "unsupported_rules": [
+    "codex.config.approval_policy_on_failure_deprecated",
+    "codex.config.approval_policy_untrusted_removed",
+    "codex.config.unsupported_key"
+  ],
+  "unresolved_rules": [
+    "codex.compatibility.unknown_version",
+    "codex.config.unknown_trust",
+    "codex.instructions.unknown_project_trust",
+    "codex.invocation.incomplete"
+  ],
+  "unknown_areas": [
+    "automatic local Codex version detection",
+    "cloud-managed configuration defaults and enforcement",
+    "managed requirements.toml semantics",
+    "Windows system configuration location",
+    "full TOML 1.0 grammar",
+    "hooks semantics and execution",
+    "MCP, plugins, and rules merge semantics",
+    "runtime/model/remote configuration state"
+  ],
+  "known_regressions": [
+    {
+      "regression_id": "codex-config-home-project-layer-exclusion",
+      "rule_id": "codex.config.codex_home_project_layer_exclusion",
+      "kind": "upstream_fix",
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-agents-home-project-root-duplication",
+      "rule_id": "codex.instructions.codex_home_project_root_duplication",
+      "kind": "current_upstream_discrepancy",
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-profile-v2-file-selection",
+      "rule_id": "codex.config.profile_precedence",
+      "kind": "upstream_behavior_change",
+      "expected_result": "compatible"
+    },
+    {
+      "regression_id": "codex-approval-policy-untrusted-removed",
+      "rule_id": "codex.config.approval_policy_untrusted_removed",
+      "kind": "upstream_semantic_change",
+      "expected_result": "unsupported"
+    }
+  ],
+  "known_upstream_discrepancies": [
+    {
+      "id": "openai/codex#34193",
+      "status": "open",
+      "summary": "AGENTS.md can be duplicated when CODEX_HOME is also the project root.",
+      "evidence_url": "https://github.com/openai/codex/issues/34193",
+      "verified_against_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+    }
+  ],
+  "generated_from": [
+    "conformance/manifest.json",
+    "conformance/regressions.json",
+    "package.json"
+  ]
+}

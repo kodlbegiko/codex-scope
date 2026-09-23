@@ -77,6 +77,8 @@ Initial evidence gate:
 - at least 1 verified upstream discrepancy, ambiguity, issue, patch, or evidence correction;
 - zero known false-certainty blockers in the supported subset.
 
+Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). As of the 2026-09-22 Phase 0 branch, the corpus contains 32 explicit semantic rules and 4 regression/change records; the gate is not considered complete until the full CI run and upstream-interaction check are green.
+
 ### 1. Compatibility matrix
 
 Generate a machine-readable record of what Codex Scope has actually tested, including evidence date and version/commit boundaries. Unknown versions remain unknown; configuration shape is not used as a version guess.

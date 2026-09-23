@@ -5,8 +5,8 @@ import { VERSION } from "./version";
 
 const COMPATIBILITY = {
   codexScopeVersion: VERSION,
-  target: "Current stable OpenAI Codex documentation plus openai/codex implementation evidence observed on 2026-08-19",
-  evidenceDate: "2026-08-19",
+  target: "OpenAI Codex documentation plus openai/codex implementation evidence at 94174e44cbc54cece45f6052328ca0c2cd7a8a2a, observed on 2026-09-22",
+  evidenceDate: "2026-09-22",
   localCodexDetected: false,
 } as const;
 
@@ -29,6 +29,7 @@ export function buildEnvironment(options: ResolveOptions): EffectiveCodexEnviron
     projectByteLimit: maxBytes,
     invocationComplete: options.invocationComplete,
     configUncertainty,
+    trust: options.trust,
   });
 
   const warnings = [...configResult.warnings, ...instructions.warnings];

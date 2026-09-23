@@ -24,5 +24,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run conformance:matrix:check
+      - run: npm run conformance:validate
       - run: npm pack
       - run: npm publish --dry-run
