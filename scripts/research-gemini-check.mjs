@@ -20,6 +20,7 @@ const schemaPath = valueAfter(
   "--schema",
   "conformance/schema/agent-research.schema.json",
 );
+const probes = readJson("conformance/research/gemini-cli/probes.json");
 
 function fail(message) {
   throw new Error(message);
@@ -71,6 +72,7 @@ function validateResearchManifest(manifest, schema) {
 
   const ids = new Set();
   const rulesById = new Map();
+  const probeIds = new Set(probes.probes.map((probe) => probe.probe_id));
 
   for (const rule of manifest.rules) {
     if (ids.has(rule.rule_id)) {
@@ -98,7 +100,24 @@ function validateResearchManifest(manifest, schema) {
       }
     }
 
+    if (rule.assertion_status === "covered" && rule.probe_ids.length === 0) {
+      fail(rule.rule_id + ": covered rule requires at least one probe_id");
+    }
+    for (const probeId of rule.probe_ids) {
+      if (!probeIds.has(probeId)) {
+        fail(rule.rule_id + ": references unknown probe_id " + probeId);
+      }
+    }
+
     validatePinnedEvidence(manifest, rule);
+  }
+
+  for (const probe of probes.probes) {
+    for (const ruleId of probe.rules) {
+      if (!rulesById.has(ruleId)) {
+        fail(probe.probe_id + ": references unknown rule_id " + ruleId);
+      }
+    }
   }
 
   for (const root of manifest.fixture_roots) {
@@ -153,6 +172,22 @@ function validateResearchManifest(manifest, schema) {
     manifest.adapter_readiness === "implemented"
   ) {
     fail("research_only corpus cannot claim adapter_readiness=implemented");
+  }
+
+  if (manifest.adapter_readiness !== "blocked") {
+    const pendingSupported = manifest.rules
+      .filter(
+        (rule) =>
+          rule.semantic_status === "supported" &&
+          rule.assertion_status !== "covered",
+      )
+      .map((rule) => rule.rule_id);
+    if (pendingSupported.length > 0) {
+      fail(
+        "adapter readiness requires deterministic assertions for supported rules: " +
+          pendingSupported.join(", "),
+      );
+    }
   }
 
   const counts = { supported: 0, unsupported: 0, unresolved: 0 };
