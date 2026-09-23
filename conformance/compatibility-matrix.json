@@ -2,6 +2,7 @@
   "schema_version": "codex-scope.compatibility.v1",
   "codex_scope_version": "0.1.2",
   "resolver_version": "codex-resolver.v0.1",
+  "adapter_version": "codex-adapter.v1",
   "evidence_date": "2026-09-22",
   "tested_codex_version": "unknown",
   "tested_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
@@ -91,6 +92,7 @@
   "generated_from": [
     "conformance/manifest.json",
     "conformance/regressions.json",
-    "package.json"
+    "package.json",
+    "src/adapters/codex.ts"
   ]
 }

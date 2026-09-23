@@ -6,6 +6,7 @@ import { assertSchema, evaluateAssertion, readJson, repoPath } from "./conforman
 const require = createRequire(import.meta.url);
 const { buildEnvironment } = require("../dist/environment.js");
 const { defaultCodexHome, resolveConfig } = require("../dist/config.js");
+const { codexAdapter } = require("../dist/adapters/codex.js");
 
 const manifest = readJson("conformance/manifest.json");
 const manifestSchema = readJson("conformance/schema/manifest.schema.json");
@@ -53,6 +54,9 @@ function validateCorpus() {
   }
   for (const id of ids) {
     if (!matrixIds.has(id)) throw new Error("compatibility matrix missing rule " + id);
+  }
+  if (matrix.adapter_version !== codexAdapter.adapterVersion) {
+    throw new Error("compatibility matrix adapter_version differs from the runtime Codex adapter");
   }
   if (matrix.tested_codex_version !== "unknown") {
     throw new Error("tested_codex_version must remain unknown until a deterministic tested binary version is supplied");
