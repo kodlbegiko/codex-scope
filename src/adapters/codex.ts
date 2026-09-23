@@ -70,11 +70,13 @@ function instructionRecord(source: InstructionSource, environment: EffectiveCode
     precedence: source.precedence,
     reason: source.reason,
   };
+  const status =
+    source.state === "resolved" && environment.instructions.state === "unresolved" ? "unresolved" : source.state;
   return {
     agent: "codex",
     surface: "instructions",
     subject: source.path,
-    status: source.state,
+    status,
     value: {
       scope: source.scope,
       filename: source.filename,
@@ -83,13 +85,16 @@ function instructionRecord(source: InstructionSource, environment: EffectiveCode
       truncated: source.truncated ?? false,
     },
     provenance: {
-      winner: source.state === "resolved" ? reference : undefined,
+      winner: status === "resolved" ? reference : undefined,
       shadowed: [],
       ignored: source.state === "ignored" ? [reference] : [],
-      conditional: source.state === "unresolved" ? [reference] : [],
+      conditional: status === "unresolved" ? [reference] : [],
     },
-    missingInformation: source.state === "unresolved" ? environment.instructions.missingInformation : [],
-    reason: source.reason,
+    missingInformation: status === "unresolved" ? environment.instructions.missingInformation : [],
+    reason:
+      status === "unresolved" && source.state === "resolved"
+        ? `${source.reason} The overall instruction set remains unresolved because required invocation or config inputs are missing.`
+        : source.reason,
   };
 }
 

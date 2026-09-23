@@ -8,13 +8,22 @@ const { buildEnvironment } = require("../dist/environment.js");
 const { defaultCodexHome, resolveConfig } = require("../dist/config.js");
 const { codexAdapter } = require("../dist/adapters/codex.js");
 
-const manifest = readJson("conformance/manifest.json");
-const manifestSchema = readJson("conformance/schema/manifest.schema.json");
-const regressions = readJson("conformance/regressions.json");
-const regressionSchema = readJson("conformance/schema/regressions.schema.json");
-const matrix = readJson("conformance/compatibility-matrix.json");
-const matrixSchema = readJson("conformance/schema/compatibility.schema.json");
 const jsonMode = process.argv.includes("--json");
+let manifest;
+let manifestSchema;
+let regressions;
+let regressionSchema;
+let matrix;
+let matrixSchema;
+
+function loadCorpus() {
+  manifest = readJson("conformance/manifest.json");
+  manifestSchema = readJson("conformance/schema/manifest.schema.json");
+  regressions = readJson("conformance/regressions.json");
+  regressionSchema = readJson("conformance/schema/regressions.schema.json");
+  matrix = readJson("conformance/compatibility-matrix.json");
+  matrixSchema = readJson("conformance/schema/compatibility.schema.json");
+}
 
 function validateCorpus() {
   assertSchema(manifest, manifestSchema, "conformance manifest");
@@ -139,17 +148,27 @@ function executeRule(rule) {
 }
 
 function runMetadata() {
+  const manifestObject = manifest && typeof manifest === "object" ? manifest : {};
+  const matrixObject = matrix && typeof matrix === "object" ? matrix : {};
+  const upstream = manifestObject.upstream && typeof manifestObject.upstream === "object"
+    ? manifestObject.upstream
+    : {};
   return {
     schema_version: "codex-scope.conformance-run.v1",
-    resolver_version: manifest.resolver_version,
-    adapter_version: matrix.adapter_version,
-    evidence_date: manifest.evidence_date,
-    tested_upstream_commit: manifest.upstream.commit,
-    tested_codex_version: manifest.upstream.tested_codex_version
+    resolver_version: typeof manifestObject.resolver_version === "string" ? manifestObject.resolver_version : "unknown",
+    adapter_version: typeof matrixObject.adapter_version === "string"
+      ? matrixObject.adapter_version
+      : codexAdapter.adapterVersion,
+    evidence_date: typeof manifestObject.evidence_date === "string" ? manifestObject.evidence_date : "unknown",
+    tested_upstream_commit: typeof upstream.commit === "string" ? upstream.commit : "unknown",
+    tested_codex_version: typeof upstream.tested_codex_version === "string"
+      ? upstream.tested_codex_version
+      : "unknown"
   };
 }
 
 try {
+  loadCorpus();
   validateCorpus();
 } catch (error) {
   const message = error instanceof Error ? error.stack ?? error.message : String(error);

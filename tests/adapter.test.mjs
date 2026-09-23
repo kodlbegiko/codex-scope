@@ -63,6 +63,21 @@ test("neutral inspection records retain Codex provenance without changing the le
   assert.ok(approval.provenance.winner);
 });
 
+test("neutral instruction records retain report-level uncertainty", () => {
+  const options = { ...fixtureOptions(), invocationComplete: false };
+  const inspection = inspectWithAdapter(codexAdapter, options);
+  const instruction = inspection.records.find(
+    (record) => record.surface === "instructions" && record.subject.endsWith("AGENTS.md"),
+  );
+
+  assert.ok(instruction);
+  assert.equal(inspection.result.instructions.state, "unresolved");
+  assert.equal(instruction.status, "unresolved");
+  assert.equal(instruction.provenance.winner, undefined);
+  assert.equal(instruction.provenance.conditional.length, 1);
+  assert.match(instruction.missingInformation.join(" "), /invocation/i);
+});
+
 test("v0.1 renderers remain byte-for-byte identical through the adapter seam", () => {
   const options = fixtureOptions();
   const viaEnvironment = buildEnvironment(options);
