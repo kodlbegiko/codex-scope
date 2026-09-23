@@ -1,0 +1,111 @@
+{
+  "schema_version": "codex-scope.agent-research-probes.v1",
+  "agent": "gemini-cli",
+  "probes": [
+    {
+      "probe_id": "gemini.instructions.initial_hierarchy",
+      "rules": [
+        "gemini.instructions.default_filename",
+        "gemini.instructions.global_context",
+        "gemini.instructions.workspace_hierarchy"
+      ],
+      "kind": "instruction_hierarchy",
+      "input": {
+        "global_path": "fixtures/gemini-research/hierarchy/home/.gemini/GEMINI.md",
+        "trusted_root": "fixtures/gemini-research/hierarchy/project",
+        "context_filenames": [
+          "GEMINI.md"
+        ]
+      },
+      "expected": {
+        "active": [
+          "fixtures/gemini-research/hierarchy/home/.gemini/GEMINI.md",
+          "fixtures/gemini-research/hierarchy/project/GEMINI.md"
+        ],
+        "not_active": [
+          "fixtures/gemini-research/hierarchy/project/packages/app/GEMINI.md"
+        ]
+      }
+    },
+    {
+      "probe_id": "gemini.instructions.jit_target",
+      "rules": [
+        "gemini.instructions.jit_subdirectory_context"
+      ],
+      "kind": "jit_context",
+      "input": {
+        "target_path": "fixtures/gemini-research/hierarchy/project/packages/app/src/new-file.ts",
+        "trusted_roots": [
+          "fixtures/gemini-research/hierarchy/project"
+        ],
+        "context_filenames": [
+          "GEMINI.md"
+        ],
+        "already_loaded": [
+          "fixtures/gemini-research/hierarchy/project/GEMINI.md"
+        ]
+      },
+      "expected": {
+        "conditional": [
+          "fixtures/gemini-research/hierarchy/project/packages/app/GEMINI.md"
+        ],
+        "active_before_access": []
+      }
+    },
+    {
+      "probe_id": "gemini.instructions.configured_filenames",
+      "rules": [
+        "gemini.instructions.configurable_filenames"
+      ],
+      "kind": "configured_filenames",
+      "input": {
+        "settings_path": "fixtures/gemini-research/settings/workspace-settings.json"
+      },
+      "expected": {
+        "filenames": [
+          "AGENTS.md",
+          "GEMINI.md"
+        ]
+      }
+    },
+    {
+      "probe_id": "gemini.config.settings_precedence.trusted",
+      "rules": [
+        "gemini.config.settings_precedence"
+      ],
+      "kind": "settings_precedence",
+      "input": {
+        "trusted": true,
+        "system_defaults": "fixtures/gemini-research/settings/system-defaults.json",
+        "user": "fixtures/gemini-research/settings/user-settings.json",
+        "workspace": "fixtures/gemini-research/settings/workspace-settings.json",
+        "system": "fixtures/gemini-research/settings/system-settings.json"
+      },
+      "expected": {
+        "ui_theme": "system-override",
+        "context_file_name": [
+          "AGENTS.md",
+          "GEMINI.md"
+        ]
+      }
+    },
+    {
+      "probe_id": "gemini.trust.untrusted_workspace_settings",
+      "rules": [
+        "gemini.trust.untrusted_workspace_settings"
+      ],
+      "kind": "settings_precedence",
+      "input": {
+        "trusted": false,
+        "system_defaults": "fixtures/gemini-research/settings/system-defaults.json",
+        "user": "fixtures/gemini-research/settings/user-settings.json",
+        "workspace": "fixtures/gemini-research/trust/untrusted/project/.gemini/settings.json",
+        "system": "fixtures/gemini-research/settings/system-settings.json"
+      },
+      "expected": {
+        "ui_theme": "system-override",
+        "context_file_name": "GEMINI.md"
+      }
+    }
+  ]
+}
