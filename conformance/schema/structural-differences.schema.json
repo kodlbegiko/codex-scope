@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/structural-differences.schema.json",
+  "title": "Codex Scope proven cross-agent structural differences",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "expected_count",
+    "proven_behaviorally_different_count",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.structural-differences.v1"
+    },
+    "expected_count": {
+      "type": "integer",
+      "minimum": 5
+    },
+    "proven_behaviorally_different_count": {
+      "type": "integer",
+      "minimum": 5
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "semantic_dimension",
+          "agents",
+          "classification",
+          "left_summary",
+          "right_summary",
+          "evidence",
+          "provenance",
+          "comparison_reference",
+          "deterministic_status"
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "semantic_dimension": { "type": "string", "minLength": 1 },
+          "agents": {
+            "const": ["codex", "gemini"]
+          },
+          "classification": {
+            "const": "behaviorally_different"
+          },
+          "left_summary": { "type": "string", "minLength": 1 },
+          "right_summary": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "object" },
+          "provenance": { "type": "object" },
+          "comparison_reference": { "type": "string", "minLength": 1 },
+          "deterministic_status": { "const": "proven" }
+        }
+      }
+    }
+  }
+}
