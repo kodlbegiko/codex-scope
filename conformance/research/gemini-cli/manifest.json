@@ -42,7 +42,9 @@
           "path": "packages/cli/src/config/config.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Pinned docs/source agree that GEMINI.md is the built-in default context filename when context.fileName does not override it.",
+      "unresolved_boundary": "This claim does not cover import recursion, JIT activation, or trust-dependent loading."
     },
     {
       "rule_id": "gemini.instructions.global_context",
@@ -56,7 +58,9 @@
           "path": "docs/cli/gemini-md.md",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
         }
-      ]
+      ],
+      "supported_boundary": "Static research covers the documented global context location ~/.gemini/GEMINI.md and its discovery as a source.",
+      "unresolved_boundary": "Whether later runtime/JIT context changes the complete active instruction set remains outside this rule."
     },
     {
       "rule_id": "gemini.instructions.workspace_hierarchy",
@@ -75,7 +79,9 @@
           "path": "packages/core/src/utils/memoryDiscovery.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Static research covers initial hierarchical discovery of ancestor/workspace context files within the documented traversal boundary.",
+      "unresolved_boundary": "Descendant JIT context and memory-import recursion are excluded from this supported claim."
     },
     {
       "rule_id": "gemini.instructions.jit_subdirectory_context",
@@ -94,7 +100,9 @@
           "path": "packages/core/src/utils/memoryDiscovery.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
         }
-      ]
+      ],
+      "supported_boundary": "The existence of JIT discovery as an upstream semantic is evidenced; descendant files are treated as discoverable/conditional rather than pre-session active.",
+      "unresolved_boundary": "The complete future active set depends on runtime file/directory access and trusted-root inputs not available to static pre-session inspection."
     },
     {
       "rule_id": "gemini.instructions.configurable_filenames",
@@ -113,7 +121,9 @@
           "path": "packages/cli/src/config/config.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Static research covers context.fileName as a string or list that changes candidate context filenames in pinned source/docs.",
+      "unresolved_boundary": "All interactions between filename lists, imports, hierarchy traversal, and JIT access traces are not yet asserted."
     },
     {
       "rule_id": "gemini.config.settings_precedence",
@@ -132,7 +142,9 @@
           "path": "packages/cli/src/config/settings.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Settings-file merge precedence is limited to schema defaults, system defaults, user settings, trusted workspace settings, then system settings overrides.",
+      "unresolved_boundary": "Environment-derived values, CLI argument precedence, remote admin controls, and every setting-specific merge strategy are outside this rule."
     },
     {
       "rule_id": "gemini.trust.untrusted_workspace_settings",
@@ -151,7 +163,9 @@
           "path": "packages/cli/src/config/settings.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Given an explicit untrusted workspace state, workspace settings are excluded from the settings merge.",
+      "unresolved_boundary": "How the default trust-enabled setting is chosen when no explicit value is present is tracked separately and remains unresolved."
     },
     {
       "rule_id": "gemini.trust.folder_trust_default",
@@ -180,7 +194,9 @@
           "path": "packages/cli/src/config/config.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
         }
-      ]
+      ],
+      "supported_boundary": "No default value is promoted as supported while pinned official documentation conflicts with the pinned settings schema/runtime call path.",
+      "unresolved_boundary": "The effective default is disputed by docs versus schema/source; Codex Scope must not infer enabled or disabled for an omitted setting until the discrepancy is resolved or bounded away."
     },
     {
       "rule_id": "gemini.trust.provenance_sources",
@@ -199,7 +215,9 @@
           "path": "packages/cli/src/config/trustedFolders.ts",
           "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.ts"
         }
-      ]
+      ],
+      "supported_boundary": "Pinned trust code exposes trust provenance categories IDE, file, environment, or unknown/undefined.",
+      "unresolved_boundary": "This rule does not claim every precedence interaction among those sources beyond paths explicitly evidenced by pinned source/tests."
     }
   ],
   "discrepancies": [
