@@ -92,7 +92,8 @@ test("Gemini research corpus passes deterministic validation", () => {
   const result = run();
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /research:gemini:validate: ok/);
-  const manifest = JSON.parse(fs.readFileSync(sourceManifest, "utf8"));\n  assert.match(result.stdout, new RegExp("adapter_readiness=" + manifest.adapter_readiness));
+  const manifest = JSON.parse(fs.readFileSync(sourceManifest, "utf8"));
+  assert.match(result.stdout, new RegExp("adapter_readiness=" + manifest.adapter_readiness));
 });
 
 test("Gemini research validation rejects duplicate rule ids", () => {
