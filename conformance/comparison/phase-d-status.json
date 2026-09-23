@@ -53,5 +53,12 @@
   "false_certainty_blockers": {
     "count": 0,
     "status": "pass"
+  },
+  "ci_outcomes": {
+    "version": "codex-scope.semantic-comparison-ci.v1",
+    "status": "pass",
+    "demo_path": "conformance/comparison/codex-gemini-demo-ci.json",
+    "precedence": "unresolved > unsupported > proven_drift > clean",
+    "evidence_gap_maps_to": "unresolved"
   }
 }
