@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
@@ -12,11 +13,23 @@ test("Gemini research semantic probes are deterministic", () => {
 
   assert.equal(result.status, 0, result.stderr);
   const parsed = JSON.parse(result.stdout);
+  const probeFile = JSON.parse(
+    fs.readFileSync(
+      path.resolve("conformance/research/gemini-cli/probes.json"),
+      "utf8",
+    ),
+  );
+  const expectedProbeIds = probeFile.probes.map((probe) => probe.probe_id);
+
   assert.equal(
     parsed.schema_version,
     "codex-scope.agent-research-probe-run.v1",
   );
-  assert.deepEqual(parsed.counts, { pass: 12, fail: 0 });
+  assert.deepEqual(parsed.counts, { pass: expectedProbeIds.length, fail: 0 });
+  assert.deepEqual(
+    parsed.results.map((item) => item.probe_id),
+    expectedProbeIds,
+  );
 
   const jit = parsed.results.find(
     (item) => item.probe_id === "gemini.instructions.jit_target",
