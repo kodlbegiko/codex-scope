@@ -10,7 +10,7 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.2.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.2 preserves the documented V0.1 semantic subset and JSON contract while adding conformance and compatibility evidence; it does not claim full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.3.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the Codex CLI and V0.1 JSON contract while adding a bounded Gemini CLI conformance-adapter preview. It does not yet add a public cross-agent comparison command or claim full compatibility with either agent. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
@@ -186,7 +186,7 @@ Normal inspection:
 - never mutates the inspected project, Codex config, or `AGENTS.md` files;
 - redacts secret-like config keys in terminal and JSON output.
 
-Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.2.
+Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.3.
 
 ## Accuracy and compatibility
 
@@ -228,6 +228,10 @@ Phase A routes the existing Codex resolver through a static `codexAdapter` behin
 
 Phase B exposes the checked-in compatibility boundary without changing those semantics. The generated matrix pins resolver/adapter/evidence metadata, `codex-scope compatibility` reports rule counts and version provenance, and `conformance:validate:json` records expected versus actual outcome for every rule.
 
+Phase C adds a bounded Gemini CLI adapter and executable evidence corpus. Its 27 deterministic research cases cover only the explicitly pinned subset, including context hierarchy, settings precedence, trust provenance, explicit-target JIT discovery, inert extension snapshots, MCP declarations, and conservative memory-import detection. Run `npm run research:gemini:validate` and `npm run research:gemini:assert` from a source checkout to verify the gate.
+
+The Gemini adapter is a preview of the shared conformance architecture, not a new CLI surface. `codex-scope inspect`, `instructions`, `config`, `why`, and `compatibility` remain Codex-facing; Phase D is responsible for any future versioned comparison command.
+
 The deterministic path still does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Unknown versions remain unknown; explicit supplied versions do not become compatibility claims without matching tested evidence.
 
 ## Build from source
@@ -252,7 +256,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.2 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, public cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.2 reports those historical values as `unsupported` rather than current resolved semantics.
+Codex Scope V0.3 does **not** execute or fully model hooks, MCP servers, plugins, snapshots, directory diffs, telemetry, a web UI, a public cross-agent comparison command, structured/granular approval-policy semantics, the full Codex/Gemini config schemas, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.3 reports those historical values as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 
