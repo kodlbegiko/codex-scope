@@ -22,8 +22,8 @@
         "status": "resolved",
         "applicability": "active",
         "runtime_dependency": "none",
-        "source_record_count": 1,
-        "reason": "Resolved from active project/workspace instruction records in the supplied deterministic fixture.",
+        "source_record_count": 2,
+        "reason": "Resolved from the complete active project/workspace instruction set under an explicit deterministic trust state.",
         "normalized_value": [
           "AGENTS.md"
         ]
@@ -34,8 +34,8 @@
         "status": "resolved",
         "applicability": "active",
         "runtime_dependency": "none",
-        "source_record_count": 1,
-        "reason": "Resolved from active project/workspace instruction records in the supplied deterministic fixture.",
+        "source_record_count": 2,
+        "reason": "Resolved from the complete active project/workspace instruction set under an explicit deterministic trust state.",
         "normalized_value": [
           "GEMINI.md"
         ]
@@ -53,6 +53,11 @@
           }
         ],
         "right": [
+          {
+            "type": "cli",
+            "scope": "env",
+            "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins."
+          },
           {
             "type": "project",
             "scope": "workspace",
@@ -107,8 +112,8 @@
         "status": "resolved",
         "applicability": "active",
         "runtime_dependency": "none",
-        "source_record_count": 1,
-        "reason": "The supplied deterministic inspection has at least one active project/workspace instruction entrypoint.",
+        "source_record_count": 2,
+        "reason": "The deterministic inspection contains an active project/workspace instruction entrypoint.",
         "normalized_value": true
       },
       "right": {
@@ -117,8 +122,8 @@
         "status": "resolved",
         "applicability": "active",
         "runtime_dependency": "none",
-        "source_record_count": 1,
-        "reason": "The supplied deterministic inspection has at least one active project/workspace instruction entrypoint.",
+        "source_record_count": 2,
+        "reason": "The deterministic inspection contains an active project/workspace instruction entrypoint.",
         "normalized_value": true
       },
       "classification": "semantically_equivalent",
@@ -134,6 +139,11 @@
           }
         ],
         "right": [
+          {
+            "type": "cli",
+            "scope": "env",
+            "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins."
+          },
           {
             "type": "project",
             "scope": "workspace",
