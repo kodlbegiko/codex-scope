@@ -167,6 +167,25 @@ function validateResearchManifest(manifest, schema) {
       "adapter_readiness must remain blocked while blocker_for_adapter discrepancies exist",
     );
   }
+
+  const openAdapterBlockers = manifest.adapter_blockers.filter(
+    (blocker) => blocker.status === "open",
+  );
+  if (
+    openAdapterBlockers.length > 0 &&
+    manifest.adapter_readiness !== "blocked"
+  ) {
+    fail(
+      "adapter_readiness must remain blocked while adapter_blockers are open: " +
+        openAdapterBlockers.map((blocker) => blocker.blocker_id).join(", "),
+    );
+  }
+  if (
+    manifest.adapter_readiness !== "blocked" &&
+    manifest.adapter_blockers.length > 0
+  ) {
+    fail("ready adapter corpus must not retain adapter_blockers");
+  }
   if (
     manifest.implementation_status === "research_only" &&
     manifest.adapter_readiness === "implemented"
@@ -193,7 +212,11 @@ function validateResearchManifest(manifest, schema) {
   const counts = { supported: 0, unsupported: 0, unresolved: 0 };
   for (const rule of manifest.rules) counts[rule.semantic_status] += 1;
 
-  return { counts, blockingDiscrepancies };
+  return {
+    counts,
+    blockingDiscrepancies,
+    openAdapterBlockers: openAdapterBlockers.length,
+  };
 }
 
 try {
@@ -205,8 +228,10 @@ try {
       Object.entries(result.counts)
         .map(([key, value]) => key + "=" + value)
         .join(" ") +
-      " blockers=" +
+      " discrepancy_blockers=" +
       result.blockingDiscrepancies +
+      " adapter_blockers=" +
+      result.openAdapterBlockers +
       " adapter_readiness=" +
       manifest.adapter_readiness,
   );
