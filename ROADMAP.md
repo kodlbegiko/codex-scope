@@ -137,9 +137,9 @@ Runtime/JIT-dependent state, omitted Folder Trust defaults, live extension activ
 
 ## ACTIVE — Phase D neutral semantic comparison
 
-Phase D now has an internal deterministic comparison core on top of the two proven adapters.
+Phase D's deterministic internal engineering is complete on the current branch. The phase-level exit gate remains blocked only by the required independent external proof.
 
-Implemented internal milestones:
+Implemented milestones:
 
 - versioned `codex-scope.semantic-comparison.v1` JSON schema;
 - versioned `codex-scope.semantic-normalization.v1` normalization contract;
@@ -147,26 +147,22 @@ Implemented internal milestones:
 - deterministic fixture coverage for every classification and negative contract cases;
 - Codex + Gemini neutral-report integration without agent-specific branches in the shared comparison engine;
 - adapter/upstream/rule/reference provenance retention;
-- three existing sanitized repositories exercised through cross-agent instruction comparison;
-- sanitized byte-stable machine-readable demonstration enforced by `npm run comparison:demo:check`.
-- versioned `codex-scope.semantic-comparison-ci.v1` CI summary with conservative `unresolved > unsupported > proven_drift > clean` precedence; `tool_error` is reserved for failures before a valid comparison document exists.
-
-The public V0.1 CLI has **not** gained a compare command. Phase D is intentionally proving the machine-readable core before any human-facing CLI surface.
+- three sanitized repositories exercised through cross-agent instruction comparison;
+- sanitized byte-stable machine-readable demonstrations enforced by CI;
+- versioned `codex-scope.semantic-comparison-ci.v1` CI summary with conservative `unresolved > unsupported > proven_drift > clean` precedence;
+- public JSON-only `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json`;
+- versioned `codex-scope.semantic-comparison-cli.v1` envelope with frozen exit semantics: `0` valid comparison, `1` unexpected internal tool error before a valid document, `2` input/usage tool error;
+- fail-closed comparison version contract and package verification;
+- machine-validated external-user evidence ledger, issue template, and CI gate.
 
 Machine-readable status is recorded in
 [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
 
-The blueprint's external proof-of-value gate is still open: **0 / 3 qualifying external user cases** where comparison identifies a real configuration problem. Repository fixtures, sanitized public snapshots, and prior upstream interactions do not count as external user cases. Therefore Phase D is not declared complete and Phase E remains blocked.
+The blueprint's external proof-of-value gate remains **0 / 3 qualifying external user cases** where comparison identifies a real configuration problem. Repository fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions do not count. Therefore the internal deterministic milestone is PASS, the overall Phase D status remains `blocked_external_proof`, and Phase E remains blocked.
 
-## AFTER PHASE D — compare CLI and later expansion
+## AFTER PHASE D — later expansion
 
-Only after the comparison contract remains stable and the external Phase D gate is satisfied should a public surface such as the following be considered:
-
-```text
-codex-scope compare codex gemini --json
-```
-
-Any future public compare command must preserve the same fail-closed distinctions between proven differences, unresolved state, unsupported semantics, and evidence gaps. It must not rank agents or infer semantic equivalence from arbitrary instruction prose.
+Only after the external Phase D exit gate is satisfied should additional adapter work or broader comparison surfaces proceed. Any later comparison expansion must preserve the existing fail-closed distinctions between proven differences, unresolved state, unsupported semantics, and evidence gaps. It must not rank agents or infer semantic equivalence from arbitrary instruction prose.
 
 ## SECONDARY CANDIDATES
 
@@ -192,7 +188,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is the current provisional second-adapter candidate, not promised support. Every adapter requires its own decision gate.
+Claude Code, Cursor, and OpenCode remain research candidates after the Phase D external exit gate. Gemini CLI is the proven second adapter used by the current Phase D comparison contract. Every additional adapter requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 

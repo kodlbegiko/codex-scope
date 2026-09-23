@@ -26,6 +26,14 @@ test("published package has explicit Phase D verification gates", () => {
   assert.match(workflow, /npm run phase:d:status:check/);
   assert.match(workflow, /npm run package:contents:check/);
   assert.match(workflow, /npm pack/);
+  assert.ok(
+    workflow.indexOf("npm run phase:d:external:check") <
+      workflow.indexOf("npm run phase:d:status:check"),
+  );
+  assert.ok(
+    workflow.indexOf("npm run phase:d:status:check") <
+      workflow.indexOf("npm run package:contents:check"),
+  );
 
   const script = fs.readFileSync(
     path.resolve("scripts/package-contents-check.mjs"),

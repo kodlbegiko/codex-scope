@@ -39,22 +39,32 @@ The generated matrix includes `adapter_version`, and CI validates it against the
 
 ## Phase D comparison compatibility boundary
 
-The internal Phase D comparison contract is versioned independently from the public V0.1 CLI:
+The Phase D comparison contracts are versioned independently from the legacy V0.1 command JSON:
 
 - comparison schema: `codex-scope.semantic-comparison.v1`;
 - normalization contract: `codex-scope.semantic-normalization.v1`;
+- CI summary schema: `codex-scope.semantic-comparison-ci.v1`;
+- public compare envelope: `codex-scope.semantic-comparison-cli.v1`;
+- explicit input schemas: `codex-scope.compare-input.codex.v1` and `codex-scope.compare-input.gemini.v1`;
 - current adapters: `codex-adapter.v1` and `gemini-adapter.v1`;
 - sanitized deterministic snapshot: `conformance/comparison/codex-gemini-demo.json`;
 - machine-readable gate status: `conformance/comparison/phase-d-status.json`.
-- CI summary schema: `codex-scope.semantic-comparison-ci.v1`, demonstrated in `conformance/comparison/codex-gemini-demo-ci.json`.
+
+The public comparison surface is:
+
+```text
+codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json
+```
+
+It is JSON-only and requires explicit input artifacts. It performs no live agent inspection, model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution.
 
 Comparison results retain each adapter's evidence date, upstream repository/commit, rule IDs, and references. Unsupported, unresolved, and evidence-gap states remain distinct from proven behavioral differences.
 
 The CI summary uses conservative precedence `unresolved > unsupported > proven_drift > clean`; `evidence_gap` maps only to the report-level `unresolved` outcome and remains explicit in record counts. `tool_error` is a tool-layer outcome, not a semantic comparison classification.
 
-The comparison core performs no model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution. The public CLI does not yet expose a cross-agent compare command.
+The compare CLI freezes process semantics separately from semantic classifications: any valid comparison document exits `0`, including non-clean semantic outcomes; malformed or unsupported explicit input exits `2` with a versioned JSON `tool_error`; an unexpected internal failure before a valid comparison document exists exits `1` with the same fail-closed JSON shape.
 
-Phase D remains externally gated: the blueprint requires three qualifying external user cases where comparison finds a real configuration problem. The current count is 0 / 3, so Phase D is not complete and Phase E is not authorized.
+Phase D remains externally gated: the blueprint requires three qualifying independent external user cases where comparison finds a real configuration problem. The current count is 0 / 3, so the internal deterministic milestone is PASS while overall Phase D remains `blocked_external_proof` and Phase E is not authorized.
 
 ## Conformance outcome taxonomy
 

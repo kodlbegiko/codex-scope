@@ -51,6 +51,20 @@ function nonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function expectExactKeys(value, expectedKeys, label) {
+  const actual = Object.keys(value).sort();
+  const expected = [...expectedKeys].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    fail(
+      label +
+        " fields are stale: expected " +
+        JSON.stringify(expected) +
+        " but received " +
+        JSON.stringify(actual),
+    );
+  }
+}
+
 function expectEqual(actual, expected, label) {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     fail(
@@ -73,6 +87,7 @@ function validateCaseShape(item, index) {
       fail("case[" + index + "] is missing required field " + field);
     }
   }
+  expectExactKeys(item, REQUIRED_CASE_FIELDS, "case[" + index + "]");
 
   for (const field of [
     "id",
@@ -133,15 +148,21 @@ export function validateExternalUserCasesLedger(ledger) {
     fail("ledger must be an object");
   }
 
+  expectExactKeys(ledger, ["schema_version", "gate", "cases"], "ledger");
   expectEqual(
     ledger.schema_version,
     "codex-scope.external-user-cases.v1",
     "schema_version",
   );
 
-  if (!ledger.gate || typeof ledger.gate !== "object") {
+  if (!ledger.gate || typeof ledger.gate !== "object" || Array.isArray(ledger.gate)) {
     fail("gate must be an object");
   }
+  expectExactKeys(
+    ledger.gate,
+    ["required_verified_cases", "verified_count", "status"],
+    "gate",
+  );
   expectEqual(
     ledger.gate.required_verified_cases,
     3,

@@ -105,6 +105,7 @@ for (const [field, pattern] of [
   ["comparison_reference", /comparison output/i],
   ["configuration_problem", /configuration problem/i],
   ["independent_problem_evidence", /independent.*evidence/i],
+  ["reproduction_instructions", /reproduction instructions/i],
 ]) {
   test("missing " + field + " fails closed", () => {
     const state = clone(loadExternalUserCasesState());
@@ -141,6 +142,30 @@ test("fixture and maintainer-synthetic records never count as external proof", (
   assert.equal(result.verified_count, 0);
 });
 
+for (const sourceType of ["fixture", "maintainer_synthetic"]) {
+  test("verified " + sourceType + " records fail closed", () => {
+    const state = clone(loadExternalUserCasesState());
+    const item = validCase("invalid-" + sourceType, "maintainer", 1250);
+    item.source_type = sourceType;
+    setCases(state, [item]);
+    assert.throws(
+      () => validateExternalUserCasesState(state),
+      /cannot be verified external proof/i,
+    );
+  });
+}
+
+test("unexpected external case fields fail closed", () => {
+  const state = clone(loadExternalUserCasesState());
+  const item = validCase("extra-field", "alice", 1251);
+  item.untracked_claim = "must not be silently accepted";
+  setCases(state, [item]);
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /fields are stale/i,
+  );
+});
+
 test("verified count is derived from ledger contents rather than trusted as input", () => {
   const state = clone(loadExternalUserCasesState());
   setCases(state, [validCase("case-a", "alice", 1301)]);
@@ -151,6 +176,25 @@ test("verified count is derived from ledger contents rather than trusted as inpu
   );
 });
 
+test("external gate status is derived rather than trusted as input", () => {
+  const state = clone(loadExternalUserCasesState());
+  setCases(state, [validCase("case-a", "alice", 1302)]);
+  state.ledger.gate.status = "pass";
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /gate.status.*stale/i,
+  );
+});
+
+test("external gate required count is frozen at three", () => {
+  const state = clone(loadExternalUserCasesState());
+  state.ledger.gate.required_verified_cases = 4;
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /required_verified_cases.*stale/i,
+  );
+});
+
 test("Phase D status external count must equal the external ledger", () => {
   const state = clone(loadExternalUserCasesState());
   setCases(state, [validCase("case-a", "alice", 1302)]);
@@ -158,6 +202,26 @@ test("Phase D status external count must equal the external ledger", () => {
   assert.throws(
     () => validateExternalUserCasesState(state),
     /Phase D status.*external/i,
+  );
+});
+
+test("Phase D external status must equal the external ledger", () => {
+  const state = clone(loadExternalUserCasesState());
+  setCases(state, [validCase("case-a", "alice", 1303)]);
+  state.phaseStatus.external_proof_of_value.status = "pass";
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /external status.*stale/i,
+  );
+});
+
+test("Phase D phase_status must equal the external ledger gate", () => {
+  const state = clone(loadExternalUserCasesState());
+  setCases(state, [validCase("case-a", "alice", 1304)]);
+  state.phaseStatus.phase_status = "complete";
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /phase_status.*stale/i,
   );
 });
 

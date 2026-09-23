@@ -47,6 +47,15 @@ function withTempInput(prefix, value, callback) {
   }
 }
 
+test("top-level help advertises the public compare command", () => {
+  const result = run(["--help"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(
+    result.stdout,
+    /codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json/,
+  );
+});
+
 test("compare codex gemini emits the versioned JSON-only comparison envelope", () => {
   const result = run(compareArgs());
 

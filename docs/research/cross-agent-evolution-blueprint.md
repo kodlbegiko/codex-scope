@@ -292,13 +292,16 @@ Implementation status as of 2026-09-23:
 - versioned schema and normalization contract: **PASS**;
 - all six comparison classifications: **PASS**;
 - Codex + Gemini neutral-report integration: **PASS**;
-- three existing sanitized repository snapshots exercised through comparison: **PASS**;
-- sanitized reproducible JSON demonstration: **PASS**;
+- three sanitized repository snapshots exercised through comparison: **PASS**;
+- sanitized reproducible JSON demonstrations: **PASS**;
 - stable versioned CI outcomes: **PASS** (`codex-scope.semantic-comparison-ci.v1`);
-- external proof-of-value: **BLOCKED (0 / 3 qualifying external user cases)**.
+- public JSON-only compare CLI: **PASS** (`codex-scope.semantic-comparison-cli.v1`);
+- frozen compare process-exit semantics: **PASS** (`0` valid comparison, `1` internal tool error, `2` input/usage tool error);
+- version compatibility and package verification: **PASS**;
+- external-user evidence ledger, validation, issue template, and CI gate infrastructure: **PASS**;
+- external proof-of-value: **BLOCKED (0 / 3 qualifying independent external user cases)**.
 
-This does **not** make Phase D complete. Fixtures, sanitized public snapshots, and prior upstream interactions are internal/repository evidence and are not counted as external user cases. The machine-readable gate is recorded in [`conformance/comparison/phase-d-status.json`](../../conformance/comparison/phase-d-status.json).
-
+This does **not** make Phase D complete. Fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions are internal/repository evidence and are not counted as external user cases. The machine-readable gate is recorded in [`conformance/comparison/phase-d-status.json`](../../conformance/comparison/phase-d-status.json).
 
 Deliverables:
 
@@ -306,9 +309,11 @@ Deliverables:
 - separate proven drift from unresolved and unsupported differences;
 - version the comparison JSON schema;
 - define stable CI outcomes;
-- publish a sanitized, reproducible demonstration.
+- expose a deterministic JSON-only compare CLI with explicit versioned inputs;
+- publish sanitized, reproducible demonstrations;
+- validate the external proof ledger fail-closed.
 
-Candidate CI outcome taxonomy:
+Current CI outcome taxonomy:
 
 ```text
 clean
@@ -318,11 +323,15 @@ unsupported
 tool_error
 ```
 
-Numeric exit codes are not frozen until common CI conventions and composability are reviewed.
+The public compare envelope freezes numeric process semantics independently from semantic classifications:
+
+- `0`: a valid comparison document was produced, including `clean`, `proven_drift`, `unresolved`, or `unsupported`;
+- `1`: unexpected internal tool failure before a valid comparison document exists;
+- `2`: malformed, unsupported, or incomplete explicit compare input / usage.
 
 Exit gate:
 
-- external users provide at least three cases where comparison finds a real configuration problem;
+- external users provide at least three independent qualifying cases where comparison finds a real configuration problem;
 - output remains actionable without requiring knowledge of adapter internals;
 - false certainty is treated as a release-blocking defect.
 

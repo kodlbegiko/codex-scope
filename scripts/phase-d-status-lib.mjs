@@ -373,15 +373,43 @@ export function validatePhaseDStatusState(state) {
     "node scripts/package-contents-check.mjs",
     "package.json package:contents:check",
   );
+  expectEqual(
+    state.packageJson.scripts["phase:d:external:check"],
+    "node scripts/external-user-cases-check.mjs",
+    "package.json phase:d:external:check",
+  );
+  expectEqual(
+    state.packageJson.scripts["phase:d:status:check"],
+    "node scripts/phase-d-status-check.mjs",
+    "package.json phase:d:status:check",
+  );
+  const externalGateIndex = state.workflow.indexOf(
+    "npm run phase:d:external:check",
+  );
+  const statusGateIndex = state.workflow.indexOf(
+    "npm run phase:d:status:check",
+  );
+  const packageGateIndex = state.workflow.indexOf(
+    "npm run package:contents:check",
+  );
   if (
-    !state.workflow.includes("npm run package:contents:check") ||
+    externalGateIndex < 0 ||
+    statusGateIndex < 0 ||
+    packageGateIndex < 0 ||
     !state.workflow.includes("npm pack")
   ) {
-    fail("package verification gate is absent from GitHub Actions");
+    fail("Phase D verification gates are absent from GitHub Actions");
+  }
+  if (
+    !(externalGateIndex < statusGateIndex && statusGateIndex < packageGateIndex)
+  ) {
+    fail("Phase D verification gates are ordered incorrectly in GitHub Actions");
   }
   for (const requiredPath of [
     "conformance/schema/phase-d-status.schema.json",
     "conformance/comparison/phase-d-status.json",
+    "conformance/schema/external-user-cases.schema.json",
+    "conformance/comparison/external-user-cases.json",
     "conformance/schema/structural-differences.schema.json",
     "conformance/comparison/structural-differences.json",
     "conformance/comparison/version-contract.json",
