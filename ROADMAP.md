@@ -8,9 +8,9 @@ Codex remains the conformance-backed foundation for its explicitly supported V0.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
-## Shipped — V0.2.x Codex conformance foundation
+## Shipped — V0.3.x Codex foundation + Gemini adapter preview
 
-Current release line: **V0.2.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.2 preserves the V0.1 semantic subset and JSON contract while exposing the evidence boundary added in Phases A and B.
+Current release line: **V0.3.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the V0.1 Codex semantic subset and JSON contract while shipping the evidence-backed Gemini CLI adapter as a bounded preview.
 
 Shipped surfaces:
 
@@ -28,8 +28,12 @@ Shipped surfaces:
 - a 32-rule semantic corpus and 4 regression/change records
 - generated compatibility matrix and `compatibility` command
 - neutral static adapter seam for evidence-gated expansion
+- 27 deterministic Gemini CLI research cases, for 59 combined semantic cases
+- a bounded Gemini adapter with explicit unresolved/unsupported boundaries
+- three sanitized real-repository validations and three external evidence records
+- machine-enforced Gemini research and implementation gates
 
-V0.2.x intentionally does **not** claim full Codex compatibility.
+V0.3.x intentionally does **not** claim full Codex or Gemini CLI compatibility, and does not yet expose a public cross-agent comparison command.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -123,25 +127,26 @@ Phase B now makes the compatibility boundary deterministic and queryable:
 
 The Phase B implementation and follow-up review fixes are validated by clean-checkout CI on the release line.
 
-## NEXT — Phase C second-agent research spike
+## COMPLETED — Phase C second-agent adapter
 
-Phase C is now permitted as a **research-first** spike. It must not start by creating an adapter class.
+Phase C selected **Gemini CLI** after comparing current official documentation and inspectable upstream source for Gemini CLI, Claude Code, and Cursor.
 
-The next task is to compare candidate agents using current official documentation and inspectable upstream source, then choose exactly one based on evidence quality, deterministic inspectability, configuration/instruction hierarchy, trust/security semantics, source pinning, fixture feasibility, and zero-network/API-key operation.
+The implemented gate contains:
 
-The existing Gemini CLI preference is only a prior hypothesis. Claude Code, Gemini CLI, and Cursor must be re-evaluated against current evidence before selecting the candidate.
+- a pinned `google-gemini/gemini-cli` evidence snapshot;
+- 27 deterministic Gemini cases and 59 combined Codex/Gemini cases;
+- three sanitized real-repository validations;
+- three distinct external upstream evidence records;
+- a bounded static adapter with explicit unresolved/unsupported states;
+- validation that rejects stale coverage, dishonest readiness, unsafe fixture paths, and missing implementation artifacts.
 
-A formal adapter is allowed only after the research spike produces machine-readable semantic rules, pinned references, representative deterministic fixtures, explicit unsupported/unresolved boundaries, and zero known false-certainty blocker.
+See [`docs/research/second-agent-selection-2026-09-23.md`](docs/research/second-agent-selection-2026-09-23.md) for the evidence and selection record.
 
-## VALIDATION CANDIDATE — one second agent
+## SHIPPED PREVIEW — one second adapter
 
-After the Codex conformance corpus and adapter seam are proven, validate the cross-agent thesis with **one** additional agent.
+Gemini CLI is the first evidence-backed second adapter. The preview covers only the deterministic subset authorized by its corpus; it does not claim complete runtime context or semantic equivalence with Codex.
 
-The current correctness-first engineering candidate is **Gemini CLI** because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior is complex enough to test the neutral model. This is not an implementation commitment.
-
-Claude Code remains a demand-relevant alternative, but no user-count threshold automatically selects it. Choose the second adapter using evidence quality, reproducibility, maintenance cost, upstream inspectability, and whether the deterministic contract can be preserved.
-
-An adapter is not accepted until it has:
+The accepted adapter has:
 
 - an official-documentation and implementation-evidence ledger;
 - version/evidence-date boundaries;
@@ -153,7 +158,7 @@ An adapter is not accepted until it has:
 
 The first cross-agent release should compare provenance and applicability facts. It must not claim semantic equivalence between arbitrary Markdown instructions.
 
-## AFTER TWO PROVEN ADAPTERS — compare and CI
+## NEXT — Phase D compare and CI
 
 Potential surfaces:
 
@@ -198,7 +203,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is the current provisional second-adapter candidate, not promised support. Every adapter requires its own decision gate.
+Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is now the bounded preview adapter; every additional adapter requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 

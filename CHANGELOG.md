@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## 0.3.0 — 2026-09-23
+
+Gemini CLI conformance-adapter preview built on the evidence-gated neutral core.
+
+### Added
+
+- Add a pinned Gemini CLI evidence manifest with 27 deterministic research cases covering context discovery, settings precedence, trust provenance, JIT target boundaries, extension-memory snapshots, MCP declarations, and conservative import handling.
+- Add a bounded, read-only Gemini adapter for the evidence-backed deterministic subset.
+- Add three sanitized real-repository validations and three distinct external upstream evidence records.
+- Add machine-enforced Gemini research validation, semantic assertions, fixture containment checks, and honest authorization/implementation gates.
+
+### Changed
+
+- Raise the combined deterministic semantic corpus to 59 cases across Codex and Gemini CLI.
+- Record Gemini CLI as the selected second-agent research adapter while keeping public cross-agent comparison deferred to Phase D.
+- Extend CI with Gemini research validation and semantic assertion steps.
+
+### Safety properties
+
+- The Gemini adapter does not invoke Gemini CLI, an LLM, extensions, plugins, hooks, or MCP servers.
+- Runtime/JIT state that cannot be proven from explicit inputs remains unresolved or unsupported.
+- Existing Codex commands and the `codex-scope.v0.1` JSON contract remain unchanged.
+
 ## 0.2.0 — 2026-09-23
 
 Conformance-backed compatibility release that preserves the existing Codex diagnostic contract while making its evidence boundary inspectable and testable.
