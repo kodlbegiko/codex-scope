@@ -34,7 +34,15 @@ The neutral seam is internal in Phase A. Existing terminal output and the `codex
 - `src/render.ts` — human/`codex-scope.v0.1` JSON views only.
 - `src/cli.ts` — argument boundary and safe error handling.
 
-## Phase A boundaries
+## Compatibility path
+
+`src/compatibility.ts` reads the packaged, generated compatibility matrix and returns a deterministic summary containing resolver/adapter versions, evidence date, pinned upstream commit, rule counts, known discrepancies, and explicit version provenance.
+
+The compatibility path does not discover a local Codex binary. `--codex-version` is an offline supplied input only. While `tested_codex_version` is `unknown`, a supplied version remains `unresolved`.
+
+The conformance harness can emit `codex-scope.conformance-run.v1` JSON with an expected and actual outcome per rule. Its process status remains fail-closed: `behavior_drift` exits 1 and `tool_error` exits 2; expected `unsupported` and `unresolved` cases do not fail CI.
+
+## Phase A/B boundaries
 
 The adapter is statically registered at compile time. There is no plugin runtime, dynamic loading, hook runner, MCP execution, network client, OpenAI SDK, telemetry client, or subprocess execution module in the deterministic inspection implementation.
 

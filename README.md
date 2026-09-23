@@ -87,9 +87,12 @@ codex-scope inspect          concise environment overview
 codex-scope instructions     instruction discovery + provenance
 codex-scope config           detailed supported config resolution
 codex-scope why <key>        explain one config decision chain
+codex-scope compatibility     report evidence/version compatibility boundaries
 ```
 
-All four commands support `--json` with a versioned `codex-scope.v0.1` schema marker.
+The original four commands continue to use the versioned `codex-scope.v0.1` JSON marker. `codex-scope compatibility --json` emits the additive `codex-scope.compatibility.v1` contract.
+
+An explicit offline Codex version can be supplied with `--codex-version <version>`. Because the current evidence snapshot has no pinned tested Codex binary version, supplied versions remain `unresolved` rather than being guessed compatible.
 
 ## Codex Scope vs native Codex diagnostics
 
@@ -210,6 +213,7 @@ Validate the checked-in corpus after building:
 ```bash
 npm run conformance:matrix:check
 npm run conformance:validate
+npm run conformance:validate:json
 ```
 
 Conformance validation distinguishes `compatible`, `behavior_drift`, `unsupported`, `unresolved`, and `tool_error`. Expected `unsupported` or `unresolved` cases are evidence, not generic test failures.
@@ -218,11 +222,13 @@ The current matrix intentionally records the tested Codex binary version as `unk
 
 See [`docs/conformance-status.md`](docs/conformance-status.md) for the implementation gate.
 
-## Adapter-ready internal core
+## Adapter and compatibility core
 
 Phase A routes the existing Codex resolver through a static `codexAdapter` behind shared inspection, provenance, capability, and evidence records. The neutral records are internal architecture: the public `inspect`, `instructions`, `config`, and `why` commands still emit the existing terminal formats and the `codex-scope.v0.1` JSON contract.
 
-The adapter seam does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Codex-specific semantics remain in the Codex adapter; the neutral core does not reinterpret unsupported or unresolved states.
+Phase B exposes the checked-in compatibility boundary without changing those semantics. The generated matrix pins resolver/adapter/evidence metadata, `codex-scope compatibility` reports rule counts and version provenance, and `conformance:validate:json` records expected versus actual outcome for every rule.
+
+The deterministic path still does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Unknown versions remain unknown; explicit supplied versions do not become compatibility claims without matching tested evidence.
 
 ## Build from source
 

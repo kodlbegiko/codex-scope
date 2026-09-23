@@ -6,6 +6,13 @@ const regressions = readJson("conformance/regressions.json");
 const pkg = readJson("package.json");
 const matrixSchema = readJson("conformance/schema/compatibility.schema.json");
 
+function readAdapterVersion() {
+  const source = fs.readFileSync("src/adapters/codex.ts", "utf8");
+  const match = source.match(/export const CODEX_ADAPTER_VERSION = "([^"]+)";/);
+  if (!match) throw new Error("Could not read CODEX_ADAPTER_VERSION from src/adapters/codex.ts");
+  return match[1];
+}
+
 function generateMatrix() {
   const byOutcome = (outcome) =>
     manifest.rules.filter((rule) => rule.expected_outcome === outcome).map((rule) => rule.rule_id).sort();
@@ -14,6 +21,7 @@ function generateMatrix() {
     schema_version: "codex-scope.compatibility.v1",
     codex_scope_version: pkg.version,
     resolver_version: manifest.resolver_version,
+    adapter_version: readAdapterVersion(),
     evidence_date: manifest.evidence_date,
     tested_codex_version: manifest.upstream.tested_codex_version,
     tested_upstream_commit: manifest.upstream.commit,
@@ -45,7 +53,7 @@ function generateMatrix() {
         verified_against_commit: manifest.upstream.commit
       }
     ],
-    generated_from: ["conformance/manifest.json", "conformance/regressions.json", "package.json"]
+    generated_from: ["conformance/manifest.json", "conformance/regressions.json", "package.json", "src/adapters/codex.ts"]
   };
 }
 

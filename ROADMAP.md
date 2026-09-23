@@ -103,34 +103,32 @@ upstream change
 
 This produces externally verifiable maintainer evidence without requiring broad early user acquisition.
 
-## CURRENT — adapter-ready neutral core
+## COMPLETED CORE GATES — Phase A + Phase B
 
-Phase A is implemented behind the existing V0.1 CLI contract:
+Phase A established the neutral static adapter seam without changing the V0.1 Codex resolver contract.
 
-- shared neutral inspection, provenance, capability, and evidence records;
-- a static compile-time adapter contract;
-- Codex resolution routed through `codexAdapter`;
-- direct adapter and legacy `buildEnvironment` paths produce the same environment model;
-- terminal and `codex-scope.v0.1` JSON rendering remain unchanged;
-- no dynamic adapter loading, network, subprocess, LLM, hook, plugin, or MCP execution was introduced.
+Phase B now makes the compatibility boundary deterministic and queryable:
 
-The Phase A gate is tracked in [`docs/conformance-status.md`](docs/conformance-status.md). The seam exists to carry proven semantics across adapters later; it is not permission to add a second agent before compatibility awareness is hardened.
+- generated matrix pins resolver version, adapter version, evidence date, upstream commit, and rule classifications;
+- `codex-scope compatibility` exposes the checked-in evidence summary;
+- `--codex-version` records explicit offline version input without invoking Codex;
+- an unknown tested binary version keeps supplied/detected compatibility `unresolved`;
+- `conformance:validate:json` emits per-rule expected/actual outcomes;
+- `behavior_drift` and `tool_error` remain distinct fail-closed CI outcomes;
+- generated matrix drift remains a CI failure;
+- the existing four commands and `codex-scope.v0.1` JSON stay backward compatible.
 
-## NEXT — compatibility awareness
+Clean-checkout CI run #37 validates the Phase B implementation before this documentation update.
 
-Phase B should make the evidence boundary queryable without weakening deterministic inspection.
+## NEXT — Phase C second-agent research spike
 
-Priorities:
+Phase C is now permitted as a **research-first** spike. It must not start by creating an adapter class.
 
-- expose resolver version, adapter version, evidence date, tested upstream commit, and rule counts from the checked-in corpus;
-- keep installed Codex version `unknown` unless a safe optional environment probe is explicitly requested;
-- accept explicit/offline version input before attempting automatic detection;
-- classify compatibility as `compatible`, `behavior_drift`, `unsupported`, `unresolved`, or `tool_error`;
-- make compatibility output machine-readable first;
-- keep generated compatibility matrix drift fail-closed in CI;
-- preserve the distinction between semantic drift and harness/tool failure.
+The next task is to compare candidate agents using current official documentation and inspectable upstream source, then choose exactly one based on evidence quality, deterministic inspectability, configuration/instruction hierarchy, trust/security semantics, source pinning, fixture feasibility, and zero-network/API-key operation.
 
-No second-agent implementation starts until the Phase B core exit gate is satisfied.
+The existing Gemini CLI preference is only a prior hypothesis. Claude Code, Gemini CLI, and Cursor must be re-evaluated against current evidence before selecting the candidate.
+
+A formal adapter is allowed only after the research spike produces machine-readable semantic rules, pinned references, representative deterministic fixtures, explicit unsupported/unresolved boundaries, and zero known false-certainty blocker.
 
 ## VALIDATION CANDIDATE — one second agent
 

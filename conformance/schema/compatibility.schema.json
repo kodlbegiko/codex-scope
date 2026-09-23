@@ -8,6 +8,7 @@
     "schema_version",
     "codex_scope_version",
     "resolver_version",
+    "adapter_version",
     "evidence_date",
     "tested_codex_version",
     "tested_upstream_commit",
@@ -28,6 +29,10 @@
       "minLength": 1
     },
     "resolver_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_version": {
       "type": "string",
       "minLength": 1
     },
