@@ -45,14 +45,15 @@ const evidence: AdapterEvidence = {
 };
 
 function sourceRef(source: ResolutionSource): NeutralSourceRef {
-  return {
-    type: source.type,
+  const reference: NeutralSourceRef = {
     scope: source.scope,
-    path: source.path,
-    line: source.line,
-    precedence: source.precedence,
-    reason: source.reason,
   };
+  if (source.type !== undefined) reference.type = source.type;
+  if (source.path !== undefined) reference.path = source.path;
+  if (source.line !== undefined) reference.line = source.line;
+  if (source.precedence !== undefined) reference.precedence = source.precedence;
+  if (source.reason !== undefined) reference.reason = source.reason;
+  return reference;
 }
 
 function emptyProvenance() {
