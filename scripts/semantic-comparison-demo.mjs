@@ -16,6 +16,9 @@ const {
   validateComparisonDocument,
 } = require("../dist/comparison.js");
 const {
+  summarizeComparisonForCi,
+} = require("../dist/comparison-ci.js");
+const {
   sanitizeComparisonDocumentPaths,
   serializeComparisonDocument,
 } = require("../dist/comparison-output.js");
@@ -24,6 +27,9 @@ const { inspectWithAdapter } = require("../dist/core.js");
 const repositoryRoot = path.resolve(process.cwd());
 const expectedPath = path.resolve(
   "conformance/comparison/codex-gemini-demo.json",
+);
+const expectedCiPath = path.resolve(
+  "conformance/comparison/codex-gemini-demo-ci.json",
 );
 
 function codexOptions() {
@@ -56,31 +62,60 @@ function generateDemo() {
   );
   const sanitized = sanitizeComparisonDocumentPaths(raw, repositoryRoot);
   validateComparisonDocument(sanitized);
-  return serializeComparisonDocument(sanitized);
+  const comparisonOutput = serializeComparisonDocument(sanitized);
+  const ciSummary = summarizeComparisonForCi(sanitized);
+  const ciOutput = JSON.stringify(ciSummary, null, 2) + "\n";
+  return { comparisonOutput, ciOutput };
 }
 
-const output = generateDemo();
-if (output.includes(repositoryRoot)) {
+const { comparisonOutput, ciOutput } = generateDemo();
+if (
+  comparisonOutput.includes(repositoryRoot) ||
+  ciOutput.includes(repositoryRoot)
+) {
   throw new Error("sanitized comparison demo leaked the checkout path");
 }
 
 if (process.argv.includes("--check")) {
-  if (!fs.existsSync(expectedPath)) {
-    console.error("comparison demo snapshot is missing");
-    console.error("----- generated comparison demo -----");
-    console.error(output);
-    process.exit(1);
+  const checks = [
+    {
+      path: expectedPath,
+      label: "comparison demo",
+      marker: "----- generated comparison demo -----",
+      output: comparisonOutput,
+    },
+    {
+      path: expectedCiPath,
+      label: "comparison CI summary",
+      marker: "----- generated comparison CI summary -----",
+      output: ciOutput,
+    },
+  ];
+
+  for (const check of checks) {
+    if (!fs.existsSync(check.path)) {
+      console.error(check.label + " snapshot is missing");
+      console.error(check.marker);
+      console.error(check.output);
+      process.exit(1);
+    }
+    const expected = fs.readFileSync(check.path, "utf8");
+    if (expected !== check.output) {
+      console.error(check.label + " snapshot is stale");
+      console.error(check.marker);
+      console.error(check.output);
+      process.exit(1);
+    }
   }
-  const expected = fs.readFileSync(expectedPath, "utf8");
-  if (expected !== output) {
-    console.error("comparison demo snapshot is stale");
-    console.error("----- generated comparison demo -----");
-    console.error(output);
-    process.exit(1);
-  }
+
+  const ciSummary = JSON.parse(ciOutput);
   console.log(
-    "comparison:demo:check: ok (schema, provenance, sanitization, deterministic snapshot)",
+    "comparison:demo:check: ok (schema, provenance, sanitization, deterministic snapshots; ci_outcome=" +
+      ciSummary.outcome +
+      ")",
   );
+} else if (process.argv.includes("--ci")) {
+  process.stdout.write(ciOutput);
 } else {
-  process.stdout.write(output);
+  process.stdout.write(comparisonOutput);
 }
