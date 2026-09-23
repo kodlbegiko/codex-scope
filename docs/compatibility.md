@@ -17,6 +17,18 @@ A local Codex binary version was not safely detected for this evidence pass. Cod
 
 See [`../conformance/compatibility-matrix.json`](../conformance/compatibility-matrix.json).
 
+## Adapter architecture status
+
+Phase A adds an internal static Codex adapter with version `codex-adapter.v1`. This is an architecture boundary, not a broader compatibility claim.
+
+- the adapter uses the same pinned evidence date and upstream commit as the Phase 0 corpus;
+- `tested Codex version` remains `unknown`;
+- no subprocess is executed to discover a local Codex version;
+- no adapter metadata is injected into the legacy `codex-scope.v0.1` JSON schema;
+- neutral inspection records preserve supported / unresolved / unsupported state instead of normalizing unknowns to supported.
+
+Public compatibility reporting and optional/supplied version handling belong to Phase B.
+
 ## Conformance outcome taxonomy
 
 | Outcome | Meaning in CI |

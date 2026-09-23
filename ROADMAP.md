@@ -103,26 +103,34 @@ upstream change
 
 This produces externally verifiable maintainer evidence without requiring broad early user acquisition.
 
-## NEXT — adapter-ready core and compatibility awareness
+## CURRENT — adapter-ready neutral core
 
-The next implementation candidate, **after the Codex conformance foundation is useful on its own**, is an internal architecture seam, not immediate support for many agents.
+Phase A is implemented behind the existing V0.1 CLI contract:
 
-Research/design goals:
+- shared neutral inspection, provenance, capability, and evidence records;
+- a static compile-time adapter contract;
+- Codex resolution routed through `codexAdapter`;
+- direct adapter and legacy `buildEnvironment` paths produce the same environment model;
+- terminal and `codex-scope.v0.1` JSON rendering remain unchanged;
+- no dynamic adapter loading, network, subprocess, LLM, hook, plugin, or MCP execution was introduced.
 
-- represent discovered sources, applicability, precedence, uncertainty, and evidence without hard-coding the output model to one agent;
-- wrap current Codex resolution behind a Codex adapter without changing V0.1 behavior;
-- safely detect or accept a local agent version when deterministic, otherwise return `unknown`;
-- expose resolver version, adapter version, semantics evidence date, and supported surfaces;
-- warn when a detected or supplied version falls outside tested evidence;
-- add contract tests proving terminal and JSON output remain backward compatible.
+The Phase A gate is tracked in [`docs/conformance-status.md`](docs/conformance-status.md). The seam exists to carry proven semantics across adapters later; it is not permission to add a second agent before compatibility awareness is hardened.
 
-Possible Codex-only surface:
+## NEXT — compatibility awareness
 
-```text
-codex-scope compatibility
-```
+Phase B should make the evidence boundary queryable without weakening deterministic inspection.
 
-Implementation requires an evidence-backed design, fixtures, and a new decision gate.
+Priorities:
+
+- expose resolver version, adapter version, evidence date, tested upstream commit, and rule counts from the checked-in corpus;
+- keep installed Codex version `unknown` unless a safe optional environment probe is explicitly requested;
+- accept explicit/offline version input before attempting automatic detection;
+- classify compatibility as `compatible`, `behavior_drift`, `unsupported`, `unresolved`, or `tool_error`;
+- make compatibility output machine-readable first;
+- keep generated compatibility matrix drift fail-closed in CI;
+- preserve the distinction between semantic drift and harness/tool failure.
+
+No second-agent implementation starts until the Phase B core exit gate is satisfied.
 
 ## VALIDATION CANDIDATE — one second agent
 
