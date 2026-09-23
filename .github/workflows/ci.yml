@@ -29,5 +29,6 @@ jobs:
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
       - run: npm run comparison:demo:check
+      - run: npm run package:contents:check
       - run: npm pack
       - run: npm publish --dry-run

@@ -28,7 +28,8 @@
     "research:gemini:validate": "node scripts/research-gemini-check.mjs",
     "research:gemini:assert": "node scripts/research-gemini-semantics.mjs",
     "comparison:demo": "npm run build && node scripts/semantic-comparison-demo.mjs",
-    "comparison:demo:check": "node scripts/semantic-comparison-demo.mjs --check"
+    "comparison:demo:check": "node scripts/semantic-comparison-demo.mjs --check",
+    "package:contents:check": "node scripts/package-contents-check.mjs"
   },
   "engines": {
     "node": ">=20"
