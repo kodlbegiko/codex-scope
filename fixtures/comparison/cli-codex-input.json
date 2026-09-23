@@ -1,0 +1,14 @@
+{
+  "schema_version": "codex-scope.compare-input.codex.v1",
+  "agent": "codex",
+  "options": {
+    "cwd": "fixtures/demo/conflict/project",
+    "codexHome": "fixtures/demo/conflict/home",
+    "trust": "trusted",
+    "invocationComplete": true,
+    "profile": "dev",
+    "cliOverrides": [],
+    "systemConfigPath": "conformance/__missing_system_config.toml",
+    "managedConfigPaths": []
+  }
+}
