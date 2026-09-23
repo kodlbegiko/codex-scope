@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/phase-d-status.schema.json",
+  "title": "Codex Scope Phase D status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "phase",
+    "phase_status",
+    "internal_deterministic_status",
+    "comparison_schema",
+    "normalization",
+    "classifications",
+    "integration",
+    "provenance",
+    "sanitized_demonstration",
+    "safety",
+    "external_proof_of_value",
+    "false_certainty_blockers"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.phase-d-status.v1"
+    },
+    "phase": {
+      "const": "D"
+    },
+    "phase_status": {
+      "enum": [
+        "blocked_external_proof",
+        "complete"
+      ]
+    },
+    "internal_deterministic_status": {
+      "const": "pass"
+    },
+    "comparison_schema": {
+      "$ref": "#/$defs/versioned_gate"
+    },
+    "normalization": {
+      "$ref": "#/$defs/versioned_gate"
+    },
+    "classifications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same",
+        "semantically_equivalent",
+        "behaviorally_different",
+        "unsupported_on_one_side",
+        "unresolved",
+        "evidence_gap"
+      ],
+      "properties": {
+        "same": { "const": "pass" },
+        "semantically_equivalent": { "const": "pass" },
+        "behaviorally_different": { "const": "pass" },
+        "unsupported_on_one_side": { "const": "pass" },
+        "unresolved": { "const": "pass" },
+        "evidence_gap": { "const": "pass" }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codex",
+        "gemini",
+        "sanitized_repository_count",
+        "sanitized_repository_status"
+      ],
+      "properties": {
+        "codex": { "const": "pass" },
+        "gemini": { "const": "pass" },
+        "sanitized_repository_count": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "sanitized_repository_status": { "const": "pass" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "adapter_versions",
+        "upstream_commits",
+        "rule_ids",
+        "references"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "adapter_versions": { "const": "preserved" },
+        "upstream_commits": { "const": "preserved" },
+        "rule_ids": { "const": "preserved" },
+        "references": { "const": "preserved" }
+      }
+    },
+    "sanitized_demonstration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "path",
+        "ci_command"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "path": {
+          "const": "conformance/comparison/codex-gemini-demo.json"
+        },
+        "ci_command": {
+          "const": "npm run comparison:demo:check"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_calls",
+        "runtime_network",
+        "agent_subprocess_probing",
+        "extension_execution",
+        "mcp_execution"
+      ],
+      "properties": {
+        "model_calls": { "const": false },
+        "runtime_network": { "const": false },
+        "agent_subprocess_probing": { "const": false },
+        "extension_execution": { "const": false },
+        "mcp_execution": { "const": false }
+      }
+    },
+    "external_proof_of_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_external_user_cases",
+        "verified_external_user_cases",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "required_external_user_cases": {
+          "const": 3
+        },
+        "verified_external_user_cases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "blocked",
+            "pass"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "false_certainty_blockers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "status"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "blocked"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "versioned_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "status"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "pass"
+        }
+      }
+    }
+  }
+}
