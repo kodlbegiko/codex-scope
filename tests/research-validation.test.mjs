@@ -12,6 +12,9 @@ const sourceManifest = path.resolve(
 const sourceCoverage = path.resolve("conformance/research/phase-2-coverage.json");
 const sourceCodexManifest = path.resolve("conformance/manifest.json");
 const sourceProbes = path.resolve("conformance/research/gemini-cli/probes.json");
+const sourceExternalEvidence = path.resolve(
+  "conformance/research/external-evidence.json",
+);
 
 function run(manifestPath = sourceManifest, realRepositoriesPath, options = {}) {
   const args = [script, "--manifest", manifestPath];
@@ -21,6 +24,9 @@ function run(manifestPath = sourceManifest, realRepositoriesPath, options = {}) 
     args.push("--codex-manifest", options.codexManifestPath);
   }
   if (options.probesPath) args.push("--probes", options.probesPath);
+  if (options.externalEvidencePath) {
+    args.push("--external-evidence", options.externalEvidencePath);
+  }
   return spawnSync(process.execPath, args, {
     encoding: "utf8",
     env: { ...process.env },
@@ -205,6 +211,52 @@ test("Gemini research validation rejects fewer than three real repositories", ()
   }
 });
 
+
+test("Gemini research validation rejects duplicate external evidence ids", () => {
+  withJson(
+    sourceExternalEvidence,
+    (ledger) => {
+      ledger.interactions.push({ ...ledger.interactions[0] });
+      ledger.interactions[1].url += "?duplicate-id-case";
+    },
+    (externalEvidencePath) => {
+      const result = run(sourceManifest, undefined, { externalEvidencePath });
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /external evidence duplicate id/);
+    },
+  );
+});
+
+test("Gemini research validation rejects duplicate external interaction URLs", () => {
+  withJson(
+    sourceExternalEvidence,
+    (ledger) => {
+      ledger.interactions.push({
+        ...ledger.interactions[0],
+        id: "duplicate-url-case",
+      });
+    },
+    (externalEvidencePath) => {
+      const result = run(sourceManifest, undefined, { externalEvidencePath });
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /duplicate interaction url/);
+    },
+  );
+});
+
+test("Gemini research validation rejects dishonest external evidence gate status", () => {
+  withJson(
+    sourceExternalEvidence,
+    (ledger) => {
+      ledger.gate.status = "pass";
+    },
+    (externalEvidencePath) => {
+      const result = run(sourceManifest, undefined, { externalEvidencePath });
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /external evidence gate status is dishonest or stale/);
+    },
+  );
+});
 
 test("Gemini research validation rejects stale Phase 2 total", () => {
   withJson(
