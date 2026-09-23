@@ -8,51 +8,152 @@ function basename(value: string): string {
   return value.split(/[\\/]/).filter(Boolean).at(-1) ?? value;
 }
 
-function resolvedProjectInstructions(
+function isProjectInstructionRecord(
+  record: NeutralInspectionRecord,
+): boolean {
+  if (record.surface !== "instructions") return false;
+  if (record.subject === "workspace-hierarchy") return true;
+  if (
+    record.value &&
+    typeof record.value === "object" &&
+    !Array.isArray(record.value) &&
+    (record.value as Record<string, unknown>).scope === "project"
+  ) {
+    return true;
+  }
+  return (
+    record.provenance.winner?.scope === "workspace" ||
+    record.provenance.conditional.some(
+      (source) => source.scope === "workspace",
+    )
+  );
+}
+
+function selectProjectInstructionContext(trustSubject: string) {
+  return (records: NeutralInspectionRecord[]): NeutralInspectionRecord[] =>
+    records.filter(
+      (record) =>
+        (record.surface === "trust" && record.subject === trustSubject) ||
+        isProjectInstructionRecord(record),
+    );
+}
+
+function activeProjectInstructions(
   records: NeutralInspectionRecord[],
 ): NeutralInspectionRecord[] {
   return records.filter(
-    (record) =>
-      record.surface === "instructions" &&
-      record.status === "resolved" &&
-      ((record.value &&
-        typeof record.value === "object" &&
-        !Array.isArray(record.value) &&
-        (record.value as Record<string, unknown>).scope === "project") ||
-        record.provenance.winner?.scope === "workspace"),
+    (record) => isProjectInstructionRecord(record) && record.status === "resolved",
   );
 }
 
 function instructionFilenames(
   records: NeutralInspectionRecord[],
 ): string[] {
-  return [...new Set(records.map((record) => basename(record.subject)))].sort();
+  return [
+    ...new Set(
+      activeProjectInstructions(records).map((record) =>
+        basename(record.subject),
+      ),
+    ),
+  ].sort();
+}
+
+function unresolvedProjectInstruction(
+  records: NeutralInspectionRecord[],
+): NeutralInspectionRecord | undefined {
+  return records.find(
+    (record) =>
+      isProjectInstructionRecord(record) &&
+      (record.status === "unresolved" || record.status === "conditional"),
+  );
+}
+
+function projectInstructionProjection(
+  records: NeutralInspectionRecord[],
+): {
+  filenames?: string[];
+  unresolved?: NormalizedProjection;
+} {
+  const trust = records.find((record) => record.surface === "trust");
+  if (!trust) {
+    return {
+      unresolved: {
+        status: "evidence_gap",
+        applicability: "unknown",
+        runtimeDependency: "evidence_gap",
+        reason:
+          "The neutral report does not contain the trust state required to interpret project instruction absence.",
+      },
+    };
+  }
+  if (trust.status === "unresolved") {
+    return {
+      unresolved: {
+        status: "unresolved",
+        applicability: "conditional",
+        runtimeDependency: "trust",
+        reason: trust.reason,
+      },
+    };
+  }
+  if (trust.status !== "resolved") {
+    return {
+      unresolved: {
+        status: "evidence_gap",
+        applicability: "unknown",
+        runtimeDependency: "evidence_gap",
+        reason:
+          "The neutral trust record is neither resolved nor explicitly unresolved.",
+      },
+    };
+  }
+
+  const unresolvedInstruction = unresolvedProjectInstruction(records);
+  if (unresolvedInstruction) {
+    return {
+      unresolved: {
+        status: "unresolved",
+        applicability: "conditional",
+        runtimeDependency: "missing_input",
+        reason: unresolvedInstruction.reason,
+      },
+    };
+  }
+
+  return { filenames: instructionFilenames(records) };
 }
 
 function projectFilenames(
   records: NeutralInspectionRecord[],
 ): NormalizedProjection {
+  const projection = projectInstructionProjection(records);
+  if (projection.unresolved) return projection.unresolved;
   return {
     status: "resolved",
-    normalizedValue: instructionFilenames(records),
+    normalizedValue: projection.filenames ?? [],
     applicability: "active",
     runtimeDependency: "none",
     reason:
-      "Resolved from active project/workspace instruction records in the supplied deterministic fixture.",
+      "Resolved from the complete active project/workspace instruction set under an explicit deterministic trust state.",
   };
 }
 
 function projectEntrypointExists(
   records: NeutralInspectionRecord[],
 ): NormalizedProjection {
+  const projection = projectInstructionProjection(records);
+  if (projection.unresolved) return projection.unresolved;
+  const filenames = projection.filenames ?? [];
   return {
     status: "resolved",
-    normalizedValue: records.length > 0,
-    representationValue: instructionFilenames(records),
+    normalizedValue: filenames.length > 0,
+    representationValue: filenames,
     applicability: "active",
     runtimeDependency: "none",
     reason:
-      "The supplied deterministic inspection has at least one active project/workspace instruction entrypoint.",
+      filenames.length > 0
+        ? "The deterministic inspection contains an active project/workspace instruction entrypoint."
+        : "The deterministic inspection contains no active project/workspace instruction entrypoint.",
   };
 }
 
@@ -172,7 +273,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["codex.instructions.project_root_to_cwd"],
         missingReason:
           "No active Codex project instruction record is available for this fixture.",
-        select: resolvedProjectInstructions,
+        select: selectProjectInstructionContext("project_trust"),
         project: projectFilenames,
       },
       right: {
@@ -180,7 +281,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["gemini.instructions.workspace_hierarchy"],
         missingReason:
           "No active Gemini workspace instruction record is available for this fixture.",
-        select: resolvedProjectInstructions,
+        select: selectProjectInstructionContext("project_trust"),
         project: projectFilenames,
       },
     },
@@ -192,7 +293,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["codex.instructions.project_root_to_cwd"],
         missingReason:
           "No active Codex project instruction record is available for this fixture.",
-        select: resolvedProjectInstructions,
+        select: selectProjectInstructionContext("project_trust"),
         project: projectEntrypointExists,
       },
       right: {
@@ -200,7 +301,7 @@ export const CODEX_GEMINI_COMPARISON_DIMENSIONS: ComparisonDimensionDefinition[]
         ruleIds: ["gemini.instructions.workspace_hierarchy"],
         missingReason:
           "No active Gemini workspace instruction record is available for this fixture.",
-        select: resolvedProjectInstructions,
+        select: selectProjectInstructionContext("project_trust"),
         project: projectEntrypointExists,
       },
     },
