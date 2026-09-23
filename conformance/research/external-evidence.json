@@ -1,0 +1,20 @@
+{
+  "schema_version": "codex-scope.external-evidence.v1",
+  "gate": {
+    "required_distinct_interactions": 3,
+    "status": "fail"
+  },
+  "interactions": [
+    {
+      "id": "codex-agents-self-root-dedup-2026-09-22",
+      "date": "2026-09-22",
+      "upstream_repository": "openai/codex",
+      "url": "https://github.com/openai/codex/issues/34193#issuecomment-5773697356",
+      "interaction_type": "comment",
+      "independent_finding": "Codex Scope independently rechecked current source and modeled the CODEX_HOME == project-root instruction duplication as deterministic conformance behavior.",
+      "external_verification": "The upstream issue contains independent binary reproductions from multiple third parties, including codex-cli 0.146.0, 0.153.4, and an app-bundled 0.154.0-alpha build.",
+      "impact": "The corpus records the discrepancy as current implementation parity so an upstream deduplication change becomes explicit behavior drift rather than silent semantic change.",
+      "status": "submitted"
+    }
+  ]
+}
