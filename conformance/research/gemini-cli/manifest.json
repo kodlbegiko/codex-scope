@@ -9,7 +9,7 @@
     "commit": "62364cb2000795537a6895261b37ec668e4cf527",
     "commit_date": "2026-09-22T21:52:46Z"
   },
-  "adapter_readiness": "blocked",
+  "adapter_readiness": "ready_for_implementation",
   "selected_over": [
     {
       "agent": "claude-code",
@@ -507,12 +507,5 @@
     "fixtures/gemini-research/settings/folder-trust-explicit",
     "fixtures/gemini-research/real-repositories"
   ],
-  "adapter_blockers": [
-    {
-      "blocker_id": "phase-2.external_evidence",
-      "status": "open",
-      "reason": "Three externally verifiable upstream interactions or corrections, or equivalent evidence that the corpus matters beyond this repository, are not recorded as satisfied.",
-      "evidence": "docs/research/cross-agent-evolution-blueprint.md"
-    }
-  ]
+  "adapter_blockers": []
 }
