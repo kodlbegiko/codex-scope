@@ -162,16 +162,42 @@ test("Gemini research validation keeps readiness blocked by open blockers", () =
 test("Gemini research validation rejects fewer than three real repositories", () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "codex-scope-real-repos-"));
   const ledgerPath = path.join(tempDir, "real-repositories.json");
-  const source = JSON.parse(
+  const probesPath = path.join(tempDir, "probes.json");
+  const coveragePath = path.join(tempDir, "phase-2-coverage.json");
+  const ledger = JSON.parse(
     fs.readFileSync(
       path.resolve("conformance/research/gemini-cli/real-repositories.json"),
       "utf8",
     ),
   );
-  source.validations = source.validations.slice(0, 2);
-  fs.writeFileSync(ledgerPath, JSON.stringify(source, null, 2) + "\n");
+  const probes = JSON.parse(fs.readFileSync(sourceProbes, "utf8"));
+  const coverage = JSON.parse(fs.readFileSync(sourceCoverage, "utf8"));
+
+  ledger.validations = ledger.validations.slice(0, 2);
+
+  const realRepositoryProbe = probes.probes.find(
+    (probe) => probe.probe_id === "gemini.phase-c.real_repository_snapshots",
+  );
+  realRepositoryProbe.expected.validation_count = 2;
+
+  const realRepositoryExpansion = coverage.gemini.case_expansion.find(
+    (entry) => entry.probe_id === "gemini.phase-c.real_repository_snapshots",
+  );
+  realRepositoryExpansion.cases = 2;
+  coverage.gemini.real_repository_validations = 2;
+  coverage.gemini.distinct_real_repositories = 2;
+  coverage.gemini.deterministic_cases = 26;
+  coverage.calculation.gemini_research_cases = 26;
+  coverage.calculation.total = 58;
+
+  fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n");
+  fs.writeFileSync(probesPath, JSON.stringify(probes, null, 2) + "\n");
+  fs.writeFileSync(coveragePath, JSON.stringify(coverage, null, 2) + "\n");
   try {
-    const result = run(sourceManifest, ledgerPath);
+    const result = run(sourceManifest, ledgerPath, {
+      probesPath,
+      coveragePath,
+    });
     assert.equal(result.status, 1);
     assert.match(result.stderr, /at least 3 sanitized real repository validations/);
   } finally {
