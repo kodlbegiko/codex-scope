@@ -24,7 +24,19 @@ const realRepositoriesPath = valueAfter(
   "--real-repositories",
   "conformance/research/gemini-cli/real-repositories.json",
 );
-const probes = readJson("conformance/research/gemini-cli/probes.json");
+const probesPath = valueAfter(
+  "--probes",
+  "conformance/research/gemini-cli/probes.json",
+);
+const coveragePath = valueAfter(
+  "--coverage",
+  "conformance/research/phase-2-coverage.json",
+);
+const codexManifestPath = valueAfter(
+  "--codex-manifest",
+  "conformance/manifest.json",
+);
+const probes = readJson(probesPath);
 
 function fail(message) {
   throw new Error(message);
@@ -118,6 +130,289 @@ function validateRealRepositories(ledger, rulesById) {
     fail("Phase C real repository gate requires 3 distinct public repositories");
   }
   return ledger.validations.length;
+}
+
+
+function exactObject(actual, expected, label) {
+  const actualKeys = Object.keys(actual ?? {}).sort();
+  const expectedKeys = Object.keys(expected ?? {}).sort();
+  if (JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
+    fail(
+      label +
+        ": keys are stale: expected " +
+        expectedKeys.join(", ") +
+        " but received " +
+        actualKeys.join(", "),
+    );
+  }
+  for (const key of expectedKeys) {
+    if (actual[key] !== expected[key]) {
+      fail(
+        label +
+          "." +
+          key +
+          " is stale: expected " +
+          JSON.stringify(expected[key]) +
+          " but received " +
+          JSON.stringify(actual[key]),
+      );
+    }
+  }
+}
+
+function uniqueCaseIds(cases, label) {
+  const ids = new Set();
+  for (const entry of cases) {
+    if (!entry?.id || typeof entry.id !== "string") {
+      fail(label + ": every case requires a string id");
+    }
+    if (ids.has(entry.id)) fail(label + ": duplicate case id " + entry.id);
+    ids.add(entry.id);
+  }
+  return ids;
+}
+
+function expandedProbeCases(probe, realRepositories) {
+  if (probe.kind === "trust_provenance" || probe.kind === "settings_scalar_cases") {
+    const expectedCount = probe.expected?.case_count;
+    const casesPath = probe.input?.cases_path;
+    if (!Number.isInteger(expectedCount) || expectedCount < 1) {
+      fail(probe.probe_id + ": expected.case_count must be a positive integer");
+    }
+    if (!casesPath || typeof casesPath !== "string") {
+      fail(probe.probe_id + ": multi-case probe requires input.cases_path");
+    }
+    const casesDocument = readJson(casesPath);
+    if (!Array.isArray(casesDocument.cases)) {
+      fail(probe.probe_id + ": cases_path must contain a cases array");
+    }
+    uniqueCaseIds(casesDocument.cases, probe.probe_id);
+    if (casesDocument.cases.length !== expectedCount) {
+      fail(
+        probe.probe_id +
+          ": expected.case_count is stale: expected " +
+          casesDocument.cases.length +
+          " from " +
+          casesPath +
+          " but received " +
+          expectedCount,
+      );
+    }
+    return expectedCount;
+  }
+
+  if (probe.kind === "user_project_memory") {
+    const cases = probe.input?.cases;
+    if (!Array.isArray(cases) || cases.length < 1) {
+      fail(probe.probe_id + ": user_project_memory requires input.cases");
+    }
+    const ids = uniqueCaseIds(cases, probe.probe_id);
+    const expectedCases = probe.expected?.cases;
+    if (!expectedCases || typeof expectedCases !== "object" || Array.isArray(expectedCases)) {
+      fail(probe.probe_id + ": user_project_memory requires expected.cases");
+    }
+    exactObject(
+      Object.fromEntries([...ids].map((id) => [id, true])),
+      Object.fromEntries(Object.keys(expectedCases).map((id) => [id, true])),
+      probe.probe_id + ".expected.cases",
+    );
+    return cases.length;
+  }
+
+  if (probe.kind === "real_repository_snapshots") {
+    const expectedCount = probe.expected?.validation_count;
+    const actualCount = realRepositories.validations?.length ?? 0;
+    if (!Number.isInteger(expectedCount) || expectedCount < 1) {
+      fail(probe.probe_id + ": expected.validation_count must be a positive integer");
+    }
+    if (expectedCount !== actualCount) {
+      fail(
+        probe.probe_id +
+          ": expected.validation_count is stale: expected " +
+          actualCount +
+          " but received " +
+          expectedCount,
+      );
+    }
+    return expectedCount;
+  }
+
+  return 1;
+}
+
+function validateCoverageLedger(coverage, codexManifest, realRepositories) {
+  if (coverage.schema_version !== "codex-scope.phase-2-coverage.v1") {
+    fail("unexpected Phase 2 coverage schema_version");
+  }
+  if (coverage.gate_id !== "phase-2.second_adapter_corpus_threshold") {
+    fail("unexpected Phase 2 coverage gate_id");
+  }
+  if (coverage.metric !== "deterministic_semantic_cases") {
+    fail("unexpected Phase 2 coverage metric");
+  }
+  if (coverage.threshold !== 50) {
+    fail("Phase 2 coverage threshold must remain 50");
+  }
+  if (coverage.codex?.manifest !== "conformance/manifest.json") {
+    fail("Phase 2 coverage codex.manifest is stale");
+  }
+  if (coverage.gemini?.probes !== "conformance/research/gemini-cli/probes.json") {
+    fail("Phase 2 coverage gemini.probes is stale");
+  }
+  if (
+    coverage.gemini?.real_repository_ledger !==
+    "conformance/research/gemini-cli/real-repositories.json"
+  ) {
+    fail("Phase 2 coverage real_repository_ledger is stale");
+  }
+
+  if (!Array.isArray(codexManifest.rules) || codexManifest.rules.length === 0) {
+    fail("Codex conformance manifest must contain rules");
+  }
+  const codexIds = new Set();
+  const fixturePaths = new Set();
+  const fixtureProbeShapes = new Set();
+  const surfaces = {};
+  let assertions = 0;
+  let regressionRules = 0;
+  for (const rule of codexManifest.rules) {
+    if (!rule?.rule_id || codexIds.has(rule.rule_id)) {
+      fail("Codex coverage requires unique rule_id values");
+    }
+    codexIds.add(rule.rule_id);
+    if (!rule.fixture?.path || !rule.fixture?.probe) {
+      fail(rule.rule_id + ": Codex coverage case requires fixture.path and fixture.probe");
+    }
+    if (!fs.existsSync(repoPath(rule.fixture.path))) {
+      fail(rule.rule_id + ": Codex coverage fixture does not exist: " + rule.fixture.path);
+    }
+    fixturePaths.add(rule.fixture.path);
+    fixtureProbeShapes.add(
+      JSON.stringify({ path: rule.fixture.path, probe: rule.fixture.probe }),
+    );
+    assertions += Array.isArray(rule.assertions) ? rule.assertions.length : 0;
+    if (rule.regression === true) regressionRules += 1;
+    surfaces[rule.surface] = (surfaces[rule.surface] ?? 0) + 1;
+  }
+  const codexRuleCases = codexManifest.rules.length;
+
+  if (!Array.isArray(probes.probes) || probes.probes.length === 0) {
+    fail("Gemini research probes must contain probes");
+  }
+  const probeIds = new Set();
+  const caseExpansion = [];
+  let geminiCases = 0;
+  for (const probe of probes.probes) {
+    if (!probe?.probe_id || probeIds.has(probe.probe_id)) {
+      fail("Gemini coverage requires unique probe_id values");
+    }
+    probeIds.add(probe.probe_id);
+    const cases = expandedProbeCases(probe, realRepositories);
+    caseExpansion.push({
+      probe_id: probe.probe_id,
+      kind: probe.kind,
+      cases,
+    });
+    geminiCases += cases;
+  }
+
+  const realValidations = realRepositories.validations?.length ?? 0;
+  const distinctRepositories = new Set(
+    (realRepositories.validations ?? []).map((entry) => entry.source_repository),
+  ).size;
+  const total = codexRuleCases + geminiCases;
+
+  exactObject(
+    coverage.calculation,
+    {
+      codex_rule_fixture_cases: codexRuleCases,
+      gemini_research_cases: geminiCases,
+      total,
+    },
+    "coverage.calculation",
+  );
+  exactObject(
+    {
+      rule_fixture_cases: coverage.codex?.rule_fixture_cases,
+      unique_fixture_paths: coverage.codex?.unique_fixture_paths,
+      unique_fixture_probe_shapes: coverage.codex?.unique_fixture_probe_shapes,
+      assertions: coverage.codex?.assertions,
+      regression_rules: coverage.codex?.regression_rules,
+    },
+    {
+      rule_fixture_cases: codexRuleCases,
+      unique_fixture_paths: fixturePaths.size,
+      unique_fixture_probe_shapes: fixtureProbeShapes.size,
+      assertions,
+      regression_rules: regressionRules,
+    },
+    "coverage.codex",
+  );
+  exactObject(coverage.codex?.surfaces, surfaces, "coverage.codex.surfaces");
+
+  exactObject(
+    {
+      top_level_probes: coverage.gemini?.top_level_probes,
+      deterministic_cases: coverage.gemini?.deterministic_cases,
+      real_repository_validations: coverage.gemini?.real_repository_validations,
+      distinct_real_repositories: coverage.gemini?.distinct_real_repositories,
+    },
+    {
+      top_level_probes: probes.probes.length,
+      deterministic_cases: geminiCases,
+      real_repository_validations: realValidations,
+      distinct_real_repositories: distinctRepositories,
+    },
+    "coverage.gemini",
+  );
+
+  if (!Array.isArray(coverage.gemini?.case_expansion)) {
+    fail("coverage.gemini.case_expansion must be an array");
+  }
+  if (coverage.gemini.case_expansion.length !== caseExpansion.length) {
+    fail(
+      "coverage.gemini.case_expansion length is stale: expected " +
+        caseExpansion.length +
+        " but received " +
+        coverage.gemini.case_expansion.length,
+    );
+  }
+  for (let index = 0; index < caseExpansion.length; index += 1) {
+    exactObject(
+      coverage.gemini.case_expansion[index],
+      caseExpansion[index],
+      "coverage.gemini.case_expansion[" + index + "]",
+    );
+  }
+
+  const expectedStatus = total >= coverage.threshold ? "pass" : "fail";
+  if (coverage.status !== expectedStatus) {
+    fail(
+      "coverage.status is dishonest or stale: expected " +
+        expectedStatus +
+        " for total=" +
+        total +
+        " threshold=" +
+        coverage.threshold +
+        " but received " +
+        coverage.status,
+    );
+  }
+  if (total < 50 || total < coverage.threshold) {
+    fail(
+      "Phase 2 second-adapter corpus coverage is below required threshold: total=" +
+        total +
+        " threshold=" +
+        coverage.threshold,
+    );
+  }
+
+  return {
+    codexRuleCases,
+    geminiCases,
+    total,
+    status: expectedStatus,
+  };
 }
 
 function validateResearchManifest(manifest, schema, realRepositories) {
@@ -288,6 +583,13 @@ try {
   const manifest = readJson(manifestPath);
   const schema = readJson(schemaPath);
   const realRepositories = readJson(realRepositoriesPath);
+  const coverage = readJson(coveragePath);
+  const codexManifest = readJson(codexManifestPath);
+  const coverageResult = validateCoverageLedger(
+    coverage,
+    codexManifest,
+    realRepositories,
+  );
   const result = validateResearchManifest(manifest, schema, realRepositories);
   console.log(
     "research:gemini:validate: ok " +
@@ -300,6 +602,10 @@ try {
       result.openAdapterBlockers +
       " real_repository_validations=" +
       result.realRepositoryValidations +
+      " coverage_cases=" +
+      coverageResult.total +
+      " coverage_status=" +
+      coverageResult.status +
       " adapter_readiness=" +
       manifest.adapter_readiness,
   );
