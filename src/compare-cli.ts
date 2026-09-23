@@ -31,6 +31,12 @@ export const CODEX_COMPARE_INPUT_SCHEMA_VERSION =
 export const GEMINI_COMPARE_INPUT_SCHEMA_VERSION =
   "codex-scope.compare-input.gemini.v1" as const;
 
+export const COMPARE_CLI_EXIT_CODES = {
+  valid_comparison: 0,
+  internal_tool_error: 1,
+  input_or_usage_tool_error: 2,
+} as const;
+
 interface CompareCliEnvelope {
   schema_version: typeof COMPARISON_CLI_SCHEMA_VERSION;
   comparison: SemanticComparisonDocument | null;
@@ -371,13 +377,13 @@ export function runCompareCli(argv: string[]): number {
     const comparison = sanitizeComparisonDocumentPaths(raw, process.cwd());
     const ciSummary = summarizeComparisonForCi(comparison);
     process.stdout.write(serialize(envelope(comparison, ciSummary)));
-    return 0;
+    return COMPARE_CLI_EXIT_CODES.valid_comparison;
   } catch (error) {
     if (error instanceof CompareInputError) {
       emitToolError(error.message);
-      return 2;
+      return COMPARE_CLI_EXIT_CODES.input_or_usage_tool_error;
     }
     emitToolError("Codex Scope compare failed safely before a valid comparison document was formed.");
-    return 1;
+    return COMPARE_CLI_EXIT_CODES.internal_tool_error;
   }
 }
