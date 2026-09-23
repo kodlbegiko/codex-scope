@@ -1,0 +1,357 @@
+{
+  "schema_version": "codex-scope.semantic-comparison-cli.v1",
+  "comparison": {
+    "schema_version": "codex-scope.semantic-comparison.v1",
+    "normalization_version": "codex-scope.semantic-normalization.v1",
+    "counts": {
+      "same": 0,
+      "semantically_equivalent": 2,
+      "behaviorally_different": 1,
+      "unsupported_on_one_side": 0,
+      "unresolved": 0,
+      "evidence_gap": 1,
+      "total": 4
+    },
+    "comparisons": [
+      {
+        "comparison_id": "instructions.active-project-filenames",
+        "agent_a": "codex",
+        "agent_b": "gemini",
+        "semantic_dimension": "instructions.active_project_instruction_filenames",
+        "left": {
+          "agent": "codex",
+          "semantic_dimension": "instructions.active_project_instruction_filenames",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 2,
+          "reason": "Resolved from the complete active project/workspace instruction set under an explicit deterministic trust state.",
+          "normalized_value": [
+            "AGENTS.md"
+          ]
+        },
+        "right": {
+          "agent": "gemini",
+          "semantic_dimension": "instructions.active_project_instruction_filenames",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 2,
+          "reason": "Resolved from the complete active project/workspace instruction set under an explicit deterministic trust state.",
+          "normalized_value": [
+            "GEMINI.md"
+          ]
+        },
+        "classification": "behaviorally_different",
+        "normalized_relation": "different",
+        "reason": "Both sides are resolved with sufficient evidence and the normalized behavior differs.",
+        "provenance": {
+          "left": [
+            {
+              "scope": "project",
+              "path": "fixtures/demo/conflict/project/AGENTS.md",
+              "precedence": 2399,
+              "reason": "Active project instruction source."
+            }
+          ],
+          "right": [
+            {
+              "type": "cli",
+              "scope": "env",
+              "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins."
+            },
+            {
+              "type": "project",
+              "scope": "workspace",
+              "path": "fixtures/gemini-research/hierarchy/project/GEMINI.md",
+              "reason": "Trusted initial workspace hierarchy."
+            }
+          ]
+        },
+        "evidence": {
+          "left": {
+            "adapter_version": "codex-adapter.v1",
+            "evidence_date": "2026-09-22",
+            "upstream_repository": "openai/codex",
+            "upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+            "references": [
+              "conformance/manifest.json",
+              "conformance/regressions.json",
+              "docs/compatibility.md",
+              "docs/semantics.md"
+            ],
+            "rule_ids": [
+              "codex.instructions.project_root_to_cwd"
+            ]
+          },
+          "right": {
+            "adapter_version": "gemini-adapter.v1",
+            "evidence_date": "2026-09-23",
+            "upstream_repository": "google-gemini/gemini-cli",
+            "upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+            "references": [
+              "conformance/research/external-evidence.json",
+              "conformance/research/gemini-cli/manifest.json",
+              "conformance/research/gemini-cli/probes.json",
+              "conformance/research/gemini-cli/real-repositories.json"
+            ],
+            "rule_ids": [
+              "gemini.instructions.workspace_hierarchy"
+            ]
+          }
+        },
+        "unsupported_metadata": null,
+        "unresolved_metadata": null
+      },
+      {
+        "comparison_id": "instructions.project-entrypoint-exists",
+        "agent_a": "codex",
+        "agent_b": "gemini",
+        "semantic_dimension": "instructions.project_instruction_entrypoint_exists",
+        "left": {
+          "agent": "codex",
+          "semantic_dimension": "instructions.project_instruction_entrypoint_exists",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 2,
+          "reason": "The deterministic inspection contains an active project/workspace instruction entrypoint.",
+          "normalized_value": true
+        },
+        "right": {
+          "agent": "gemini",
+          "semantic_dimension": "instructions.project_instruction_entrypoint_exists",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 2,
+          "reason": "The deterministic inspection contains an active project/workspace instruction entrypoint.",
+          "normalized_value": true
+        },
+        "classification": "semantically_equivalent",
+        "normalized_relation": "equivalent",
+        "reason": "Both sides resolve equivalent behavior under the versioned normalization contract.",
+        "provenance": {
+          "left": [
+            {
+              "scope": "project",
+              "path": "fixtures/demo/conflict/project/AGENTS.md",
+              "precedence": 2399,
+              "reason": "Active project instruction source."
+            }
+          ],
+          "right": [
+            {
+              "type": "cli",
+              "scope": "env",
+              "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins."
+            },
+            {
+              "type": "project",
+              "scope": "workspace",
+              "path": "fixtures/gemini-research/hierarchy/project/GEMINI.md",
+              "reason": "Trusted initial workspace hierarchy."
+            }
+          ]
+        },
+        "evidence": {
+          "left": {
+            "adapter_version": "codex-adapter.v1",
+            "evidence_date": "2026-09-22",
+            "upstream_repository": "openai/codex",
+            "upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+            "references": [
+              "conformance/manifest.json",
+              "conformance/regressions.json",
+              "docs/compatibility.md",
+              "docs/semantics.md"
+            ],
+            "rule_ids": [
+              "codex.instructions.project_root_to_cwd"
+            ]
+          },
+          "right": {
+            "adapter_version": "gemini-adapter.v1",
+            "evidence_date": "2026-09-23",
+            "upstream_repository": "google-gemini/gemini-cli",
+            "upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+            "references": [
+              "conformance/research/external-evidence.json",
+              "conformance/research/gemini-cli/manifest.json",
+              "conformance/research/gemini-cli/probes.json",
+              "conformance/research/gemini-cli/real-repositories.json"
+            ],
+            "rule_ids": [
+              "gemini.instructions.workspace_hierarchy"
+            ]
+          }
+        },
+        "unsupported_metadata": null,
+        "unresolved_metadata": null
+      },
+      {
+        "comparison_id": "runtime.mcp-effective-instructions",
+        "agent_a": "codex",
+        "agent_b": "gemini",
+        "semantic_dimension": "instructions.runtime_mcp_effective_content",
+        "left": {
+          "agent": "codex",
+          "semantic_dimension": "instructions.runtime_mcp_effective_content",
+          "status": "evidence_gap",
+          "applicability": "unknown",
+          "runtime_dependency": "evidence_gap",
+          "source_record_count": 0,
+          "reason": "The Codex neutral report has no evidence-backed mapping for effective runtime MCP instruction content."
+        },
+        "right": {
+          "agent": "gemini",
+          "semantic_dimension": "instructions.runtime_mcp_effective_content",
+          "status": "unsupported",
+          "applicability": "unknown",
+          "runtime_dependency": "unsupported",
+          "source_record_count": 1,
+          "reason": "The deterministic adapter never connects to, starts, or queries MCP servers."
+        },
+        "classification": "evidence_gap",
+        "normalized_relation": "not_comparable",
+        "reason": "The Codex neutral report has no evidence-backed mapping for effective runtime MCP instruction content.",
+        "provenance": {
+          "left": [],
+          "right": [
+            {
+              "scope": "mcp_declaration",
+              "path": "fixtures/gemini-research/mcp-memory/declaration.json",
+              "reason": "Only declaration metadata was inspected."
+            }
+          ]
+        },
+        "evidence": {
+          "left": {
+            "adapter_version": "codex-adapter.v1",
+            "evidence_date": "2026-09-22",
+            "upstream_repository": "openai/codex",
+            "upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+            "references": [
+              "conformance/manifest.json",
+              "conformance/regressions.json",
+              "docs/compatibility.md",
+              "docs/semantics.md"
+            ],
+            "rule_ids": [
+              "comparison.mapping.codex.mcp_effective_content_gap"
+            ]
+          },
+          "right": {
+            "adapter_version": "gemini-adapter.v1",
+            "evidence_date": "2026-09-23",
+            "upstream_repository": "google-gemini/gemini-cli",
+            "upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+            "references": [
+              "conformance/research/external-evidence.json",
+              "conformance/research/gemini-cli/manifest.json",
+              "conformance/research/gemini-cli/probes.json",
+              "conformance/research/gemini-cli/real-repositories.json"
+            ],
+            "rule_ids": [
+              "gemini.instructions.mcp_instructions"
+            ]
+          }
+        },
+        "unsupported_metadata": null,
+        "unresolved_metadata": null
+      },
+      {
+        "comparison_id": "trust.workspace-state",
+        "agent_a": "codex",
+        "agent_b": "gemini",
+        "semantic_dimension": "trust.workspace_state",
+        "left": {
+          "agent": "codex",
+          "semantic_dimension": "trust.workspace_state",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 1,
+          "reason": "Project trust was supplied explicitly for deterministic inspection.",
+          "normalized_value": "trusted"
+        },
+        "right": {
+          "agent": "gemini",
+          "semantic_dimension": "trust.workspace_state",
+          "status": "resolved",
+          "applicability": "active",
+          "runtime_dependency": "none",
+          "source_record_count": 1,
+          "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins.",
+          "normalized_value": "trusted"
+        },
+        "classification": "semantically_equivalent",
+        "normalized_relation": "equivalent",
+        "reason": "Both sides resolve equivalent behavior under the versioned normalization contract.",
+        "provenance": {
+          "left": [],
+          "right": [
+            {
+              "type": "cli",
+              "scope": "env",
+              "reason": "Explicit GEMINI_CLI_TRUST_WORKSPACE=true input wins."
+            }
+          ]
+        },
+        "evidence": {
+          "left": {
+            "adapter_version": "codex-adapter.v1",
+            "evidence_date": "2026-09-22",
+            "upstream_repository": "openai/codex",
+            "upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+            "references": [
+              "conformance/manifest.json",
+              "conformance/regressions.json",
+              "docs/compatibility.md",
+              "docs/semantics.md"
+            ],
+            "rule_ids": [
+              "codex.config.unknown_trust",
+              "codex.instructions.unknown_project_trust"
+            ]
+          },
+          "right": {
+            "adapter_version": "gemini-adapter.v1",
+            "evidence_date": "2026-09-23",
+            "upstream_repository": "google-gemini/gemini-cli",
+            "upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+            "references": [
+              "conformance/research/external-evidence.json",
+              "conformance/research/gemini-cli/manifest.json",
+              "conformance/research/gemini-cli/probes.json",
+              "conformance/research/gemini-cli/real-repositories.json"
+            ],
+            "rule_ids": [
+              "gemini.trust.provenance_sources"
+            ]
+          }
+        },
+        "unsupported_metadata": null,
+        "unresolved_metadata": null
+      }
+    ]
+  },
+  "ci_summary": {
+    "schema_version": "codex-scope.semantic-comparison-ci.v1",
+    "outcome": "unresolved",
+    "observed_outcomes": [
+      "proven_drift",
+      "unresolved"
+    ],
+    "counts": {
+      "same": 0,
+      "semantically_equivalent": 2,
+      "behaviorally_different": 1,
+      "unsupported_on_one_side": 0,
+      "unresolved": 0,
+      "evidence_gap": 1,
+      "total": 4
+    },
+    "reason": "At least one comparison record is unresolved or has an evidence gap; the overall result remains fail-closed."
+  }
+}
