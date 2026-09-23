@@ -75,12 +75,14 @@ function collectProvenance(records: NeutralInspectionRecord[]): NeutralSourceRef
   }
 
   const seen = new Set<string>();
-  return collected.filter((source) => {
-    const key = stableString(source);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  return collected
+    .filter((source) => {
+      const key = stableString(source);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((left, right) => stableString(left).localeCompare(stableString(right)));
 }
 
 function evidenceFor(
