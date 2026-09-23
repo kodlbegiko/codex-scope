@@ -63,6 +63,19 @@ function stableString(value: unknown): string {
   return result === undefined ? "undefined" : result;
 }
 
+function provenanceSortKey(source: NeutralSourceRef): string {
+  return [
+    source.scope,
+    source.type ?? "",
+    source.path ?? "",
+    source.line === undefined ? "" : String(source.line).padStart(12, "0"),
+    source.precedence === undefined
+      ? ""
+      : String(source.precedence).padStart(12, "0"),
+    source.reason ?? "",
+  ].join("\\u0000");
+}
+
 function collectProvenance(records: NeutralInspectionRecord[]): NeutralSourceRef[] {
   const collected: NeutralSourceRef[] = [];
   for (const record of records) {
@@ -82,7 +95,9 @@ function collectProvenance(records: NeutralInspectionRecord[]): NeutralSourceRef
       seen.add(key);
       return true;
     })
-    .sort((left, right) => stableString(left).localeCompare(stableString(right)));
+    .sort((left, right) =>
+      provenanceSortKey(left).localeCompare(provenanceSortKey(right)),
+    );
 }
 
 function evidenceFor(
