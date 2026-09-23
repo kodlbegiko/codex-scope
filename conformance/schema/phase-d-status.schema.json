@@ -11,6 +11,7 @@
     "internal_deterministic_status",
     "comparison_schema",
     "normalization",
+    "ci_outcomes",
     "classifications",
     "integration",
     "provenance",
@@ -53,12 +54,24 @@
         "evidence_gap"
       ],
       "properties": {
-        "same": { "const": "pass" },
-        "semantically_equivalent": { "const": "pass" },
-        "behaviorally_different": { "const": "pass" },
-        "unsupported_on_one_side": { "const": "pass" },
-        "unresolved": { "const": "pass" },
-        "evidence_gap": { "const": "pass" }
+        "same": {
+          "const": "pass"
+        },
+        "semantically_equivalent": {
+          "const": "pass"
+        },
+        "behaviorally_different": {
+          "const": "pass"
+        },
+        "unsupported_on_one_side": {
+          "const": "pass"
+        },
+        "unresolved": {
+          "const": "pass"
+        },
+        "evidence_gap": {
+          "const": "pass"
+        }
       }
     },
     "integration": {
@@ -71,13 +84,19 @@
         "sanitized_repository_status"
       ],
       "properties": {
-        "codex": { "const": "pass" },
-        "gemini": { "const": "pass" },
+        "codex": {
+          "const": "pass"
+        },
+        "gemini": {
+          "const": "pass"
+        },
         "sanitized_repository_count": {
           "type": "integer",
           "minimum": 3
         },
-        "sanitized_repository_status": { "const": "pass" }
+        "sanitized_repository_status": {
+          "const": "pass"
+        }
       }
     },
     "provenance": {
@@ -91,11 +110,21 @@
         "references"
       ],
       "properties": {
-        "status": { "const": "pass" },
-        "adapter_versions": { "const": "preserved" },
-        "upstream_commits": { "const": "preserved" },
-        "rule_ids": { "const": "preserved" },
-        "references": { "const": "preserved" }
+        "status": {
+          "const": "pass"
+        },
+        "adapter_versions": {
+          "const": "preserved"
+        },
+        "upstream_commits": {
+          "const": "preserved"
+        },
+        "rule_ids": {
+          "const": "preserved"
+        },
+        "references": {
+          "const": "preserved"
+        }
       }
     },
     "sanitized_demonstration": {
@@ -107,7 +136,9 @@
         "ci_command"
       ],
       "properties": {
-        "status": { "const": "pass" },
+        "status": {
+          "const": "pass"
+        },
         "path": {
           "const": "conformance/comparison/codex-gemini-demo.json"
         },
@@ -127,11 +158,21 @@
         "mcp_execution"
       ],
       "properties": {
-        "model_calls": { "const": false },
-        "runtime_network": { "const": false },
-        "agent_subprocess_probing": { "const": false },
-        "extension_execution": { "const": false },
-        "mcp_execution": { "const": false }
+        "model_calls": {
+          "const": false
+        },
+        "runtime_network": {
+          "const": false
+        },
+        "agent_subprocess_probing": {
+          "const": false
+        },
+        "extension_execution": {
+          "const": false
+        },
+        "mcp_execution": {
+          "const": false
+        }
       }
     },
     "external_proof_of_value": {
@@ -180,6 +221,34 @@
             "pass",
             "blocked"
           ]
+        }
+      }
+    },
+    "ci_outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "status",
+        "demo_path",
+        "precedence",
+        "evidence_gap_maps_to"
+      ],
+      "properties": {
+        "version": {
+          "const": "codex-scope.semantic-comparison-ci.v1"
+        },
+        "status": {
+          "const": "pass"
+        },
+        "demo_path": {
+          "const": "conformance/comparison/codex-gemini-demo-ci.json"
+        },
+        "precedence": {
+          "const": "unresolved > unsupported > proven_drift > clean"
+        },
+        "evidence_gap_maps_to": {
+          "const": "unresolved"
         }
       }
     }
