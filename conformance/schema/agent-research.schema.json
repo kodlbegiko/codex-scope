@@ -12,6 +12,7 @@
     "evidence_date",
     "upstream",
     "adapter_readiness",
+    "adapter_blockers",
     "selected_over",
     "rules",
     "discrepancies",
@@ -264,6 +265,39 @@
       "items": {
         "type": "string",
         "minLength": 1
+      }
+    },
+    "adapter_blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocker_id",
+          "status",
+          "reason",
+          "evidence"
+        ],
+        "properties": {
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "open",
+              "bounded"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     }
   }
