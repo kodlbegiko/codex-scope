@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require("node:path");
 import { buildCompatibilitySummary } from "./compatibility";
+import { runCompareCli } from "./compare-cli";
 import { defaultCodexHome } from "./config";
 import { ConfigParseError, UsageError } from "./errors";
 import { buildEnvironment } from "./environment";
@@ -123,6 +124,10 @@ function parseArgs(argv: string[]): ParsedArgs {
 }
 
 export function main(argv = process.argv.slice(2)): number {
+  if (argv[0] === "compare") {
+    return runCompareCli(argv.slice(1));
+  }
+
   try {
     const args = parseArgs(argv);
     if (args.command === "compatibility") {
