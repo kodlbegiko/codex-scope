@@ -37,6 +37,60 @@
     "path": "conformance/comparison/codex-gemini-demo.json",
     "ci_command": "npm run comparison:demo:check"
   },
+  "compare_cli": {
+    "status": "pass",
+    "schema_version": "codex-scope.semantic-comparison-cli.v1",
+    "codex_input_schema": "codex-scope.compare-input.codex.v1",
+    "gemini_input_schema": "codex-scope.compare-input.gemini.v1",
+    "supported_agents": [
+      "codex",
+      "gemini"
+    ],
+    "explicit_input_required": true,
+    "json_only": true,
+    "deterministic": true,
+    "source_path": "src/compare-cli.ts",
+    "snapshot_path": "conformance/comparison/cli-codex-gemini.json"
+  },
+  "exit_semantics": {
+    "status": "pass",
+    "valid_comparison": 0,
+    "internal_tool_error": 1,
+    "input_or_usage_tool_error": 2,
+    "semantic_non_clean_is_tool_error": false
+  },
+  "structural_differences": {
+    "status": "pass",
+    "ledger_path": "conformance/comparison/structural-differences.json",
+    "proven_behaviorally_different_count": 5,
+    "required_minimum": 5
+  },
+  "real_repository_proof": {
+    "status": "pass",
+    "repository_count": 3,
+    "comparison_dimension_count": 7,
+    "test_path": "tests/comparison-real-repositories.test.mjs"
+  },
+  "package_verification": {
+    "status": "pass",
+    "command": "npm run package:contents:check",
+    "script_path": "scripts/package-contents-check.mjs",
+    "workflow_path": ".github/workflows/ci.yml",
+    "npm_pack_verification": true
+  },
+  "version_compatibility": {
+    "status": "pass",
+    "contract_path": "conformance/comparison/version-contract.json",
+    "legacy_json_schema": "codex-scope.v0.1",
+    "comparison_schema": "codex-scope.semantic-comparison.v1",
+    "normalization_version": "codex-scope.semantic-normalization.v1",
+    "ci_summary_schema": "codex-scope.semantic-comparison-ci.v1",
+    "cli_envelope_schema": "codex-scope.semantic-comparison-cli.v1",
+    "codex_adapter_version": "codex-adapter.v1",
+    "gemini_adapter_version": "gemini-adapter.v1",
+    "migration_policy": "no_silent_mutation",
+    "future_version_policy": "fail_closed"
+  },
   "safety": {
     "model_calls": false,
     "runtime_network": false,
@@ -48,7 +102,7 @@
     "required_external_user_cases": 3,
     "verified_external_user_cases": 0,
     "status": "blocked",
-    "reason": "The blueprint requires three external user cases where comparison finds a real configuration problem. Repository fixtures, sanitized public snapshots, and prior upstream interactions are not counted as external user cases."
+    "reason": "The blueprint requires three independent qualifying external user cases. Repository fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions are not external proof-of-value."
   },
   "false_certainty_blockers": {
     "count": 0,

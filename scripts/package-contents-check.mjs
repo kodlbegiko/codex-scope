@@ -8,6 +8,7 @@ const required = [
   "conformance/schema/structural-differences.schema.json",
   "conformance/comparison/phase-d-status.json",
   "conformance/comparison/structural-differences.json",
+  "conformance/comparison/version-contract.json",
   "conformance/comparison/cli-codex-gemini.json",
   "dist/comparison.js",
   "dist/comparison-ci.js",
