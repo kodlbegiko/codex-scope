@@ -1,0 +1,18 @@
+{
+  "schema_version": "codex-scope.semantic-comparison-ci.v1",
+  "outcome": "unresolved",
+  "observed_outcomes": [
+    "proven_drift",
+    "unresolved"
+  ],
+  "counts": {
+    "same": 0,
+    "semantically_equivalent": 2,
+    "behaviorally_different": 1,
+    "unsupported_on_one_side": 0,
+    "unresolved": 0,
+    "evidence_gap": 1,
+    "total": 4
+  },
+  "reason": "At least one comparison record is unresolved or has an evidence gap; the overall result remains fail-closed."
+}
