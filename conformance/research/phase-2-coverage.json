@@ -1,0 +1,111 @@
+{
+  "schema_version": "codex-scope.phase-2-coverage.v1",
+  "gate_id": "phase-2.second_adapter_corpus_threshold",
+  "metric": "deterministic_semantic_cases",
+  "threshold": 50,
+  "status": "pass",
+  "calculation": {
+    "codex_rule_fixture_cases": 32,
+    "gemini_research_cases": 27,
+    "total": 59
+  },
+  "codex": {
+    "manifest": "conformance/manifest.json",
+    "rule_fixture_cases": 32,
+    "unique_fixture_paths": 17,
+    "unique_fixture_probe_shapes": 28,
+    "assertions": 59,
+    "regression_rules": 9,
+    "surfaces": {
+      "instructions": 12,
+      "trust": 4,
+      "config": 13,
+      "invocation": 2,
+      "compatibility": 1
+    }
+  },
+  "gemini": {
+    "probes": "conformance/research/gemini-cli/probes.json",
+    "top_level_probes": 13,
+    "deterministic_cases": 27,
+    "case_expansion": [
+      {
+        "probe_id": "gemini.instructions.initial_hierarchy",
+        "kind": "instruction_hierarchy",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.instructions.jit_target",
+        "kind": "jit_context",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.instructions.configured_filenames",
+        "kind": "configured_filenames",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.config.settings_precedence.trusted",
+        "kind": "settings_precedence",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.trust.untrusted_workspace_settings",
+        "kind": "settings_precedence",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.trust.provenance_precedence",
+        "kind": "trust_provenance",
+        "cases": 9
+      },
+      {
+        "probe_id": "gemini.instructions.user_project_memory_precedence",
+        "kind": "user_project_memory",
+        "cases": 3
+      },
+      {
+        "probe_id": "gemini.instructions.extension_memory_snapshot",
+        "kind": "extension_memory_snapshot",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.instructions.mcp_runtime_boundary",
+        "kind": "mcp_boundary",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.instructions.memory_import_fail_closed",
+        "kind": "memory_import_boundary",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.config.include_directories_concat",
+        "kind": "settings_array_concat",
+        "cases": 1
+      },
+      {
+        "probe_id": "gemini.config.folder_trust_explicit_precedence",
+        "kind": "settings_scalar_cases",
+        "cases": 3
+      },
+      {
+        "probe_id": "gemini.phase-c.real_repository_snapshots",
+        "kind": "real_repository_snapshots",
+        "cases": 3
+      }
+    ],
+    "real_repository_ledger": "conformance/research/gemini-cli/real-repositories.json",
+    "real_repository_validations": 3,
+    "distinct_real_repositories": 3
+  },
+  "rationale": "Equivalent coverage counts each Codex rule-level fixture scenario once and each independently asserted Gemini research case once. Multi-case Gemini probes count only explicit enumerated cases or validator-enforced case_count values. Assertions, files, and repeated fixture paths are reported as supporting diagnostics and are not added to the gate total.",
+  "evidence": [
+    "docs/research/cross-agent-evolution-blueprint.md",
+    "conformance/manifest.json",
+    "conformance/research/gemini-cli/probes.json",
+    "conformance/research/gemini-cli/real-repositories.json",
+    "scripts/conformance-check.mjs",
+    "scripts/research-gemini-semantics.mjs"
+  ]
+}
