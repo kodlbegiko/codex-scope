@@ -281,3 +281,12 @@ test("deprecated approval_policy=on-failure keeps provenance but is unsupported"
   assert.equal(approval.state, "unsupported");
   assert.match(approval.reason, /deprecated/);
 });
+
+test("legacy approval policy remains unresolved when invocation state is incomplete", () => {
+  const result = resolveConfig(options("policy-legacy", "", { invocationComplete: false }));
+  const approval = result.values.approval_policy;
+  assert.equal(approval.effectiveValue, "untrusted");
+  assert.equal(approval.state, "unresolved");
+  assert.match(approval.reason, /missing invocation\/trust state/);
+  assert.match(approval.missingInformation.join(" "), /invocation/i);
+});

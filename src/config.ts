@@ -102,13 +102,17 @@ function validateAndClassify(values: Record<string, ResolvedValue>): void {
     } else if (value.key === "approval_policy" && actual !== undefined) {
       if (typeof actual === "string") {
         if (actual === "untrusted") {
-          value.state = "unsupported";
-          value.reason =
-            'approval_policy="untrusted" is no longer supported by current Codex; project trust is modeled separately.';
+          if (value.state !== "unresolved") {
+            value.state = "unsupported";
+            value.reason =
+              'approval_policy="untrusted" is no longer supported by current Codex; project trust is modeled separately.';
+          }
         } else if (actual === "on-failure") {
-          value.state = "unsupported";
-          value.reason =
-            'approval_policy="on-failure" is deprecated upstream; V0.1 preserves provenance but does not claim current semantics.';
+          if (value.state !== "unresolved") {
+            value.state = "unsupported";
+            value.reason =
+              'approval_policy="on-failure" is deprecated upstream; V0.1 preserves provenance but does not claim current semantics.';
+          }
         } else if (!["on-request", "never"].includes(actual)) {
           throw new CodexScopeError(
             "UNSUPPORTED_CONFIG_VALUE",
