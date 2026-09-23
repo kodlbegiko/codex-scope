@@ -654,3 +654,240 @@ export function validateComparisonDocument(
 
   validateCounts(document.counts, comparisons);
 }
+
+export type ResolvedRelation = "same" | "equivalent" | "different";
+
+export interface NormalizedComparisonInput {
+  comparison_id: string;
+  semantic_dimension: string;
+  left: ComparisonSide;
+  right: ComparisonSide;
+  resolved_relation?: ResolvedRelation;
+  provenance: SemanticComparisonRecord["provenance"];
+  evidence: SemanticComparisonRecord["evidence"];
+}
+
+const UNRESOLVED_RUNTIME_DEPENDENCIES = new Set<RuntimeDependency>([
+  "trust",
+  "jit",
+  "runtime",
+  "missing_input",
+  "upstream_ambiguity",
+]);
+
+function unique<T>(values: T[]): T[] {
+  return values.filter((value, index) => values.indexOf(value) === index);
+}
+
+export function compareNormalizedSides(
+  input: NormalizedComparisonInput,
+): SemanticComparisonRecord {
+  if (input.left.agent === input.right.agent) {
+    throw new Error("agent_a and agent_b must differ");
+  }
+  if (
+    input.left.semantic_dimension !== input.semantic_dimension ||
+    input.right.semantic_dimension !== input.semantic_dimension
+  ) {
+    throw new Error("semantic_dimension must match both normalized sides");
+  }
+
+  let classification: ComparisonClassification;
+  let normalizedRelation: NormalizedRelation = "not_comparable";
+  let reason: string;
+  let unsupportedMetadata: UnsupportedMetadata | null = null;
+  let unresolvedMetadata: UnresolvedMetadata | null = null;
+
+  const gapSides = [
+    input.left.status === "evidence_gap" ? "left" : undefined,
+    input.right.status === "evidence_gap" ? "right" : undefined,
+  ].filter((side): side is "left" | "right" => Boolean(side));
+
+  if (gapSides.length > 0) {
+    classification = "evidence_gap";
+    reason = gapSides
+      .map((side) => (side === "left" ? input.left.reason : input.right.reason))
+      .join(" ");
+  } else {
+    const unresolvedSides = [
+      input.left.status === "unresolved" ? "left" : undefined,
+      input.right.status === "unresolved" ? "right" : undefined,
+    ].filter((side): side is "left" | "right" => Boolean(side));
+
+    if (unresolvedSides.length > 0) {
+      const dependencies = unique(
+        unresolvedSides.map((side) =>
+          side === "left"
+            ? input.left.runtime_dependency
+            : input.right.runtime_dependency,
+        ),
+      );
+      for (const dependency of dependencies) {
+        if (!UNRESOLVED_RUNTIME_DEPENDENCIES.has(dependency)) {
+          throw new Error(
+            "unresolved normalized sides require an explicit unresolved runtime_dependency",
+          );
+        }
+      }
+
+      classification = "unresolved";
+      reason = unresolvedSides
+        .map((side) => (side === "left" ? input.left.reason : input.right.reason))
+        .join(" ");
+      unresolvedMetadata = {
+        sides: unresolvedSides,
+        reasons: unresolvedSides.map((side) =>
+          side === "left" ? input.left.reason : input.right.reason,
+        ),
+        dependencies: dependencies as UnresolvedMetadata["dependencies"],
+      };
+    } else {
+      const unsupportedSides = [
+        input.left.status === "unsupported" ? "left" : undefined,
+        input.right.status === "unsupported" ? "right" : undefined,
+      ].filter((side): side is "left" | "right" => Boolean(side));
+
+      if (unsupportedSides.length > 0) {
+        if (
+          unsupportedSides.length !== 1 ||
+          (unsupportedSides[0] === "left"
+            ? input.right.status !== "resolved"
+            : input.left.status !== "resolved")
+        ) {
+          throw new Error(
+            "unsupported_on_one_side requires exactly one unsupported side opposite a resolved side",
+          );
+        }
+        const side = unsupportedSides[0];
+        const sideReason =
+          side === "left" ? input.left.reason : input.right.reason;
+        classification = "unsupported_on_one_side";
+        reason = sideReason;
+        unsupportedMetadata = {
+          side,
+          reason: sideReason,
+        };
+      } else {
+        if (
+          input.left.status !== "resolved" ||
+          input.right.status !== "resolved"
+        ) {
+          throw new Error(
+            "normalized sides are not comparable without resolved, unsupported, unresolved, or evidence_gap status",
+          );
+        }
+        if (!input.resolved_relation) {
+          throw new Error(
+            "resolved_relation is required when both normalized sides are resolved",
+          );
+        }
+        normalizedRelation = input.resolved_relation;
+        if (input.resolved_relation === "same") {
+          classification = "same";
+          reason =
+            "Both sides resolve the same normalized semantic state for this dimension.";
+        } else if (input.resolved_relation === "equivalent") {
+          classification = "semantically_equivalent";
+          reason =
+            "Both sides resolve equivalent behavior under the versioned normalization contract.";
+        } else {
+          classification = "behaviorally_different";
+          reason =
+            "Both sides are resolved with sufficient evidence and the normalized behavior differs.";
+        }
+      }
+    }
+  }
+
+  return {
+    comparison_id: input.comparison_id,
+    agent_a: input.left.agent,
+    agent_b: input.right.agent,
+    semantic_dimension: input.semantic_dimension,
+    left: { ...input.left },
+    right: { ...input.right },
+    classification,
+    normalized_relation: normalizedRelation,
+    reason,
+    provenance: {
+      left: input.provenance.left.map((source) => ({ ...source })),
+      right: input.provenance.right.map((source) => ({ ...source })),
+    },
+    evidence: {
+      left: {
+        ...input.evidence.left,
+        references: [...input.evidence.left.references],
+        rule_ids: [...input.evidence.left.rule_ids],
+      },
+      right: {
+        ...input.evidence.right,
+        references: [...input.evidence.right.references],
+        rule_ids: [...input.evidence.right.rule_ids],
+      },
+    },
+    unsupported_metadata: unsupportedMetadata,
+    unresolved_metadata: unresolvedMetadata,
+  };
+}
+
+export function buildComparisonDocument(
+  records: SemanticComparisonRecord[],
+): SemanticComparisonDocument {
+  const comparisons = records
+    .map((record) => ({
+      ...record,
+      left: { ...record.left },
+      right: { ...record.right },
+      provenance: {
+        left: record.provenance.left.map((source) => ({ ...source })),
+        right: record.provenance.right.map((source) => ({ ...source })),
+      },
+      evidence: {
+        left: {
+          ...record.evidence.left,
+          references: [...record.evidence.left.references],
+          rule_ids: [...record.evidence.left.rule_ids],
+        },
+        right: {
+          ...record.evidence.right,
+          references: [...record.evidence.right.references],
+          rule_ids: [...record.evidence.right.rule_ids],
+        },
+      },
+      unsupported_metadata: record.unsupported_metadata
+        ? { ...record.unsupported_metadata }
+        : null,
+      unresolved_metadata: record.unresolved_metadata
+        ? {
+            sides: [...record.unresolved_metadata.sides],
+            reasons: [...record.unresolved_metadata.reasons],
+            dependencies: [...record.unresolved_metadata.dependencies],
+          }
+        : null,
+    }))
+    .sort((left, right) =>
+      left.comparison_id.localeCompare(right.comparison_id),
+    );
+
+  const counts: SemanticComparisonCounts = {
+    same: 0,
+    semantically_equivalent: 0,
+    behaviorally_different: 0,
+    unsupported_on_one_side: 0,
+    unresolved: 0,
+    evidence_gap: 0,
+    total: comparisons.length,
+  };
+  for (const comparison of comparisons) {
+    counts[comparison.classification] += 1;
+  }
+
+  const document: SemanticComparisonDocument = {
+    schema_version: COMPARISON_SCHEMA_VERSION,
+    normalization_version: NORMALIZATION_VERSION,
+    counts,
+    comparisons,
+  };
+  validateComparisonDocument(document);
+  return document;
+}
