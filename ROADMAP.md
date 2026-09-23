@@ -120,56 +120,52 @@ Phase B now makes the compatibility boundary deterministic and queryable:
 
 Clean-checkout CI run #37 validates the Phase B implementation before this documentation update.
 
-## NEXT — Phase C second-agent research spike
+## COMPLETED — Phase C second-agent conformance adapter
 
-Phase C is now permitted as a **research-first** spike. It must not start by creating an adapter class.
+Phase C selected **Gemini CLI** after evidence-first candidate research and completed the conformance gate before adapter implementation.
 
-The next task is to compare candidate agents using current official documentation and inspectable upstream source, then choose exactly one based on evidence quality, deterministic inspectability, configuration/instruction hierarchy, trust/security semantics, source pinning, fixture feasibility, and zero-network/API-key operation.
+The checked-in Phase C baseline includes:
 
-The existing Gemini CLI preference is only a prior hypothesis. Claude Code, Gemini CLI, and Cursor must be re-evaluated against current evidence before selecting the candidate.
+- pinned official documentation, upstream source, and upstream tests;
+- deterministic Gemini probes and fixtures;
+- explicit supported, unresolved, and unsupported boundaries;
+- three sanitized real-repository validations;
+- external evidence gating;
+- `gemini-adapter.v1` limited to the authorized deterministic subset.
 
-A formal adapter is allowed only after the research spike produces machine-readable semantic rules, pinned references, representative deterministic fixtures, explicit unsupported/unresolved boundaries, and zero known false-certainty blocker.
+Runtime/JIT-dependent state, omitted Folder Trust defaults, live extension activation, effective MCP instruction content, and recursive memory imports remain unresolved or unsupported rather than guessed.
 
-## VALIDATION CANDIDATE — one second agent
+## ACTIVE — Phase D neutral semantic comparison
 
-After the Codex conformance corpus and adapter seam are proven, validate the cross-agent thesis with **one** additional agent.
+Phase D now has an internal deterministic comparison core on top of the two proven adapters.
 
-The current correctness-first engineering candidate is **Gemini CLI** because its implementation is inspectable, its documentation is strong, and its hierarchical/JIT context behavior is complex enough to test the neutral model. This is not an implementation commitment.
+Implemented internal milestones:
 
-Claude Code remains a demand-relevant alternative, but no user-count threshold automatically selects it. Choose the second adapter using evidence quality, reproducibility, maintenance cost, upstream inspectability, and whether the deterministic contract can be preserved.
+- versioned `codex-scope.semantic-comparison.v1` JSON schema;
+- versioned `codex-scope.semantic-normalization.v1` normalization contract;
+- closed classifications: `same`, `semantically_equivalent`, `behaviorally_different`, `unsupported_on_one_side`, `unresolved`, and `evidence_gap`;
+- deterministic fixture coverage for every classification and negative contract cases;
+- Codex + Gemini neutral-report integration without agent-specific branches in the shared comparison engine;
+- adapter/upstream/rule/reference provenance retention;
+- three existing sanitized repositories exercised through cross-agent instruction comparison;
+- sanitized byte-stable machine-readable demonstration enforced by `npm run comparison:demo:check`.
 
-An adapter is not accepted until it has:
+The public V0.1 CLI has **not** gained a compare command. Phase D is intentionally proving the machine-readable core before any human-facing CLI surface.
 
-- an official-documentation and implementation-evidence ledger;
-- version/evidence-date boundaries;
-- deterministic fixtures for precedence and path-scoped behavior;
-- explicit conditional/unresolved handling;
-- redaction and path-privacy review;
-- a documented native-diagnostics comparison;
-- sanitized real-repository validation.
+Machine-readable status is recorded in
+[`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
 
-The first cross-agent release should compare provenance and applicability facts. It must not claim semantic equivalence between arbitrary Markdown instructions.
+The blueprint's external proof-of-value gate is still open: **0 / 3 qualifying external user cases** where comparison identifies a real configuration problem. Repository fixtures, sanitized public snapshots, and prior upstream interactions do not count as external user cases. Therefore Phase D is not declared complete and Phase E remains blocked.
 
-## AFTER TWO PROVEN ADAPTERS — compare and CI
+## AFTER PHASE D — compare CLI and later expansion
 
-Potential surfaces:
+Only after the comparison contract remains stable and the external Phase D gate is satisfied should a public surface such as the following be considered:
 
 ```text
-codex-scope agents
-codex-scope compare codex <second-agent>
-codex-scope compare codex <second-agent> --json
+codex-scope compare codex gemini --json
 ```
 
-Candidate proven differences include:
-
-- instruction source coverage;
-- scope and applicability;
-- winner, shadowed, ignored, and conditional sources;
-- supported permission/config values with a defensible common meaning;
-- MCP server declarations when discovery and merge semantics are verified;
-- adapter compatibility and evidence state.
-
-CI behavior requires a stable, versioned comparison schema and separate outcomes for proven drift, unresolved state, unsupported semantics, and tool failure.
+Any future public compare command must preserve the same fail-closed distinctions between proven differences, unresolved state, unsupported semantics, and evidence gaps. It must not rank agents or infer semantic equivalence from arbitrary instruction prose.
 
 ## SECONDARY CANDIDATES
 
