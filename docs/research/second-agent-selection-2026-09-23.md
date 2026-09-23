@@ -103,20 +103,30 @@ presence into `resolved`.
 The pinned evidence is internally inconsistent and must not be normalized away:
 
 - `docs/cli/trusted-folders.md` says Trusted Folders is **disabled by default**;
-- `docs/reference/configuration.md` says
-  `security.folderTrust.enabled` defaults to `true`;
-- `packages/cli/src/config/trustedFolders.ts` uses
-  `settings.security?.folderTrust?.enabled ?? true` when deciding whether
-  trust checking is enabled;
-- `packages/cli/src/config/config.ts` separately computes a
-  `folderTrust` value using `settings.security?.folderTrust?.enabled ?? false`.
+- `docs/reference/configuration.md` and
+  `packages/cli/src/config/settingsSchema.ts` describe
+  `security.folderTrust.enabled` with a default of `true`;
+- `packages/cli/src/config/settings.ts` materializes schema defaults through
+  `getDefaultsFromSchema()` before merging system-default, user, trusted
+  workspace, and system-override settings;
+- `packages/cli/src/config/trustedFolders.ts` then consumes the merged value
+  and also has a `?? true` fallback;
+- `packages/cli/src/config/config.ts` contains a separate `?? false`
+  fallback, but the normal merged-settings path already materializes schema
+  defaults before this point;
+- pinned upstream tests assert the schema default and trust-enabled/disabled
+  behavior, but the official trusted-folders guide still says the feature is
+  disabled by default.
 
-Until the upstream semantics are reconciled and the effective call path is
-proven with a deterministic fixture, Codex Scope records the default as
-**unresolved**.
+The evidence therefore strongly identifies the current normal source path while
+still leaving an official-doc/source contradiction. Codex Scope continues to
+classify the **omitted-setting default** as `unresolved`.
 
-This is exactly the kind of evidence conflict the project must surface rather
-than silently choosing documentation or implementation.
+The discrepancy is now **bounded rather than silently resolved**: a future
+adapter may only make a resolved trust-dependent claim when trust/folder-trust
+state is supplied explicitly or otherwise covered by a deterministic supported
+input. If that input is absent, the adapter must return `unresolved`; it must
+not choose `true` or `false` from the conflicting evidence.
 
 ## Research-only fixture policy
 
@@ -129,21 +139,71 @@ remaining evidence gate is later satisfied.
 No fixture contains hooks, executable configuration, MCP servers, plugin code,
 or network-dependent behavior.
 
+## Deterministic research validation
+
+Phase C research data is now executable evidence rather than documentation-only
+state:
+
+- `conformance/schema/agent-research.schema.json` validates the research
+  ledger;
+- `npm run research:gemini:validate` validates the schema, pinned evidence
+  links, duplicate rule IDs, fixture paths, discrepancy references, assertion
+  coverage, and adapter-readiness blockers;
+- `conformance/research/gemini-cli/probes.json` defines deterministic
+  hierarchy, JIT-target, configurable-filename, settings-precedence, and
+  untrusted-workspace probes;
+- `npm run research:gemini:assert` executes those probes without a model call,
+  Gemini CLI subprocess, runtime network access, hooks, plugins, or MCP;
+- JIT descendant context is only asserted from an explicit target path and is
+  not pre-activated in the pre-session result.
+
+Pinned `MemoryContextManager` evidence also shows that a complete Gemini
+instruction surface includes channels beyond the current filesystem-context
+subset: extension memory, user-project memory, and MCP-provided instructions.
+Those channels remain outside the supported research subset and must not be
+silently omitted by a formal adapter.
+
+Memory-import evidence is also pinned: imports are recursively processed,
+bounded by project-root/path validation and a maximum depth. The current spike
+does not implement that processor. A future adapter must either model it
+deterministically or fail closed when potential imports can change the effective
+instruction result.
+
 ## Adapter authorization gate
 
 Do **not** add `src/adapters/gemini.ts` yet.
 
-A formal Gemini adapter remains blocked until at least:
+The folder-trust discrepancy and JIT boundary are now sufficiently bounded for
+continued research, but the repository's actual blueprint imposes stronger
+authorization gates that are not yet satisfied:
 
-- the folder-trust default discrepancy is resolved or explicitly bounded away
-  from the supported subset;
-- JIT context is modeled as conditional/unresolved with a deterministic input
-  boundary;
-- import behavior and trusted-root boundaries are sufficiently pinned for the
-  chosen instruction subset;
-- each promoted semantic rule has a deterministic assertion, not only a
-  research fixture;
-- zero known false-certainty blocker remains in the proposed supported subset.
+- Phase C requires at least **three sanitized real repositories** validating
+  useful output; none are currently recorded in the Phase C corpus;
+- the Codex conformance manifest currently contains **32 rules**, while the
+  blueprint's second-adapter authorization gate requires at least 50 total
+  conformance fixtures or equivalent coverage evidence; equivalent coverage has
+  not been demonstrated;
+- three externally verifiable upstream interactions/corrections, or equivalent
+  evidence that the corpus matters beyond this repository, are not recorded as
+  satisfied;
+- extension memory, user-project memory, and MCP instruction channels still
+  need an explicit supported/unsupported boundary;
+- trust provenance still lacks a deterministic assertion for the selected
+  subset.
 
-If those conditions cannot be met, Phase C should remain a research spike rather
-than shipping a speculative adapter.
+These blockers are also machine-readable in
+`conformance/research/gemini-cli/manifest.json`. Adapter readiness must remain
+`blocked` while any open blocker exists.
+
+Current result:
+
+```text
+Phase C research infrastructure: PASS
+Folder-trust ambiguity: BOUNDED, default remains UNRESOLVED
+JIT explicit-target boundary: PASS
+Gemini adapter authorization: BLOCKED
+Phase C exit gate: FAIL
+```
+
+This is an intentional conformance-first stop, not a reason to weaken the gate
+or ship a filename-only adapter.
