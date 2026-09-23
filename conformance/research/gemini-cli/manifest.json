@@ -291,10 +291,10 @@
     {
       "discrepancy_id": "gemini-folder-trust-default-2026-09-23",
       "rule_id": "gemini.trust.folder_trust_default",
-      "status": "open_research",
+      "status": "bounded",
       "classification": "unresolved",
-      "summary": "Trusted Folders docs say disabled by default; configuration reference says enabled=true by default; trustedFolders.ts and config.ts also use different nullish defaults in different call paths.",
-      "blocker_for_adapter": true
+      "summary": "Pinned docs say Folder Trust is disabled by default, while the settings schema defaults security.folderTrust.enabled to true and getDefaultsFromSchema materializes that value into the normal merged-settings path. The omitted-setting default remains unresolved; a future adapter must accept explicit trust/folder-trust input or return unresolved instead of choosing a default.",
+      "blocker_for_adapter": false
     }
   ],
   "known_unknowns": [
@@ -302,11 +302,46 @@
     "Memory import recursion, trust-root, and error semantics are not yet promoted into the supported research subset.",
     "Interaction between context.fileName lists and every hierarchy/JIT path needs fixture-level confirmation before adapter implementation.",
     "Automatic local Gemini CLI version detection is not part of the research spike.",
-    "MCP, hooks, extensions, custom commands, policy engine, and model/runtime behavior remain outside the proposed initial adapter subset."
+    "MCP, hooks, extensions, custom commands, policy engine, and model/runtime behavior remain outside the proposed initial adapter subset.",
+    "Extension memory, user-project memory, and MCP-provided instructions are present in pinned MemoryContextManager and remain outside the current research subset.",
+    "Memory imports are recursively processed with project-root path validation; exact import expansion is not yet part of the adapter-authorized subset and must fail closed if encountered.",
+    "CLI arguments, environment-derived behavior, and remote admin controls do not form one generic settings layer; only the checked-in file-precedence subset is currently asserted."
   ],
   "fixture_roots": [
     "fixtures/gemini-research/hierarchy",
     "fixtures/gemini-research/settings",
     "fixtures/gemini-research/trust/untrusted"
+  ],
+  "adapter_blockers": [
+    {
+      "blocker_id": "phase-c.real_repository_validation",
+      "status": "open",
+      "reason": "The checked-in Phase C corpus has no recorded sanitized-real-repository validations; the repository blueprint requires at least three before the Phase C exit gate can pass.",
+      "evidence": "docs/research/cross-agent-evolution-blueprint.md"
+    },
+    {
+      "blocker_id": "phase-2.second_adapter_corpus_threshold",
+      "status": "open",
+      "reason": "The Codex conformance manifest currently contains 32 rules. The repository blueprint requires at least 50 total conformance fixtures or equivalent coverage evidence before authorizing a second adapter; equivalent coverage has not been demonstrated.",
+      "evidence": "conformance/manifest.json"
+    },
+    {
+      "blocker_id": "phase-2.external_evidence",
+      "status": "open",
+      "reason": "Three externally verifiable upstream interactions or corrections, or equivalent evidence that the corpus matters beyond this repository, are not recorded as satisfied.",
+      "evidence": "docs/research/cross-agent-evolution-blueprint.md"
+    },
+    {
+      "blocker_id": "gemini.instructions.additional_runtime_channels",
+      "status": "open",
+      "reason": "Pinned MemoryContextManager also composes extension memory, user-project memory, and MCP instructions. The current research subset does not yet model these channels or encode their unsupported boundary as adapter conformance.",
+      "evidence": "packages/core/src/context/memoryContextManager.ts@62364cb2000795537a6895261b37ec668e4cf527"
+    },
+    {
+      "blocker_id": "gemini.trust.provenance_assertion",
+      "status": "open",
+      "reason": "Trust provenance source categories are source-evidenced but do not yet have a deterministic local assertion covering the selected adapter subset.",
+      "evidence": "gemini.trust.provenance_sources"
+    }
   ]
 }
