@@ -1,0 +1,124 @@
+{
+  "schema_version": "codex-scope.real-repository-validation.v1",
+  "agent": "gemini-cli",
+  "evidence_date": "2026-09-23",
+  "validations": [
+    {
+      "id": "netdata-nested-hierarchy",
+      "source_repository": "netdata/netdata",
+      "source_commit": "51d547bcf42703d403ba0a426a17315edf4ef519",
+      "source_visibility": "public",
+      "license_spdx": "GPL-3.0",
+      "source_paths": [
+        "GEMINI.md",
+        "src/go/GEMINI.md",
+        "src/go/plugin/ibm.d/GEMINI.md"
+      ],
+      "sanitized_root": "fixtures/gemini-research/real-repositories/netdata-netdata",
+      "sanitized_paths": [
+        "fixtures/gemini-research/real-repositories/netdata-netdata/GEMINI.md",
+        "fixtures/gemini-research/real-repositories/netdata-netdata/src/go/GEMINI.md",
+        "fixtures/gemini-research/real-repositories/netdata-netdata/src/go/plugin/ibm.d/GEMINI.md"
+      ],
+      "validates_rules": [
+        "gemini.instructions.workspace_hierarchy",
+        "gemini.instructions.jit_subdirectory_context"
+      ],
+      "removed": [
+        "All source instruction prose was replaced with neutral markers; all non-GEMINI repository files were omitted."
+      ],
+      "safety": "Only inert Markdown path structure is retained. No repository scripts, hooks, packages, binaries, extensions, MCP servers, or lifecycle commands are executed.",
+      "scenario": {
+        "context_filenames": [
+          "GEMINI.md"
+        ],
+        "target_path": "src/go/plugin/ibm.d/new-file.go",
+        "expected_active": [
+          "GEMINI.md"
+        ],
+        "expected_conditional": [
+          "src/go/GEMINI.md",
+          "src/go/plugin/ibm.d/GEMINI.md"
+        ]
+      }
+    },
+    {
+      "id": "pigweed-configured-filename-and-jit",
+      "source_repository": "pigweed-project/pigweed",
+      "source_commit": "d6640a206bf18e78c3b965a03c71aabea67cf5b2",
+      "source_visibility": "public",
+      "license_spdx": "Apache-2.0",
+      "source_paths": [
+        "GEMINI.md",
+        "pw_ide/GEMINI.md",
+        ".gemini/settings.json"
+      ],
+      "sanitized_root": "fixtures/gemini-research/real-repositories/pigweed-project-pigweed",
+      "sanitized_paths": [
+        "fixtures/gemini-research/real-repositories/pigweed-project-pigweed/GEMINI.md",
+        "fixtures/gemini-research/real-repositories/pigweed-project-pigweed/pw_ide/GEMINI.md",
+        "fixtures/gemini-research/real-repositories/pigweed-project-pigweed/.gemini/settings.json"
+      ],
+      "validates_rules": [
+        "gemini.instructions.configurable_filenames",
+        "gemini.instructions.workspace_hierarchy",
+        "gemini.instructions.jit_subdirectory_context"
+      ],
+      "removed": [
+        "Instruction bodies were replaced with neutral markers; settings keys unrelated to context.fileName were removed; all other repository files were omitted."
+      ],
+      "safety": "Only inert Markdown path structure and the context.fileName setting are retained. No repository code or tooling is executed.",
+      "scenario": {
+        "context_filenames": [
+          "GEMINI.md"
+        ],
+        "settings_path": ".gemini/settings.json",
+        "target_path": "pw_ide/new-file.py",
+        "expected_active": [
+          "GEMINI.md"
+        ],
+        "expected_conditional": [
+          "pw_ide/GEMINI.md"
+        ],
+        "expected_context_filenames": [
+          "GEMINI.md"
+        ]
+      }
+    },
+    {
+      "id": "wandb-vibes-mcp-declaration",
+      "source_repository": "wandb/vibes",
+      "source_commit": "2a66efacb0f8784f026c76a8740b47580cb62598",
+      "source_visibility": "public",
+      "license_spdx": "Apache-2.0",
+      "source_paths": [
+        "GEMINI.md",
+        ".gemini/settings.json"
+      ],
+      "sanitized_root": "fixtures/gemini-research/real-repositories/wandb-vibes",
+      "sanitized_paths": [
+        "fixtures/gemini-research/real-repositories/wandb-vibes/GEMINI.md",
+        "fixtures/gemini-research/real-repositories/wandb-vibes/.gemini/settings.json"
+      ],
+      "validates_rules": [
+        "gemini.instructions.default_filename",
+        "gemini.instructions.mcp_instructions"
+      ],
+      "removed": [
+        "The instruction body was replaced with a neutral marker; MCP command and arguments were removed while preserving only declaration presence; all other repository files were omitted."
+      ],
+      "safety": "The snapshot contains no executable MCP command. It records only that an MCP server declaration exists; Codex Scope never connects to or executes it.",
+      "scenario": {
+        "context_filenames": [
+          "GEMINI.md"
+        ],
+        "settings_path": ".gemini/settings.json",
+        "expected_active": [
+          "GEMINI.md"
+        ],
+        "expected_conditional": [],
+        "expected_mcp_declared": true
+      }
+    }
+  ]
+}

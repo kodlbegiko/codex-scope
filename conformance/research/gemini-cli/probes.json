@@ -263,6 +263,22 @@
       "expected": {
         "case_count": 3
       }
+    },
+    {
+      "probe_id": "gemini.phase-c.real_repository_snapshots",
+      "rules": [
+        "gemini.instructions.workspace_hierarchy",
+        "gemini.instructions.jit_subdirectory_context",
+        "gemini.instructions.configurable_filenames",
+        "gemini.instructions.mcp_instructions"
+      ],
+      "kind": "real_repository_snapshots",
+      "input": {
+        "ledger_path": "conformance/research/gemini-cli/real-repositories.json"
+      },
+      "expected": {
+        "validation_count": 3
+      }
     }
   ]
 }

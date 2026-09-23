@@ -20,6 +20,10 @@ const schemaPath = valueAfter(
   "--schema",
   "conformance/schema/agent-research.schema.json",
 );
+const realRepositoriesPath = valueAfter(
+  "--real-repositories",
+  "conformance/research/gemini-cli/real-repositories.json",
+);
 const probes = readJson("conformance/research/gemini-cli/probes.json");
 
 function fail(message) {
@@ -72,7 +76,51 @@ function validatePinnedEvidence(manifest, rule) {
   }
 }
 
-function validateResearchManifest(manifest, schema) {
+function validateRealRepositories(ledger, rulesById) {
+  if (ledger.schema_version !== "codex-scope.real-repository-validation.v1") {
+    fail("unexpected real repository validation schema_version");
+  }
+  if (ledger.agent !== "gemini-cli") {
+    fail("real repository validation agent must be gemini-cli");
+  }
+  if (!Array.isArray(ledger.validations) || ledger.validations.length < 3) {
+    fail("Phase C requires at least 3 sanitized real repository validations");
+  }
+  const repositories = new Set();
+  for (const validation of ledger.validations) {
+    if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(validation.source_repository ?? "")) {
+      fail(validation.id + ": invalid source_repository");
+    }
+    if (!/^[0-9a-f]{40}$/.test(validation.source_commit ?? "")) {
+      fail(validation.id + ": invalid source_commit");
+    }
+    if (validation.source_visibility !== "public") {
+      fail(validation.id + ": source repository must be recorded as public");
+    }
+    if (!validation.license_spdx || !validation.safety || !validation.removed?.length) {
+      fail(validation.id + ": license, safety, and sanitization record are required");
+    }
+    repositories.add(validation.source_repository);
+    const root = fixturePath(validation.sanitized_root, validation.id + ": sanitized_root");
+    if (!fs.existsSync(root)) fail(validation.id + ": sanitized_root does not exist");
+    for (const sanitizedPath of validation.sanitized_paths ?? []) {
+      const candidate = fixturePath(sanitizedPath, validation.id + ": sanitized_path");
+      if (!fs.existsSync(candidate)) fail(validation.id + ": sanitized path does not exist: " + sanitizedPath);
+    }
+    if (!validation.validates_rules?.length) {
+      fail(validation.id + ": validates_rules must not be empty");
+    }
+    for (const ruleId of validation.validates_rules) {
+      if (!rulesById.has(ruleId)) fail(validation.id + ": references unknown rule_id " + ruleId);
+    }
+  }
+  if (repositories.size < 3) {
+    fail("Phase C real repository gate requires 3 distinct public repositories");
+  }
+  return ledger.validations.length;
+}
+
+function validateResearchManifest(manifest, schema, realRepositories) {
   assertSchema(manifest, schema, "agent research manifest");
 
   if (manifest.agent !== "gemini-cli") {
@@ -135,6 +183,8 @@ function validateResearchManifest(manifest, schema) {
       }
     }
   }
+
+  const realRepositoryValidations = validateRealRepositories(realRepositories, rulesById);
 
   for (const root of manifest.fixture_roots) {
     const resolvedFixtureRoot = fixturePath(root, "fixture root");
@@ -230,13 +280,15 @@ function validateResearchManifest(manifest, schema) {
     counts,
     blockingDiscrepancies,
     openAdapterBlockers: openAdapterBlockers.length,
+    realRepositoryValidations,
   };
 }
 
 try {
   const manifest = readJson(manifestPath);
   const schema = readJson(schemaPath);
-  const result = validateResearchManifest(manifest, schema);
+  const realRepositories = readJson(realRepositoriesPath);
+  const result = validateResearchManifest(manifest, schema, realRepositories);
   console.log(
     "research:gemini:validate: ok " +
       Object.entries(result.counts)
@@ -246,6 +298,8 @@ try {
       result.blockingDiscrepancies +
       " adapter_blockers=" +
       result.openAdapterBlockers +
+      " real_repository_validations=" +
+      result.realRepositoryValidations +
       " adapter_readiness=" +
       manifest.adapter_readiness,
   );

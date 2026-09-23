@@ -261,6 +261,45 @@ function runProbe(probe) {
     return { cases: results };
   }
 
+  if (probe.kind === "real_repository_snapshots") {
+    const ledger = readJson(probe.input.ledger_path);
+    const cases = ledger.validations.map((validation) => {
+      const scenario = validation.scenario;
+      const root = validation.sanitized_root;
+      const active = upwardContextFiles(root, root, scenario.context_filenames);
+      const expectedActive = scenario.expected_active.map((p) => path.join(root, p).replaceAll("\\", "/"));
+      assertEqual(active, expectedActive, probe.probe_id + "." + validation.id + ".active");
+
+      let conditional = [];
+      if (scenario.target_path) {
+        const target = path.join(root, scenario.target_path);
+        const discovered = upwardContextFiles(path.dirname(target), root, scenario.context_filenames);
+        const loaded = new Set(active);
+        conditional = discovered.filter((candidate) => !loaded.has(candidate));
+      }
+      const expectedConditional = scenario.expected_conditional.map((p) => path.join(root, p).replaceAll("\\", "/"));
+      assertEqual(conditional, expectedConditional, probe.probe_id + "." + validation.id + ".conditional");
+
+      let contextFilenames;
+      let mcpDeclared;
+      if (scenario.settings_path) {
+        const settings = readJson(path.join(root, scenario.settings_path).replaceAll("\\", "/"));
+        if (scenario.expected_context_filenames) {
+          const raw = settings.context?.fileName;
+          contextFilenames = Array.isArray(raw) ? raw : raw ? [raw] : ["GEMINI.md"];
+          assertEqual(contextFilenames, scenario.expected_context_filenames, probe.probe_id + "." + validation.id + ".context_filenames");
+        }
+        if (scenario.expected_mcp_declared !== undefined) {
+          mcpDeclared = Object.keys(settings.mcpServers ?? {}).length > 0;
+          assertEqual(mcpDeclared, scenario.expected_mcp_declared, probe.probe_id + "." + validation.id + ".mcp_declared");
+        }
+      }
+      return { id: validation.id, active, conditional, context_filenames: contextFilenames, mcp_declared: mcpDeclared };
+    });
+    assertEqual(cases.length, probe.expected.validation_count, probe.probe_id + ".validation_count");
+    return { validation_count: cases.length, cases };
+  }
+
   if (probe.kind === "settings_precedence") {
     const systemDefaults = readJson(probe.input.system_defaults);
     const user = readJson(probe.input.user);

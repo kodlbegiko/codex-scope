@@ -504,15 +504,10 @@
     "fixtures/gemini-research/mcp-memory",
     "fixtures/gemini-research/imports",
     "fixtures/gemini-research/settings/include-directories",
-    "fixtures/gemini-research/settings/folder-trust-explicit"
+    "fixtures/gemini-research/settings/folder-trust-explicit",
+    "fixtures/gemini-research/real-repositories"
   ],
   "adapter_blockers": [
-    {
-      "blocker_id": "phase-c.real_repository_validation",
-      "status": "open",
-      "reason": "The checked-in Phase C corpus has no recorded sanitized-real-repository validations; the repository blueprint requires at least three before the Phase C exit gate can pass.",
-      "evidence": "docs/research/cross-agent-evolution-blueprint.md"
-    },
     {
       "blocker_id": "phase-2.second_adapter_corpus_threshold",
       "status": "open",

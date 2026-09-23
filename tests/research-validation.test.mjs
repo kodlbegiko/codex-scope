@@ -10,8 +10,10 @@ const sourceManifest = path.resolve(
   "conformance/research/gemini-cli/manifest.json",
 );
 
-function run(manifestPath = sourceManifest) {
-  return spawnSync(process.execPath, [script, "--manifest", manifestPath], {
+function run(manifestPath = sourceManifest, realRepositoriesPath) {
+  const args = [script, "--manifest", manifestPath];
+  if (realRepositoriesPath) args.push("--real-repositories", realRepositoriesPath);
+  return spawnSync(process.execPath, args, {
     encoding: "utf8",
     env: { ...process.env },
   });
@@ -104,4 +106,25 @@ test("Gemini research validation keeps readiness blocked by open blockers", () =
       );
     },
   );
+});
+
+
+test("Gemini research validation rejects fewer than three real repositories", () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "codex-scope-real-repos-"));
+  const ledgerPath = path.join(tempDir, "real-repositories.json");
+  const source = JSON.parse(
+    fs.readFileSync(
+      path.resolve("conformance/research/gemini-cli/real-repositories.json"),
+      "utf8",
+    ),
+  );
+  source.validations = source.validations.slice(0, 2);
+  fs.writeFileSync(ledgerPath, JSON.stringify(source, null, 2) + "\n");
+  try {
+    const result = run(sourceManifest, ledgerPath);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /at least 3 sanitized real repository validations/);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
