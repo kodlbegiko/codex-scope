@@ -11,23 +11,31 @@ evidence date:          2026-09-22
 openai/codex commit:    94174e44cbc54cece45f6052328ca0c2cd7a8a2a
 tested Codex version:   unknown
 resolver version:       codex-resolver.v0.1
+adapter version:        codex-adapter.v1
 ```
 
 A local Codex binary version was not safely detected for this evidence pass. Codex Scope does **not** shell out to Codex or infer its version from configuration shape. The machine-readable record therefore keeps `tested_codex_version = "unknown"`.
 
 See [`../conformance/compatibility-matrix.json`](../conformance/compatibility-matrix.json).
 
-## Adapter architecture status
+## Deterministic compatibility reporting
 
-Phase A adds an internal static Codex adapter with version `codex-adapter.v1`. This is an architecture boundary, not a broader compatibility claim.
+Phase B exposes the evidence boundary through:
 
-- the adapter uses the same pinned evidence date and upstream commit as the Phase 0 corpus;
-- `tested Codex version` remains `unknown`;
-- no subprocess is executed to discover a local Codex version;
-- no adapter metadata is injected into the legacy `codex-scope.v0.1` JSON schema;
-- neutral inspection records preserve supported / unresolved / unsupported state instead of normalizing unknowns to supported.
+```text
+codex-scope compatibility
+codex-scope compatibility --json
+codex-scope compatibility --codex-version <version>
+npm run conformance:validate:json
+```
 
-Public compatibility reporting and optional/supplied version handling belong to Phase B.
+The compatibility summary is generated from the checked-in matrix and reports the resolver version, adapter version, evidence date, pinned upstream commit, supported/unsupported/unresolved rule counts, known discrepancies, and version provenance.
+
+Automatic local Codex version detection is deliberately not performed. The core does not shell out. An explicitly supplied version is labeled `supplied`; because this evidence snapshot has `tested_codex_version = "unknown"`, that version remains `unresolved` rather than being labeled compatible.
+
+The generated matrix includes `adapter_version`, and CI validates it against the built `codexAdapter`. A stale generated matrix fails the matrix freshness check.
+
+`conformance:validate:json` emits `codex-scope.conformance-run.v1` with per-rule `expected_outcome`, `actual_outcome`, and details. Exit status remains distinct: semantic `behavior_drift` fails with status 1, harness/corpus `tool_error` with status 2, while expected `unsupported` and `unresolved` results do not fail the run.
 
 ## Conformance outcome taxonomy
 

@@ -88,6 +88,16 @@ The neutral layer is deliberately non-authoritative about Codex semantics: prece
 
 Adapter version: `codex-adapter.v1`.
 
+## Compatibility reporting
+
+Phase B does not change the semantic rules above. It exposes their evidence boundary.
+
+The generated compatibility matrix records `codex-resolver.v0.1`, `codex-adapter.v1`, the 2026-09-22 evidence date, the pinned upstream commit, and the current supported / unsupported / unresolved rule sets.
+
+The tested Codex binary version remains `unknown`. `codex-scope compatibility --codex-version <version>` may record a supplied version, but the result remains `unresolved` until checked-in evidence contains a matching tested binary version. No version is inferred from config shape and no Codex subprocess is executed.
+
+`conformance:validate:json` reports each rule's `expected_outcome` separately from its `actual_outcome`, so semantic drift cannot be hidden by relabeling an expectation.
+
 ## Evidence links
 
 Official documentation:

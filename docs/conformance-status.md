@@ -65,15 +65,36 @@ Phase 0 therefore satisfies the **current Phase 0 exit gate (9/9 tracked gates)*
 
 Phase A satisfies the current exit gate. Phase B may proceed; second-agent work remains blocked until the Phase B core gate is also satisfied.
 
-## Phase B — compatibility awareness
+## Phase B — compatibility awareness / drift detection
 
-- [x] Evidence date and resolver version exist in the internal compatibility corpus
-- [x] Unknown installed Codex version remains explicitly `unknown`
-- [ ] Public/supplied version input design
-- [ ] Safe version-range warning behavior
-- [ ] Adapter version field
+- [x] Generated matrix pins resolver version, adapter version, evidence date, upstream commit, and rule classifications
+- [x] Matrix generator remains the deterministic source of truth and stale output fails CI
+- [x] `codex-scope compatibility` exposes a deterministic human-readable summary
+- [x] `codex-scope.compatibility.v1` machine-readable summary
+- [x] Explicit offline `--codex-version` input
+- [x] Unknown tested/local version remains `unknown` / `unresolved`
+- [x] No subprocess-based local version probe in deterministic core
+- [x] Per-rule machine-readable expected vs actual conformance result
+- [x] `compatible` / `behavior_drift` / `unsupported` / `unresolved` / `tool_error` taxonomy retained
+- [x] Semantic drift and tool failure use distinct fail-closed exit status
+- [x] Existing known discrepancy remains regression-covered
+- [x] Clean-checkout GitHub Actions run #37 passes the full workflow
 
-Status: **partial infrastructure only**; no Phase B public feature is claimed.
+### Phase B exit gate
+
+| Gate | Evidence | Status |
+|---|---|---|
+| Matrix generated from source of truth | `scripts/generate-compatibility.mjs` | satisfied |
+| Generated drift detected by CI | `conformance:matrix:check` in CI | satisfied |
+| Evidence provenance machine-readable | matrix + `codex-scope compatibility --json` | satisfied |
+| Upstream commit/date explicit | compatibility matrix/summary | satisfied |
+| Outcome taxonomy stable | shared core type + conformance harness | satisfied |
+| Unknown version avoids false certainty | supplied/unknown version tests keep outcome unresolved | satisfied |
+| Known discrepancy regression-covered | `openai/codex#34193` fixture/regression record | satisfied |
+| Semantic drift vs tool failure distinguishable | per-rule JSON + exit 1 vs exit 2 | satisfied |
+| Phase A/B tests and clean checkout green | GitHub Actions run #37 | satisfied |
+
+Phase B satisfies the current core exit gate. Phase C may begin as a research-only spike; no second-agent adapter is yet authorized by evidence.
 
 ## Phase C — second-agent research spike
 
