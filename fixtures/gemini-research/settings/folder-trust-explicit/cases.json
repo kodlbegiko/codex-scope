@@ -1,0 +1,80 @@
+{
+  "schema_version": "codex-scope.gemini-settings-scalar-cases.v1",
+  "cases": [
+    {
+      "id": "workspace-over-user-when-trusted",
+      "trusted": true,
+      "layers": {
+        "system_defaults": {},
+        "user": {
+          "security": {
+            "folderTrust": {
+              "enabled": true
+            }
+          }
+        },
+        "workspace": {
+          "security": {
+            "folderTrust": {
+              "enabled": false
+            }
+          }
+        },
+        "system": {}
+      },
+      "expected": false
+    },
+    {
+      "id": "workspace-excluded-when-untrusted",
+      "trusted": false,
+      "layers": {
+        "system_defaults": {},
+        "user": {
+          "security": {
+            "folderTrust": {
+              "enabled": true
+            }
+          }
+        },
+        "workspace": {
+          "security": {
+            "folderTrust": {
+              "enabled": false
+            }
+          }
+        },
+        "system": {}
+      },
+      "expected": true
+    },
+    {
+      "id": "system-overrides-workspace",
+      "trusted": true,
+      "layers": {
+        "system_defaults": {},
+        "user": {
+          "security": {
+            "folderTrust": {
+              "enabled": false
+            }
+          }
+        },
+        "workspace": {
+          "security": {
+            "folderTrust": {
+              "enabled": false
+            }
+          }
+        },
+        "system": {
+          "security": {
+            "folderTrust": {
+              "enabled": true
+            }
+          }
+        }
+      },
+      "expected": true
+    }
+  ]
+}

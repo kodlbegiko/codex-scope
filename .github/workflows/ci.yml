@@ -26,5 +26,7 @@ jobs:
       - run: npm run build
       - run: npm run conformance:matrix:check
       - run: npm run conformance:validate
+      - run: npm run research:gemini:validate
+      - run: npm run research:gemini:assert
       - run: npm pack
       - run: npm publish --dry-run

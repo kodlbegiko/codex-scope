@@ -1,0 +1,141 @@
+{
+  "schema_version": "codex-scope.gemini-trust-provenance-cases.v1",
+  "cases": [
+    {
+      "id": "restricted-mode-overrides-explicit-trust",
+      "input": {
+        "restricted_mode": true,
+        "env_workspace": "true",
+        "folder_trust_enabled": true,
+        "ide_trust": true,
+        "file_trust": true
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": false,
+        "source": "env"
+      }
+    },
+    {
+      "id": "environment-explicit-untrusted",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": "false",
+        "folder_trust_enabled": true,
+        "ide_trust": true,
+        "file_trust": true
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": false,
+        "source": "env"
+      }
+    },
+    {
+      "id": "environment-explicit-trusted",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": "true",
+        "folder_trust_enabled": true,
+        "ide_trust": false,
+        "file_trust": false
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": true,
+        "source": "env"
+      }
+    },
+    {
+      "id": "folder-trust-disabled-short-circuit",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": false,
+        "ide_trust": false,
+        "file_trust": false
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": true,
+        "source": null
+      }
+    },
+    {
+      "id": "ide-precedes-file",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": true,
+        "ide_trust": false,
+        "file_trust": true
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": false,
+        "source": "ide"
+      }
+    },
+    {
+      "id": "file-trusted",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": true,
+        "ide_trust": null,
+        "file_trust": true
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": true,
+        "source": "file"
+      }
+    },
+    {
+      "id": "file-untrusted",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": true,
+        "ide_trust": null,
+        "file_trust": false
+      },
+      "expected": {
+        "outcome": "resolved",
+        "is_trusted": false,
+        "source": "file"
+      }
+    },
+    {
+      "id": "invalid-trusted-folders-file",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": true,
+        "ide_trust": null,
+        "file_error": true,
+        "file_trust": null
+      },
+      "expected": {
+        "outcome": "tool_error",
+        "is_trusted": null,
+        "source": null
+      }
+    },
+    {
+      "id": "no-trust-source",
+      "input": {
+        "restricted_mode": false,
+        "env_workspace": null,
+        "folder_trust_enabled": true,
+        "ide_trust": null,
+        "file_trust": null
+      },
+      "expected": {
+        "outcome": "unresolved",
+        "is_trusted": null,
+        "source": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "codex-scope.external-evidence.v1",
+  "gate": {
+    "required_distinct_interactions": 3,
+    "status": "pass"
+  },
+  "interactions": [
+    {
+      "id": "codex-agents-self-root-dedup-2026-09-22",
+      "date": "2026-09-22",
+      "upstream_repository": "openai/codex",
+      "url": "https://github.com/openai/codex/issues/34193#issuecomment-5773697356",
+      "interaction_type": "comment",
+      "independent_finding": "Codex Scope independently rechecked current source and modeled the CODEX_HOME == project-root instruction duplication as deterministic conformance behavior.",
+      "external_verification": "The upstream issue contains independent binary reproductions from multiple third parties, including codex-cli 0.146.0, 0.153.4, and an app-bundled 0.154.0-alpha build.",
+      "impact": "The corpus records the discrepancy as current implementation parity so an upstream deduplication change becomes explicit behavior drift rather than silent semantic change.",
+      "status": "submitted"
+    },
+    {
+      "id": "codex-home-project-layer-exclusion-2026-09-23",
+      "date": "2026-09-23",
+      "upstream_repository": "openai/codex",
+      "url": "https://github.com/openai/codex/issues/9932#issuecomment-5790857109",
+      "interaction_type": "comment",
+      "independent_finding": "Codex Scope independently preserved the CODEX_HOME project-layer exclusion as a deterministic regression rule and rechecked that current upstream source still skips a project .codex layer whose absolute or normalized path matches CODEX_HOME.",
+      "external_verification": "The upstream issue contains independent user reproductions, and an OpenAI maintainer explicitly linked PR #10207 as the fix for the original CODEX_HOME-as-project-layer bug. Current main at 40eac3ce8a0c10cbcb9db910d529355eb2f8fc09 still contains the exclusion.",
+      "impact": "The corpus detects any future reintroduction of duplicate user/project config loading as semantic drift affecting precedence, trust, and provenance.",
+      "status": "submitted"
+    },
+    {
+      "id": "codex-profile-v2-boundary-2026-09-23",
+      "date": "2026-09-23",
+      "upstream_repository": "openai/codex",
+      "url": "https://github.com/openai/codex/issues/24858#issuecomment-5790857533",
+      "interaction_type": "comment",
+      "independent_finding": "Codex Scope independently modeled the Codex 0.134.0+ profile-v2 contract as separate CODEX_HOME/<name>.config.toml selection and treats legacy profile-table selection as historical rather than current semantics.",
+      "external_verification": "The upstream issue independently reproduces the legacy-profile startup failure on codex-cli 0.134.0, and current main at 40eac3ce8a0c10cbcb9db910d529355eb2f8fc09 still documents --profile/-p as layering CODEX_HOME/<name>.config.toml over the base user config.",
+      "impact": "The regression corpus prevents silent fallback to legacy profile tables and keeps explicit missing-profile behavior fail-closed.",
+      "status": "submitted"
+    }
+  ]
+}

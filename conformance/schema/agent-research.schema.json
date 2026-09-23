@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/agent-research.schema.json",
+  "title": "Codex Scope agent research manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agent",
+    "phase",
+    "implementation_status",
+    "evidence_date",
+    "upstream",
+    "adapter_readiness",
+    "adapter_blockers",
+    "selected_over",
+    "rules",
+    "discrepancies",
+    "known_unknowns",
+    "fixture_roots"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.agent-research.v1"
+    },
+    "agent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "enum": [
+        "research_spike"
+      ]
+    },
+    "implementation_status": {
+      "enum": [
+        "research_only",
+        "adapter_candidate",
+        "implemented"
+      ]
+    },
+    "evidence_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "upstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "commit_date"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "commit_date": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "adapter_readiness": {
+      "enum": [
+        "blocked",
+        "ready_for_implementation",
+        "implemented"
+      ]
+    },
+    "selected_over": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agent",
+          "repository",
+          "commit",
+          "reason"
+        ],
+        "properties": {
+          "agent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repository": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+          },
+          "commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "surface",
+          "semantic_status",
+          "summary",
+          "supported_boundary",
+          "unresolved_boundary",
+          "fixture_path",
+          "assertion_status",
+          "probe_ids",
+          "evidence"
+        ],
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+\\.[a-z0-9_.-]+$"
+          },
+          "surface": {
+            "enum": [
+              "instructions",
+              "config",
+              "trust"
+            ]
+          },
+          "semantic_status": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "unresolved"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supported_boundary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unresolved_boundary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fixture_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "path",
+                "url"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "official_docs",
+                    "upstream_source",
+                    "upstream_test",
+                    "upstream_issue",
+                    "upstream_pr"
+                  ]
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "assertion_status": {
+            "enum": [
+              "covered",
+              "pending"
+            ]
+          },
+          "probe_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "discrepancies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "discrepancy_id",
+          "rule_id",
+          "status",
+          "classification",
+          "summary",
+          "blocker_for_adapter"
+        ],
+        "properties": {
+          "discrepancy_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rule_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "open_research",
+              "bounded",
+              "resolved"
+            ]
+          },
+          "classification": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "unresolved"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocker_for_adapter": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "known_unknowns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fixture_roots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "adapter_blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocker_id",
+          "status",
+          "reason",
+          "evidence"
+        ],
+        "properties": {
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "open",
+              "bounded"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

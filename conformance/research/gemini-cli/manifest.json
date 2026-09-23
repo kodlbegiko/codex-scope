@@ -1,0 +1,511 @@
+{
+  "schema_version": "codex-scope.agent-research.v1",
+  "agent": "gemini-cli",
+  "phase": "research_spike",
+  "implementation_status": "implemented",
+  "evidence_date": "2026-09-23",
+  "upstream": {
+    "repository": "google-gemini/gemini-cli",
+    "commit": "62364cb2000795537a6895261b37ec668e4cf527",
+    "commit_date": "2026-09-22T21:52:46Z"
+  },
+  "adapter_readiness": "implemented",
+  "selected_over": [
+    {
+      "agent": "claude-code",
+      "repository": "anthropics/claude-code",
+      "commit": "56f36532530f88b572854538d685fcf781141e8c",
+      "reason": "Official semantic documentation is strong, but the pinned public repository exposes less direct core resolver implementation evidence for the settings/instruction surfaces selected for deterministic conformance."
+    },
+    {
+      "agent": "cursor",
+      "repository": "cursor/cursor",
+      "commit": "654b1b4775ca67aef473bd31a14c8c04a1abde2d",
+      "reason": "Official rules documentation exists, but the pinned public repository does not expose the core rules/config resolver implementation needed for source-backed conformance; some rule applicability is agent-decided."
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "gemini.instructions.default_filename",
+      "surface": "instructions",
+      "semantic_status": "supported",
+      "summary": "The default instructional context filename is GEMINI.md.",
+      "fixture_path": "fixtures/gemini-research/hierarchy",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/gemini-md.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/config.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
+        }
+      ],
+      "supported_boundary": "Pinned docs/source agree that GEMINI.md is the built-in default context filename when context.fileName does not override it.",
+      "unresolved_boundary": "This claim does not cover import recursion, JIT activation, or trust-dependent loading.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.initial_hierarchy"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.global_context",
+      "surface": "instructions",
+      "semantic_status": "supported",
+      "summary": "The documented global context file is ~/.gemini/GEMINI.md.",
+      "fixture_path": "fixtures/gemini-research/hierarchy/home/.gemini/GEMINI.md",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/gemini-md.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
+        }
+      ],
+      "supported_boundary": "Static research covers the documented global context location ~/.gemini/GEMINI.md and its discovery as a source.",
+      "unresolved_boundary": "Whether later runtime/JIT context changes the complete active instruction set remains outside this rule.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.initial_hierarchy"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.workspace_hierarchy",
+      "surface": "instructions",
+      "semantic_status": "supported",
+      "summary": "Workspace and ancestor context files are discovered hierarchically and concatenated in documented order.",
+      "fixture_path": "fixtures/gemini-research/hierarchy",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/gemini-md.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/memoryDiscovery.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/memoryDiscovery.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.test.ts"
+        }
+      ],
+      "supported_boundary": "Static research covers initial hierarchical discovery of ancestor/workspace context files within the documented traversal boundary.",
+      "unresolved_boundary": "Descendant JIT context and memory-import recursion are excluded from this supported claim.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.initial_hierarchy"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.jit_subdirectory_context",
+      "surface": "instructions",
+      "semantic_status": "unresolved",
+      "summary": "JIT context discovery is documented, but the complete future active set depends on runtime file/directory access and cannot be asserted by static pre-session inspection without additional explicit inputs.",
+      "fixture_path": "fixtures/gemini-research/hierarchy/project/packages/app/GEMINI.md",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/gemini-md.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/memoryDiscovery.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/memoryDiscovery.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.test.ts"
+        }
+      ],
+      "supported_boundary": "The existence of JIT discovery as an upstream semantic is evidenced; descendant files are treated as discoverable/conditional rather than pre-session active.",
+      "unresolved_boundary": "The complete future active set depends on runtime file/directory access and trusted-root inputs not available to static pre-session inspection.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.jit_target"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.configurable_filenames",
+      "surface": "instructions",
+      "semantic_status": "supported",
+      "summary": "context.fileName can replace the default context filename with a string or configured list of names.",
+      "fixture_path": "fixtures/gemini-research/settings/workspace-settings.json",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/gemini-md.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/gemini-md.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/config.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
+        }
+      ],
+      "supported_boundary": "Static research covers context.fileName as a string or list that changes candidate context filenames in pinned source/docs.",
+      "unresolved_boundary": "All interactions between filename lists, imports, hierarchy traversal, and JIT access traces are not yet asserted.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.configured_filenames"
+      ]
+    },
+    {
+      "rule_id": "gemini.config.settings_precedence",
+      "surface": "config",
+      "semantic_status": "supported",
+      "summary": "For settings-file values, schema defaults are followed by system defaults, user settings, trusted workspace settings, then system settings as overrides.",
+      "fixture_path": "fixtures/gemini-research/settings",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/reference/configuration.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/reference/configuration.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        }
+      ],
+      "supported_boundary": "Settings-file merge precedence is limited to schema defaults, system defaults, user settings, trusted workspace settings, then system settings overrides.",
+      "unresolved_boundary": "Environment-derived values, CLI argument precedence, remote admin controls, and every setting-specific merge strategy are outside this rule.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.config.settings_precedence.trusted"
+      ]
+    },
+    {
+      "rule_id": "gemini.trust.untrusted_workspace_settings",
+      "surface": "trust",
+      "semantic_status": "supported",
+      "summary": "The settings merge excludes workspace settings when the supplied workspace trust state is false.",
+      "fixture_path": "fixtures/gemini-research/trust/untrusted",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/trusted-folders.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/trusted-folders.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        }
+      ],
+      "supported_boundary": "Given an explicit untrusted workspace state, workspace settings are excluded from the settings merge.",
+      "unresolved_boundary": "How the default trust-enabled setting is chosen when no explicit value is present is tracked separately and remains unresolved.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.trust.untrusted_workspace_settings"
+      ]
+    },
+    {
+      "rule_id": "gemini.trust.folder_trust_default",
+      "surface": "trust",
+      "semantic_status": "unresolved",
+      "summary": "Pinned documentation and implementation paths disagree about the default value/behavior of security.folderTrust.enabled.",
+      "fixture_path": "fixtures/gemini-research/trust/untrusted",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/cli/trusted-folders.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/cli/trusted-folders.md"
+        },
+        {
+          "kind": "official_docs",
+          "path": "docs/reference/configuration.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/reference/configuration.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/trustedFolders.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/config.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/config.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settingsSchema.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settingsSchema.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settingsSchema.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settingsSchema.test.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/trustedFolders.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.test.ts"
+        }
+      ],
+      "supported_boundary": "No default value is promoted as supported while pinned official documentation conflicts with the pinned settings schema/runtime call path.",
+      "unresolved_boundary": "The effective default is disputed by docs versus schema/source; Codex Scope must not infer enabled or disabled for an omitted setting until the discrepancy is resolved or bounded away.",
+      "assertion_status": "pending",
+      "probe_ids": []
+    },
+    {
+      "rule_id": "gemini.trust.provenance_sources",
+      "surface": "trust",
+      "semantic_status": "supported",
+      "summary": "Trust provenance is selected in a deterministic precedence order: restrictive/explicit environment input, disabled folder-trust shortcut, IDE state, trusted-folders file, then unknown.",
+      "fixture_path": "fixtures/gemini-research/trust/provenance",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/trust.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/trust.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/trust.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/trust.test.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/trustedFolders.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.ts"
+        }
+      ],
+      "supported_boundary": "Given explicit deterministic inputs, GEMINI_RESTRICTED_MODE=true or GEMINI_CLI_TRUST_WORKSPACE=false resolves untrusted from env; GEMINI_CLI_TRUST_WORKSPACE=true resolves trusted from env; disabled folder trust resolves trusted with no provenance source; otherwise IDE precedes trusted-folders file. A malformed trusted-folders file is a fatal configuration error rather than a fallback trust decision.",
+      "unresolved_boundary": "When folder trust is enabled and no environment, IDE, or matching file rule supplies a decision, trust is unknown/undefined. The disputed omitted-setting default for security.folderTrust.enabled remains a separate unresolved rule.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.trust.provenance_precedence"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.user_project_memory",
+      "surface": "instructions",
+      "semantic_status": "supported",
+      "summary": "Given an explicit user-project memory directory, MEMORY.md is preferred; configured GEMINI.md-style filenames are only fallback sources when MEMORY.md is absent.",
+      "fixture_path": "fixtures/gemini-research/user-project-memory",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/memoryDiscovery.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/memoryDiscovery.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.test.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/tools/memoryTool.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/tools/memoryTool.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/context/memoryContextManager.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/context/memoryContextManager.ts"
+        }
+      ],
+      "supported_boundary": "Static inspection supports source selection only when the project-memory directory is supplied explicitly: readable MEMORY.md wins, otherwise configured context filenames in that same directory are legacy fallbacks.",
+      "unresolved_boundary": "Deriving Gemini CLI's user-project storage directory from live runtime/project identity is not inferred by the research core; absent an explicit directory snapshot, applicability remains unresolved.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.user_project_memory_precedence"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.extension_memory",
+      "surface": "instructions",
+      "semantic_status": "unresolved",
+      "summary": "Extension context files are selected from extensions already marked active by Gemini CLI's extension loader; static Codex Scope research does not execute or load extensions to discover activation.",
+      "fixture_path": "fixtures/gemini-research/extension-memory",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/memoryDiscovery.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/memoryDiscovery.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryDiscovery.test.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/context/memoryContextManager.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/context/memoryContextManager.ts"
+        }
+      ],
+      "supported_boundary": "Given an inert, already-materialized extension activation snapshot, Codex Scope can deterministically list context-file declarations from active entries and ignore inactive entries without executing extension code.",
+      "unresolved_boundary": "Actual extension discovery, enablement, activation, and any code-derived context remain unresolved unless supplied as explicit inert inputs; the deterministic core must never load or execute an extension.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.extension_memory_snapshot"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.mcp_instructions",
+      "surface": "instructions",
+      "semantic_status": "unsupported",
+      "summary": "Gemini CLI may append instructions returned by the runtime MCP client manager to trusted project memory; Codex Scope does not connect to or execute MCP servers.",
+      "fixture_path": "fixtures/gemini-research/mcp-memory",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/context/memoryContextManager.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/context/memoryContextManager.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/context/memoryContextManager.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/context/memoryContextManager.test.ts"
+        }
+      ],
+      "supported_boundary": "Static inspection may record that an inert configuration snapshot declares an MCP instruction channel and that upstream composes runtime MCP instructions only into trusted project memory.",
+      "unresolved_boundary": "Effective MCP instruction content is runtime-derived from McpClientManager and is intentionally unsupported by the deterministic core; no connection, subprocess, fetch, or server execution is permitted.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.mcp_runtime_boundary"
+      ]
+    },
+    {
+      "rule_id": "gemini.instructions.memory_imports",
+      "surface": "instructions",
+      "semantic_status": "unresolved",
+      "summary": "GEMINI.md memory imports can recursively change effective instruction content; the current research core detects a conservative local-import subset and fails closed instead of silently ignoring it.",
+      "fixture_path": "fixtures/gemini-research/imports",
+      "evidence": [
+        {
+          "kind": "official_docs",
+          "path": "docs/reference/memport.md",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/docs/reference/memport.md"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/core/src/utils/memoryImportProcessor.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryImportProcessor.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/core/src/utils/memoryImportProcessor.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/core/src/utils/memoryImportProcessor.test.ts"
+        }
+      ],
+      "supported_boundary": "The research probe only detects direct local import candidates on ordinary Markdown lines outside fenced code and classifies the effective content unresolved. It does not claim parity with Gemini CLI's full import parser.",
+      "unresolved_boundary": "Nested expansion, circular handling, depth limits, missing-import rendering, realpath/project-root validation, and the complete inline/code-block parser remain unresolved until independently reproduced with full deterministic conformance.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.instructions.memory_import_fail_closed"
+      ]
+    },
+    {
+      "rule_id": "gemini.config.include_directories_merge",
+      "surface": "config",
+      "semantic_status": "supported",
+      "summary": "context.includeDirectories uses a setting-specific CONCAT merge strategy across schema/system-default, user, trusted workspace, and system-override layers.",
+      "fixture_path": "fixtures/gemini-research/settings/include-directories",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settingsSchema.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settingsSchema.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        }
+      ],
+      "supported_boundary": "For the pinned setting context.includeDirectories, deterministic file-layer merging concatenates arrays in low-to-high precedence order; workspace entries participate only when the supplied workspace trust state is true.",
+      "unresolved_boundary": "This rule does not generalize CONCAT to other keys and does not infer CLI/environment/remote-admin contributions.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.config.include_directories_concat"
+      ]
+    },
+    {
+      "rule_id": "gemini.config.folder_trust_explicit_precedence",
+      "surface": "config",
+      "semantic_status": "supported",
+      "summary": "When security.folderTrust.enabled is explicitly present in settings layers, normal settings-file precedence determines the merged value; untrusted workspace settings are excluded.",
+      "fixture_path": "fixtures/gemini-research/settings/folder-trust-explicit",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/trustedFolders.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.ts"
+        }
+      ],
+      "supported_boundary": "Explicit boolean values are resolved through the pinned settings-file precedence with trusted-workspace gating. This supports explicit trust input without choosing the disputed omitted-setting default.",
+      "unresolved_boundary": "If no explicit layer supplies the value, the separate folder-trust-default discrepancy remains unresolved and this rule must not supply a default.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.config.folder_trust_explicit_precedence"
+      ]
+    }
+  ],
+  "discrepancies": [
+    {
+      "discrepancy_id": "gemini-folder-trust-default-2026-09-23",
+      "rule_id": "gemini.trust.folder_trust_default",
+      "status": "bounded",
+      "classification": "unresolved",
+      "summary": "Pinned docs say Folder Trust is disabled by default, while the settings schema defaults security.folderTrust.enabled to true and getDefaultsFromSchema materializes that value into the normal merged-settings path. The omitted-setting default remains unresolved; a future adapter must accept explicit trust/folder-trust input or return unresolved instead of choosing a default.",
+      "blocker_for_adapter": false
+    }
+  ],
+  "known_unknowns": [
+    "Exact deterministic boundary between initial hierarchical context and later JIT context for arbitrary future tool-access traces.",
+    "Interaction between context.fileName lists and every hierarchy/JIT path needs fixture-level confirmation before adapter implementation.",
+    "Automatic local Gemini CLI version detection is not part of the research spike.",
+    "CLI arguments, environment-derived behavior, and remote admin controls do not form one generic settings layer; only the checked-in file-precedence subset is currently asserted.",
+    "Extension activation remains runtime-derived unless an explicit inert activation snapshot is supplied; Codex Scope will not load or execute extension code.",
+    "Effective MCP-provided instruction content is unsupported because it is returned by a runtime MCP client manager; declaration presence may be reported without connecting to a server.",
+    "User-project MEMORY.md/GEMINI.md source selection is supported only from an explicit project-memory directory snapshot; live storage-directory derivation remains unresolved.",
+    "Memory imports are fail-closed when a conservative import candidate is detected; full recursive import semantics remain unresolved."
+  ],
+  "fixture_roots": [
+    "fixtures/gemini-research/hierarchy",
+    "fixtures/gemini-research/settings",
+    "fixtures/gemini-research/trust/untrusted",
+    "fixtures/gemini-research/trust/provenance",
+    "fixtures/gemini-research/user-project-memory",
+    "fixtures/gemini-research/extension-memory",
+    "fixtures/gemini-research/mcp-memory",
+    "fixtures/gemini-research/imports",
+    "fixtures/gemini-research/settings/include-directories",
+    "fixtures/gemini-research/settings/folder-trust-explicit",
+    "fixtures/gemini-research/real-repositories"
+  ],
+  "adapter_blockers": []
+}
