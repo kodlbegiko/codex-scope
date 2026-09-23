@@ -21,6 +21,12 @@ test("Phase D machine-readable status is internally consistent and fail-closed",
   );
   const demoText = fs.readFileSync(demoPath, "utf8");
   const demo = JSON.parse(demoText);
+  const ciSchema = readJson(
+    "conformance/schema/semantic-comparison-ci.schema.json",
+  );
+  const ciSummary = readJson(
+    "conformance/comparison/codex-gemini-demo-ci.json",
+  );
   const realRepositories = readJson(
     "conformance/research/gemini-cli/real-repositories.json",
   );
@@ -47,6 +53,25 @@ test("Phase D machine-readable status is internally consistent and fail-closed",
     status.normalization.version,
     "codex-scope.semantic-normalization.v1",
   );
+  assert.equal(ciSchema.additionalProperties, false);
+  assert.equal(
+    ciSchema.properties.schema_version.const,
+    "codex-scope.semantic-comparison-ci.v1",
+  );
+  assert.equal(
+    status.ci_outcomes.version,
+    "codex-scope.semantic-comparison-ci.v1",
+  );
+  assert.equal(status.ci_outcomes.status, "pass");
+  assert.equal(
+    status.ci_outcomes.demo_path,
+    "conformance/comparison/codex-gemini-demo-ci.json",
+  );
+  assert.equal(
+    status.ci_outcomes.precedence,
+    "unresolved > unsupported > proven_drift > clean",
+  );
+  assert.equal(status.ci_outcomes.evidence_gap_maps_to, "unresolved");
 
   const expectedClasses = [
     "same",
@@ -83,6 +108,17 @@ test("Phase D machine-readable status is internally consistent and fail-closed",
     demo.schema_version,
     status.comparison_schema.version,
   );
+  assert.equal(
+    ciSummary.schema_version,
+    status.ci_outcomes.version,
+  );
+  assert.equal(ciSummary.outcome, "unresolved");
+  assert.deepEqual(ciSummary.observed_outcomes, [
+    "proven_drift",
+    "unresolved",
+  ]);
+  assert.deepEqual(ciSummary.counts, demo.counts);
+  assert.equal(ciSummary.counts.evidence_gap, 1);
   assert.equal(status.sanitized_demonstration.status, "pass");
   assert.equal(
     status.sanitized_demonstration.path,
