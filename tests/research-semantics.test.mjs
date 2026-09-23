@@ -16,7 +16,7 @@ test("Gemini research semantic probes are deterministic", () => {
     parsed.schema_version,
     "codex-scope.agent-research-probe-run.v1",
   );
-  assert.deepEqual(parsed.counts, { pass: 5, fail: 0 });
+  assert.deepEqual(parsed.counts, { pass: 6, fail: 0 });
 
   const jit = parsed.results.find(
     (item) => item.probe_id === "gemini.instructions.jit_target",
@@ -32,4 +32,20 @@ test("Gemini research semantic probes are deterministic", () => {
   );
   assert.equal(untrusted.actual.trusted, false);
   assert.equal(untrusted.actual.context_file_name, "GEMINI.md");
+
+  const provenance = parsed.results.find(
+    (item) => item.probe_id === "gemini.trust.provenance_precedence",
+  );
+  const precedenceCase = provenance.actual.cases.find(
+    (item) => item.id === "ide-precedes-file",
+  );
+  assert.deepEqual(precedenceCase.actual, {
+    outcome: "resolved",
+    is_trusted: false,
+    source: "ide",
+  });
+  const unknownCase = provenance.actual.cases.find(
+    (item) => item.id === "no-trust-source",
+  );
+  assert.equal(unknownCase.actual.outcome, "unresolved");
 });

@@ -71,6 +71,28 @@ function assertEqual(actual, expected, label) {
   }
 }
 
+function resolveTrustProvenance(input) {
+  if (input.restricted_mode === true || input.env_workspace === "false") {
+    return { outcome: "resolved", is_trusted: false, source: "env" };
+  }
+  if (input.env_workspace === "true") {
+    return { outcome: "resolved", is_trusted: true, source: "env" };
+  }
+  if (input.folder_trust_enabled === false) {
+    return { outcome: "resolved", is_trusted: true, source: null };
+  }
+  if (typeof input.ide_trust === "boolean") {
+    return { outcome: "resolved", is_trusted: input.ide_trust, source: "ide" };
+  }
+  if (input.file_error === true) {
+    return { outcome: "tool_error", is_trusted: null, source: null };
+  }
+  if (typeof input.file_trust === "boolean") {
+    return { outcome: "resolved", is_trusted: input.file_trust, source: "file" };
+  }
+  return { outcome: "unresolved", is_trusted: null, source: null };
+}
+
 function runProbe(probe) {
   if (probe.kind === "instruction_hierarchy") {
     const workspace = upwardContextFiles(
@@ -134,6 +156,21 @@ function runProbe(probe) {
       probe.probe_id + ".filenames",
     );
     return { filenames };
+  }
+
+  if (probe.kind === "trust_provenance") {
+    const fixture = readJson(probe.input.cases_path);
+    const results = fixture.cases.map((item) => {
+      const actual = resolveTrustProvenance(item.input);
+      assertEqual(actual, item.expected, probe.probe_id + "." + item.id);
+      return { id: item.id, actual };
+    });
+    assertEqual(
+      results.length,
+      probe.expected.case_count,
+      probe.probe_id + ".case_count",
+    );
+    return { cases: results };
   }
 
   if (probe.kind === "settings_precedence") {

@@ -106,6 +106,19 @@
         "ui_theme": "system-override",
         "context_file_name": "GEMINI.md"
       }
+    },
+    {
+      "probe_id": "gemini.trust.provenance_precedence",
+      "rules": [
+        "gemini.trust.provenance_sources"
+      ],
+      "kind": "trust_provenance",
+      "input": {
+        "cases_path": "fixtures/gemini-research/trust/provenance/cases.json"
+      },
+      "expected": {
+        "case_count": 9
+      }
     }
   ]
 }
