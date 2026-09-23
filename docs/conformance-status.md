@@ -37,12 +37,33 @@ Phase 0 therefore satisfies the **current Phase 0 exit gate (9/9 tracked gates)*
 
 ## Phase A — adapter-ready neutral core
 
-- [ ] Neutral records
-- [ ] Minimal `CodexAdapter` seam
-- [ ] Existing CLI behavior-preservation contract
-- [ ] Byte-for-byte compatibility tests where promised
+- [x] Neutral inspection / provenance / evidence records
+- [x] Minimal static `AgentAdapter` contract
+- [x] Codex-specific semantics routed through `codexAdapter`
+- [x] Existing `buildEnvironment` API preserved as a compatibility wrapper
+- [x] Existing `inspect`, `instructions`, `config`, and `why` behavior preserved
+- [x] `codex-scope.v0.1` JSON marker and shape preserved
+- [x] Adapter contract and neutral-record tests
+- [x] Byte-for-byte renderer equivalence tests across wrapper and direct adapter paths
+- [x] All Phase 0 conformance checks remain green
+- [x] Clean-checkout PR CI passes without runtime network, subprocesses, LLMs, API keys, hooks, plugins, MCP, or project mutation
 
-Status: **not started**. Phase 0 must close first.
+### Phase A exit gate
+
+| Gate | Evidence | Status |
+|---|---|---|
+| Neutral internal model exists | `src/core.ts` shared records/provenance/evidence/capabilities | satisfied |
+| Codex semantics enter through adapter | `src/adapters/codex.ts` builds the Codex environment and neutral records | satisfied |
+| Shared resolver entry is not Codex-only architecture | `src/environment.ts` delegates through the static adapter contract | satisfied |
+| Phase 0 conformance remains green | unchanged corpus + CI conformance validation | satisfied |
+| Original CLI tests remain green | existing CLI suite unchanged and passing | satisfied |
+| No semantic regression | conformance outcome remains free of `behavior_drift` | satisfied |
+| No schema regression | legacy JSON remains `codex-scope.v0.1`; adapter metadata stays internal | satisfied |
+| Deterministic behavior preserved | adapter contract tests + unchanged resolver inputs | satisfied |
+| Clean checkout reproducible | GitHub Actions PR checkout passes full workflow | satisfied |
+| Security constraints preserved | static lint + architecture; no network/subprocess/model/plugin execution | satisfied |
+
+Phase A satisfies the current exit gate. Phase B may proceed; second-agent work remains blocked until the Phase B core gate is also satisfied.
 
 ## Phase B — compatibility awareness
 

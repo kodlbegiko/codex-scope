@@ -218,6 +218,12 @@ The current matrix intentionally records the tested Codex binary version as `unk
 
 See [`docs/conformance-status.md`](docs/conformance-status.md) for the implementation gate.
 
+## Adapter-ready internal core
+
+Phase A routes the existing Codex resolver through a static `codexAdapter` behind shared inspection, provenance, capability, and evidence records. The neutral records are internal architecture: the public `inspect`, `instructions`, `config`, and `why` commands still emit the existing terminal formats and the `codex-scope.v0.1` JSON contract.
+
+The adapter seam does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Codex-specific semantics remain in the Codex adapter; the neutral core does not reinterpret unsupported or unresolved states.
+
 ## Build from source
 
 Prerequisites: Node.js 20+ and TypeScript 5.8+ available as `tsc` for source builds.

@@ -80,6 +80,14 @@ With trust `unknown`, a higher-precedence project config remains conditional and
 
 Unless `--invocation-complete` is supplied, unseen invocation/profile inputs can still supersede file-derived values, so affected results remain unresolved.
 
+## Adapter boundary
+
+Phase A does not change any Codex semantic rule in this ledger. The same Codex-specific resolver is now reached through `codexAdapter`, which projects deterministic results into shared internal inspection/provenance records while preserving `EffectiveCodexEnvironment` for the V0.1 CLI.
+
+The neutral layer is deliberately non-authoritative about Codex semantics: precedence, trust gating, instruction discovery, parser boundaries, and fail-closed behavior remain owned by the Codex adapter and the machine-readable conformance corpus. An `unresolved` or `unsupported` Codex result remains unresolved or unsupported after projection.
+
+Adapter version: `codex-adapter.v1`.
+
 ## Evidence links
 
 Official documentation:

@@ -1,9 +1,11 @@
-# V0.1 architecture
+# Adapter-ready architecture
 
-The runtime path is intentionally small:
+The runtime path remains intentionally small and read-only:
 
 ```text
 CLI arguments / explicit invocation state
+            ↓
+      static Codex adapter
             ↓
 configuration scanner + conservative TOML parser
             ↓
@@ -11,23 +13,29 @@ project-root and precedence resolver
             ↓
 instruction discovery resolver
             ↓
-EffectiveCodexEnvironment
+EffectiveCodexEnvironment ─────→ neutral inspection records
+            ↓                         │
+       central redaction              └→ internal provenance/evidence seam
             ↓
-central redaction
-            ↓
-terminal renderer / JSON renderer
+terminal renderer / codex-scope.v0.1 JSON renderer
 ```
 
-Terminal and JSON output consume the same environment model. Command renderers do not independently resolve Codex semantics.
+The neutral seam is internal in Phase A. Existing terminal output and the `codex-scope.v0.1` JSON contract still consume the same `EffectiveCodexEnvironment`; neutral records are not silently added to the legacy schema.
 
 ## Modules
 
-- `src/config.ts` — source discovery, trust gating, precedence, missing-state handling.
-- `src/agents.ts` — global/project instruction discovery and byte accounting.
-- `src/toml.ts` — fail-closed parser for the supported subset.
-- `src/environment.ts` — single reusable environment model.
-- `src/redact.ts` — centralized secret-like key redaction.
-- `src/render.ts` — human/JSON views only.
+- `src/core.ts` — agent-neutral inspection records, provenance, compatibility outcome vocabulary, evidence metadata, capabilities, and static adapter contract.
+- `src/adapters/codex.ts` — Codex-specific semantics, evidence declaration, neutral-record projection, and construction of the legacy Codex environment.
+- `src/config.ts` — Codex config source discovery, trust gating, precedence, and missing-state handling.
+- `src/agents.ts` — Codex global/project instruction discovery and byte accounting.
+- `src/toml.ts` — fail-closed parser for the supported Codex subset.
+- `src/environment.ts` — backward-compatible wrapper that delegates to the Codex adapter.
+- `src/redact.ts` — centralized secret-like key redaction for public output.
+- `src/render.ts` — human/`codex-scope.v0.1` JSON views only.
 - `src/cli.ts` — argument boundary and safe error handling.
 
-There is no hook runner, network client, OpenAI SDK, telemetry client, or subprocess execution module in the inspection implementation.
+## Phase A boundaries
+
+The adapter is statically registered at compile time. There is no plugin runtime, dynamic loading, hook runner, MCP execution, network client, OpenAI SDK, telemetry client, or subprocess execution module in the deterministic inspection implementation.
+
+Codex-specific rules remain Codex-specific. The neutral core carries their results and provenance; it does not guess common semantics or coerce `unsupported` / `unresolved` states into compatibility claims.
