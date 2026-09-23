@@ -1,0 +1,8 @@
+{
+  "context": {
+    "includeDirectories": [
+      "/user/dir1",
+      "/user/dir2"
+    ]
+  }
+}

@@ -16,7 +16,7 @@ test("Gemini research semantic probes are deterministic", () => {
     parsed.schema_version,
     "codex-scope.agent-research-probe-run.v1",
   );
-  assert.deepEqual(parsed.counts, { pass: 10, fail: 0 });
+  assert.deepEqual(parsed.counts, { pass: 12, fail: 0 });
 
   const jit = parsed.results.find(
     (item) => item.probe_id === "gemini.instructions.jit_target",
@@ -64,4 +64,30 @@ test("Gemini research semantic probes are deterministic", () => {
   assert.deepEqual(imports.actual.candidates, ["./shared.md"]);
   assert.equal(imports.actual.classification, "unresolved");
   assert.equal(imports.actual.expanded, false);
+
+  const includeDirectories = parsed.results.find(
+    (item) => item.probe_id === "gemini.config.include_directories_concat",
+  );
+  assert.deepEqual(includeDirectories.actual.trusted, [
+    "/system/defaults/dir",
+    "/user/dir1",
+    "/user/dir2",
+    "/workspace/dir",
+    "/system/dir",
+  ]);
+  assert.deepEqual(includeDirectories.actual.untrusted, [
+    "/system/defaults/dir",
+    "/user/dir1",
+    "/user/dir2",
+    "/system/dir",
+  ]);
+
+  const folderTrust = parsed.results.find(
+    (item) => item.probe_id === "gemini.config.folder_trust_explicit_precedence",
+  );
+  assert.deepEqual(folderTrust.actual.cases, [
+    { id: "workspace-over-user-when-trusted", value: false },
+    { id: "workspace-excluded-when-untrusted", value: true },
+    { id: "system-overrides-workspace", value: true },
+  ]);
 });

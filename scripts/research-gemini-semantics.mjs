@@ -225,6 +225,42 @@ function runProbe(probe) {
     return actual;
   }
 
+  if (probe.kind === "settings_array_concat") {
+    const layers = [
+      readJson(probe.input.system_defaults),
+      readJson(probe.input.user),
+      readJson(probe.input.workspace),
+      readJson(probe.input.system),
+    ];
+    const readPath = (value) => probe.input.path.reduce((current, key) => current?.[key], value);
+    const concatFor = (trusted) =>
+      [layers[0], layers[1], ...(trusted ? [layers[2]] : []), layers[3]]
+        .flatMap((layer) => readPath(layer) ?? []);
+    const actual = { trusted: concatFor(true), untrusted: concatFor(false) };
+    assertEqual(actual, probe.expected, probe.probe_id);
+    return actual;
+  }
+
+  if (probe.kind === "settings_scalar_cases") {
+    const fixture = readJson(probe.input.cases_path);
+    const readPath = (value) => probe.input.path.reduce((current, key) => current?.[key], value);
+    const results = fixture.cases.map((item) => {
+      const workspace = item.trusted ? item.layers.workspace : {};
+      const merged = deepMerge(
+        item.layers.system_defaults,
+        item.layers.user,
+        workspace,
+        item.layers.system,
+      );
+      const value = readPath(merged);
+      const actual = { id: item.id, value };
+      assertEqual(actual, { id: item.id, value: item.expected }, probe.probe_id + "." + item.id);
+      return actual;
+    });
+    assertEqual(results.length, probe.expected.case_count, probe.probe_id + ".case_count");
+    return { cases: results };
+  }
+
   if (probe.kind === "settings_precedence") {
     const systemDefaults = readJson(probe.input.system_defaults);
     const user = readJson(probe.input.user);

@@ -412,6 +412,66 @@
       "probe_ids": [
         "gemini.instructions.memory_import_fail_closed"
       ]
+    },
+    {
+      "rule_id": "gemini.config.include_directories_merge",
+      "surface": "config",
+      "semantic_status": "supported",
+      "summary": "context.includeDirectories uses a setting-specific CONCAT merge strategy across schema/system-default, user, trusted workspace, and system-override layers.",
+      "fixture_path": "fixtures/gemini-research/settings/include-directories",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settingsSchema.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settingsSchema.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        }
+      ],
+      "supported_boundary": "For the pinned setting context.includeDirectories, deterministic file-layer merging concatenates arrays in low-to-high precedence order; workspace entries participate only when the supplied workspace trust state is true.",
+      "unresolved_boundary": "This rule does not generalize CONCAT to other keys and does not infer CLI/environment/remote-admin contributions.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.config.include_directories_concat"
+      ]
+    },
+    {
+      "rule_id": "gemini.config.folder_trust_explicit_precedence",
+      "surface": "config",
+      "semantic_status": "supported",
+      "summary": "When security.folderTrust.enabled is explicitly present in settings layers, normal settings-file precedence determines the merged value; untrusted workspace settings are excluded.",
+      "fixture_path": "fixtures/gemini-research/settings/folder-trust-explicit",
+      "evidence": [
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/settings.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.ts"
+        },
+        {
+          "kind": "upstream_test",
+          "path": "packages/cli/src/config/settings.test.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/settings.test.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "path": "packages/cli/src/config/trustedFolders.ts",
+          "url": "https://github.com/google-gemini/gemini-cli/blob/62364cb2000795537a6895261b37ec668e4cf527/packages/cli/src/config/trustedFolders.ts"
+        }
+      ],
+      "supported_boundary": "Explicit boolean values are resolved through the pinned settings-file precedence with trusted-workspace gating. This supports explicit trust input without choosing the disputed omitted-setting default.",
+      "unresolved_boundary": "If no explicit layer supplies the value, the separate folder-trust-default discrepancy remains unresolved and this rule must not supply a default.",
+      "assertion_status": "covered",
+      "probe_ids": [
+        "gemini.config.folder_trust_explicit_precedence"
+      ]
     }
   ],
   "discrepancies": [
@@ -442,7 +502,9 @@
     "fixtures/gemini-research/user-project-memory",
     "fixtures/gemini-research/extension-memory",
     "fixtures/gemini-research/mcp-memory",
-    "fixtures/gemini-research/imports"
+    "fixtures/gemini-research/imports",
+    "fixtures/gemini-research/settings/include-directories",
+    "fixtures/gemini-research/settings/folder-trust-explicit"
   ],
   "adapter_blockers": [
     {

@@ -213,6 +213,56 @@
         "classification": "unresolved",
         "expanded": false
       }
+    },
+    {
+      "probe_id": "gemini.config.include_directories_concat",
+      "rules": [
+        "gemini.config.include_directories_merge"
+      ],
+      "kind": "settings_array_concat",
+      "input": {
+        "path": [
+          "context",
+          "includeDirectories"
+        ],
+        "system_defaults": "fixtures/gemini-research/settings/include-directories/system-defaults.json",
+        "user": "fixtures/gemini-research/settings/include-directories/user.json",
+        "workspace": "fixtures/gemini-research/settings/include-directories/workspace.json",
+        "system": "fixtures/gemini-research/settings/include-directories/system.json"
+      },
+      "expected": {
+        "trusted": [
+          "/system/defaults/dir",
+          "/user/dir1",
+          "/user/dir2",
+          "/workspace/dir",
+          "/system/dir"
+        ],
+        "untrusted": [
+          "/system/defaults/dir",
+          "/user/dir1",
+          "/user/dir2",
+          "/system/dir"
+        ]
+      }
+    },
+    {
+      "probe_id": "gemini.config.folder_trust_explicit_precedence",
+      "rules": [
+        "gemini.config.folder_trust_explicit_precedence"
+      ],
+      "kind": "settings_scalar_cases",
+      "input": {
+        "cases_path": "fixtures/gemini-research/settings/folder-trust-explicit/cases.json",
+        "path": [
+          "security",
+          "folderTrust",
+          "enabled"
+        ]
+      },
+      "expected": {
+        "case_count": 3
+      }
     }
   ]
 }
