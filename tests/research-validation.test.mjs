@@ -92,7 +92,7 @@ test("Gemini research corpus passes deterministic validation", () => {
   const result = run();
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /research:gemini:validate: ok/);
-  assert.match(result.stdout, /adapter_readiness=blocked/);
+  const manifest = JSON.parse(fs.readFileSync(sourceManifest, "utf8"));\n  assert.match(result.stdout, new RegExp("adapter_readiness=" + manifest.adapter_readiness));
 });
 
 test("Gemini research validation rejects duplicate rule ids", () => {
@@ -151,6 +151,14 @@ test("Gemini research validation rejects fixture root traversal", () => {
 test("Gemini research validation keeps readiness blocked by open blockers", () => {
   withManifest(
     (manifest) => {
+      manifest.adapter_blockers = [
+        {
+          blocker_id: "test.open_blocker",
+          status: "open",
+          reason: "Synthetic open blocker for validator coverage.",
+          evidence: "tests/research-validation.test.mjs",
+        },
+      ];
       manifest.adapter_readiness = "ready_for_implementation";
     },
     (manifestPath) => {
