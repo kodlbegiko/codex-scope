@@ -1,3 +1,4 @@
+import type { CompatibilitySummary } from "./compatibility";
 import { displayPath } from "./fs-utils";
 import { redactEnvironment } from "./redact";
 import type { EffectiveCodexEnvironment, InstructionSource, ResolvedValue } from "./types";
@@ -195,4 +196,41 @@ export function renderJson(raw: EffectiveCodexEnvironment, command: string, key?
     null,
     2,
   );
+}
+
+export function renderCompatibility(summary: CompatibilitySummary): string {
+  const lines = [
+    "Compatibility",
+    `agent: ${summary.agent}`,
+    `Codex Scope: ${summary.codexScopeVersion}`,
+    `resolver: ${summary.resolverVersion}`,
+    `adapter: ${summary.adapterVersion}`,
+    `evidence date: ${summary.evidenceDate}`,
+    `tested upstream commit: ${summary.testedUpstreamCommit}`,
+    `tested Codex version: ${summary.testedCodexVersion}`,
+    `inspected Codex version: ${summary.inspectedCodexVersion}`,
+    `version source: ${summary.versionSource}`,
+    `version outcome: ${summary.versionOutcome}`,
+    `version probe: ${summary.localVersionProbe}`,
+    `reason: ${summary.versionReason}`,
+    "",
+    "Rules",
+    `  supported: ${summary.rules.supported}`,
+    `  unsupported: ${summary.rules.unsupported}`,
+    `  unresolved: ${summary.rules.unresolved}`,
+    `  total: ${summary.rules.total}`,
+  ];
+
+  if (summary.knownDiscrepancies.length > 0) {
+    lines.push("", "Known discrepancies");
+    for (const item of summary.knownDiscrepancies) {
+      lines.push(`  - ${item.id} [${item.status}]: ${item.summary}`);
+    }
+  }
+
+  return lines.join("\n");
+}
+
+export function renderCompatibilityJson(summary: CompatibilitySummary): string {
+  return JSON.stringify(summary, null, 2);
 }

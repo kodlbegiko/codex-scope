@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 const path = require("node:path");
+import { buildCompatibilitySummary } from "./compatibility";
 import { defaultCodexHome } from "./config";
 import { ConfigParseError, UsageError } from "./errors";
 import { buildEnvironment } from "./environment";
 import { normalizeExistingDirectory } from "./fs-utils";
-import { renderConfig, renderInspect, renderInstructions, renderJson, renderWhy } from "./render";
+import { renderCompatibility, renderCompatibilityJson, renderConfig, renderInspect, renderInstructions, renderJson, renderWhy } from "./render";
 import type { TrustState } from "./types";
 import { VERSION } from "./version";
 
-type Command = "inspect" | "instructions" | "config" | "why";
+type Command = "inspect" | "instructions" | "config" | "why" | "compatibility";
 
 interface ParsedArgs {
   command: Command;
@@ -20,10 +21,11 @@ interface ParsedArgs {
   profile?: string;
   cliOverrides: string[];
   whyKey?: string;
+  codexVersion?: string;
 }
 
 function usage(): string {
-  return `Codex Scope ${VERSION}\n\nUsage:\n  codex-scope inspect [options]\n  codex-scope instructions [path] [options]\n  codex-scope config [options]\n  codex-scope why <key> [options]\n\nOptions:\n  --json                       Machine-readable, versioned output\n  --cwd <path>                 Target working directory\n  --codex-home <path>          Override CODEX_HOME for inspection\n  --trust trusted|untrusted|unknown\n  --profile <name>             Known Codex profile file (<name>.config.toml)\n  -c, --config <key=value>     Known Codex invocation override; repeatable\n  --invocation-complete        Assert supplied profile/-c state is complete\n  --version\n  --help\n\nCodex Scope is read-only. It makes no LLM calls and executes no discovered hooks.`;
+  return `Codex Scope ${VERSION}\n\nUsage:\n  codex-scope inspect [options]\n  codex-scope instructions [path] [options]\n  codex-scope config [options]\n  codex-scope why <key> [options]\n  codex-scope compatibility [options]\n\nOptions:\n  --json                       Machine-readable, versioned output\n  --cwd <path>                 Target working directory\n  --codex-home <path>          Override CODEX_HOME for inspection\n  --trust trusted|untrusted|unknown\n  --profile <name>             Known Codex profile file (<name>.config.toml)\n  -c, --config <key=value>     Known Codex invocation override; repeatable\n  --invocation-complete        Assert supplied profile/-c state is complete\n  --codex-version <version>      Explicit offline Codex version for compatibility reporting\n  --version\n  --help\n\nCodex Scope is read-only. It makes no LLM calls and executes no discovered hooks.`;
 }
 
 function takeValue(args: string[], index: number, option: string): string {
@@ -42,7 +44,7 @@ function parseArgs(argv: string[]): ParsedArgs {
     process.exit(0);
   }
 
-  const commandToken = argv.find((arg) => ["inspect", "instructions", "config", "why"].includes(arg));
+  const commandToken = argv.find((arg) => ["inspect", "instructions", "config", "why", "compatibility"].includes(arg));
   if (!commandToken) {
     throw new UsageError(usage());
   }
@@ -56,6 +58,7 @@ function parseArgs(argv: string[]): ParsedArgs {
   const cliOverrides: string[] = [];
   let whyKey: string | undefined;
   let instructionsPath: string | undefined;
+  let codexVersion: string | undefined;
   let seenCommand = false;
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -85,6 +88,9 @@ function parseArgs(argv: string[]): ParsedArgs {
     } else if (arg === "-c" || arg === "--config") {
       cliOverrides.push(takeValue(argv, index, arg));
       index += 1;
+    } else if (arg === "--codex-version") {
+      codexVersion = takeValue(argv, index, arg);
+      index += 1;
     } else if (arg.startsWith("-")) {
       throw new UsageError(`Unknown option: ${arg}`);
     } else if (seenCommand && command === "why" && !whyKey) {
@@ -97,6 +103,9 @@ function parseArgs(argv: string[]): ParsedArgs {
   }
 
   if (command === "why" && !whyKey) throw new UsageError("codex-scope why requires a config key.");
+  if (codexVersion && command !== "compatibility") {
+    throw new UsageError("--codex-version is only valid with codex-scope compatibility.");
+  }
   if (instructionsPath) cwd = instructionsPath;
 
   return {
@@ -109,12 +118,18 @@ function parseArgs(argv: string[]): ParsedArgs {
     profile,
     cliOverrides,
     whyKey,
+    codexVersion,
   };
 }
 
 export function main(argv = process.argv.slice(2)): number {
   try {
     const args = parseArgs(argv);
+    if (args.command === "compatibility") {
+      const summary = buildCompatibilitySummary({ codexVersion: args.codexVersion });
+      console.log(args.json ? renderCompatibilityJson(summary) : renderCompatibility(summary));
+      return 0;
+    }
     const environment = buildEnvironment({
       cwd: args.cwd,
       codexHome: args.codexHome,
