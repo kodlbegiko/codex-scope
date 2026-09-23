@@ -286,6 +286,19 @@ If the exit gate fails, keep the adapter experimental or do not ship it.
 
 ### Phase D — compare proof of value
 
+Implementation status as of 2026-09-23:
+
+- internal deterministic comparison milestone: **PASS**;
+- versioned schema and normalization contract: **PASS**;
+- all six comparison classifications: **PASS**;
+- Codex + Gemini neutral-report integration: **PASS**;
+- three existing sanitized repository snapshots exercised through comparison: **PASS**;
+- sanitized reproducible JSON demonstration: **PASS**;
+- external proof-of-value: **BLOCKED (0 / 3 qualifying external user cases)**.
+
+This does **not** make Phase D complete. Fixtures, sanitized public snapshots, and prior upstream interactions are internal/repository evidence and are not counted as external user cases. The machine-readable gate is recorded in [`conformance/comparison/phase-d-status.json`](../../conformance/comparison/phase-d-status.json).
+
+
 Deliverables:
 
 - compare two supported adapter reports;

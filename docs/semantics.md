@@ -98,6 +98,25 @@ The tested Codex binary version remains `unknown`. `codex-scope compatibility --
 
 `conformance:validate:json` reports each rule's `expected_outcome` separately from its `actual_outcome`, so semantic drift cannot be hidden by relabeling an expectation.
 
+## Cross-agent comparison semantics
+
+Phase D comparison consumes neutral adapter records through a dedicated, versioned normalization layer. The shared comparison engine does not encode Codex- or Gemini-specific branches.
+
+The machine-readable contract is `codex-scope.semantic-comparison.v1`; normalization is `codex-scope.semantic-normalization.v1`.
+
+Classification is fail-closed:
+
+- `same`: both sides are resolved and have the same normalized value and representation for the selected semantic dimension;
+- `semantically_equivalent`: both sides are resolved and normalize to the same behavior even though their source representation differs;
+- `behaviorally_different`: both sides are resolved with sufficient evidence and their normalized behavior differs;
+- `unsupported_on_one_side`: exactly one side is formally unsupported while the other is resolved;
+- `unresolved`: at least one side depends on trust, JIT/runtime state, missing explicit input, or bounded upstream ambiguity;
+- `evidence_gap`: a comparison mapping is not sufficiently evidenced to claim equality, equivalence, or difference.
+
+An unresolved side is never downgraded to `behaviorally_different`. An evidence gap is never guessed into a stronger classification. Provenance retains adapter version, pinned upstream commit, rule/source references, and normalized source provenance.
+
+The current comparison layer only covers explicit structural semantic dimensions. It does not compare arbitrary instruction prose, execute agents, query MCP servers, activate extensions, or use a model to judge meaning.
+
 ## Evidence links
 
 Official documentation:

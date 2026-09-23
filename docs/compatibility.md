@@ -37,6 +37,22 @@ The generated matrix includes `adapter_version`, and CI validates it against the
 
 `conformance:validate:json` emits `codex-scope.conformance-run.v1` with per-rule `expected_outcome`, `actual_outcome`, and details. Exit status remains distinct: semantic `behavior_drift` fails with status 1, harness/corpus `tool_error` with status 2, while expected `unsupported` and `unresolved` results do not fail the run.
 
+## Phase D comparison compatibility boundary
+
+The internal Phase D comparison contract is versioned independently from the public V0.1 CLI:
+
+- comparison schema: `codex-scope.semantic-comparison.v1`;
+- normalization contract: `codex-scope.semantic-normalization.v1`;
+- current adapters: `codex-adapter.v1` and `gemini-adapter.v1`;
+- sanitized deterministic snapshot: `conformance/comparison/codex-gemini-demo.json`;
+- machine-readable gate status: `conformance/comparison/phase-d-status.json`.
+
+Comparison results retain each adapter's evidence date, upstream repository/commit, rule IDs, and references. Unsupported, unresolved, and evidence-gap states remain distinct from proven behavioral differences.
+
+The comparison core performs no model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution. The public CLI does not yet expose a cross-agent compare command.
+
+Phase D remains externally gated: the blueprint requires three qualifying external user cases where comparison finds a real configuration problem. The current count is 0 / 3, so Phase D is not complete and Phase E is not authorized.
+
 ## Conformance outcome taxonomy
 
 | Outcome | Meaning in CI |

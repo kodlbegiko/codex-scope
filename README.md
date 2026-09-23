@@ -228,6 +228,9 @@ Phase A routes the existing Codex resolver through a static `codexAdapter` behin
 
 Phase B exposes the checked-in compatibility boundary without changing those semantics. The generated matrix pins resolver/adapter/evidence metadata, `codex-scope compatibility` reports rule counts and version provenance, and `conformance:validate:json` records expected versus actual outcome for every rule.
 
+Phase C adds the bounded `gemini-adapter.v1` after evidence, fixtures, deterministic probes, and sanitized real-repository validation. Phase D now contains an **internal** versioned neutral comparison engine and sanitized JSON demonstration. The public V0.1 CLI remains unchanged: there is no public `compare` command yet, and the external Phase D proof-of-value gate remains open at 0 / 3 qualifying external user cases. See [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
+
+
 The deterministic path still does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Unknown versions remain unknown; explicit supplied versions do not become compatibility claims without matching tested evidence.
 
 ## Build from source
@@ -252,7 +255,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.1 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.1 reports those historical values as `unsupported` rather than current resolved semantics.
+Codex Scope V0.1 does **not** expose hooks, MCP execution, plugins, snapshots, directory diffs, telemetry, a web UI, a public cross-agent comparison command, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Phase D's internal cross-agent comparison infrastructure is deterministic and limited to evidence-backed structural semantic dimensions. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.1 reports those historical values as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 
