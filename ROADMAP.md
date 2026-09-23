@@ -149,6 +149,7 @@ Implemented internal milestones:
 - adapter/upstream/rule/reference provenance retention;
 - three existing sanitized repositories exercised through cross-agent instruction comparison;
 - sanitized byte-stable machine-readable demonstration enforced by `npm run comparison:demo:check`.
+- versioned `codex-scope.semantic-comparison-ci.v1` CI summary with conservative `unresolved > unsupported > proven_drift > clean` precedence; `tool_error` is reserved for failures before a valid comparison document exists.
 
 The public V0.1 CLI has **not** gained a compare command. Phase D is intentionally proving the machine-readable core before any human-facing CLI surface.
 

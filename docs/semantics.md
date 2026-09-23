@@ -117,6 +117,9 @@ An unresolved side is never downgraded to `behaviorally_different`. An evidence 
 
 The current comparison layer only covers explicit structural semantic dimensions. It does not compare arbitrary instruction prose, execute agents, query MCP servers, activate extensions, or use a model to judge meaning.
 
+For CI composition, `codex-scope.semantic-comparison-ci.v1` derives a conservative report-level outcome without rewriting record classifications. Precedence is `unresolved > unsupported > proven_drift > clean`. A record-level `evidence_gap` contributes to the report-level `unresolved` outcome while remaining `evidence_gap` in the comparison document. `tool_error` is reserved for failures that prevent a valid comparison document from being formed. Numeric exit codes remain unfrozen.
+
+
 ## Evidence links
 
 Official documentation:

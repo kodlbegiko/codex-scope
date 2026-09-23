@@ -46,8 +46,11 @@ The internal Phase D comparison contract is versioned independently from the pub
 - current adapters: `codex-adapter.v1` and `gemini-adapter.v1`;
 - sanitized deterministic snapshot: `conformance/comparison/codex-gemini-demo.json`;
 - machine-readable gate status: `conformance/comparison/phase-d-status.json`.
+- CI summary schema: `codex-scope.semantic-comparison-ci.v1`, demonstrated in `conformance/comparison/codex-gemini-demo-ci.json`.
 
 Comparison results retain each adapter's evidence date, upstream repository/commit, rule IDs, and references. Unsupported, unresolved, and evidence-gap states remain distinct from proven behavioral differences.
+
+The CI summary uses conservative precedence `unresolved > unsupported > proven_drift > clean`; `evidence_gap` maps only to the report-level `unresolved` outcome and remains explicit in record counts. `tool_error` is a tool-layer outcome, not a semantic comparison classification.
 
 The comparison core performs no model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution. The public CLI does not yet expose a cross-agent compare command.
 

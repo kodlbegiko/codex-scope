@@ -294,6 +294,7 @@ Implementation status as of 2026-09-23:
 - Codex + Gemini neutral-report integration: **PASS**;
 - three existing sanitized repository snapshots exercised through comparison: **PASS**;
 - sanitized reproducible JSON demonstration: **PASS**;
+- stable versioned CI outcomes: **PASS** (`codex-scope.semantic-comparison-ci.v1`);
 - external proof-of-value: **BLOCKED (0 / 3 qualifying external user cases)**.
 
 This does **not** make Phase D complete. Fixtures, sanitized public snapshots, and prior upstream interactions are internal/repository evidence and are not counted as external user cases. The machine-readable gate is recorded in [`conformance/comparison/phase-d-status.json`](../../conformance/comparison/phase-d-status.json).
