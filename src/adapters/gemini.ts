@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import path from "node:path";
+import { isFile, path, readText } from "../fs-utils";
 import type {
   AdapterCapabilities,
   AdapterEvidence,
