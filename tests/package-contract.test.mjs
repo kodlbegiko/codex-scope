@@ -1,0 +1,35 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import test from "node:test";
+
+test("published package has an explicit comparison-content verification gate", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.resolve("package.json"), "utf8"));
+  assert.equal(
+    pkg.scripts["package:contents:check"],
+    "node scripts/package-contents-check.mjs",
+  );
+
+  const workflow = fs.readFileSync(
+    path.resolve(".github/workflows/ci.yml"),
+    "utf8",
+  );
+  assert.match(workflow, /npm run package:contents:check/);
+
+  const script = fs.readFileSync(
+    path.resolve("scripts/package-contents-check.mjs"),
+    "utf8",
+  );
+  for (const required of [
+    "conformance/schema/semantic-comparison.schema.json",
+    "conformance/schema/semantic-comparison-ci.schema.json",
+    "conformance/schema/semantic-comparison-cli.schema.json",
+    "conformance/schema/phase-d-status.schema.json",
+    "conformance/schema/structural-differences.schema.json",
+    "conformance/comparison/phase-d-status.json",
+    "conformance/comparison/structural-differences.json",
+    "conformance/comparison/cli-codex-gemini.json",
+  ]) {
+    assert.equal(script.includes(required), true, required);
+  }
+});
