@@ -10,7 +10,7 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.1.x is the current public release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.2.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.2 preserves the documented V0.1 semantic subset and JSON contract while adding conformance and compatibility evidence; it does not claim full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
@@ -186,7 +186,7 @@ Normal inspection:
 - never mutates the inspected project, Codex config, or `AGENTS.md` files;
 - redacts secret-like config keys in terminal and JSON output.
 
-Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.1.
+Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.2.
 
 ## Accuracy and compatibility
 
@@ -252,7 +252,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.1 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.1 reports those historical values as `unsupported` rather than current resolved semantics.
+Codex Scope V0.2 does **not** model hooks, MCP, plugins, snapshots, directory diffs, telemetry, a web UI, public cross-agent behavior, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.2 reports those historical values as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 
