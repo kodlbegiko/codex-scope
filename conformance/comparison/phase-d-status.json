@@ -1,0 +1,57 @@
+{
+  "schema_version": "codex-scope.phase-d-status.v1",
+  "phase": "D",
+  "phase_status": "blocked_external_proof",
+  "internal_deterministic_status": "pass",
+  "comparison_schema": {
+    "version": "codex-scope.semantic-comparison.v1",
+    "status": "pass"
+  },
+  "normalization": {
+    "version": "codex-scope.semantic-normalization.v1",
+    "status": "pass"
+  },
+  "classifications": {
+    "same": "pass",
+    "semantically_equivalent": "pass",
+    "behaviorally_different": "pass",
+    "unsupported_on_one_side": "pass",
+    "unresolved": "pass",
+    "evidence_gap": "pass"
+  },
+  "integration": {
+    "codex": "pass",
+    "gemini": "pass",
+    "sanitized_repository_count": 3,
+    "sanitized_repository_status": "pass"
+  },
+  "provenance": {
+    "status": "pass",
+    "adapter_versions": "preserved",
+    "upstream_commits": "preserved",
+    "rule_ids": "preserved",
+    "references": "preserved"
+  },
+  "sanitized_demonstration": {
+    "status": "pass",
+    "path": "conformance/comparison/codex-gemini-demo.json",
+    "ci_command": "npm run comparison:demo:check"
+  },
+  "safety": {
+    "model_calls": false,
+    "runtime_network": false,
+    "agent_subprocess_probing": false,
+    "extension_execution": false,
+    "mcp_execution": false
+  },
+  "external_proof_of_value": {
+    "required_external_user_cases": 3,
+    "verified_external_user_cases": 0,
+    "status": "blocked",
+    "reason": "The blueprint requires three external user cases where comparison finds a real configuration problem. Repository fixtures, sanitized public snapshots, and prior upstream interactions are not counted as external user cases."
+  },
+  "false_certainty_blockers": {
+    "count": 0,
+    "status": "pass"
+  }
+}
