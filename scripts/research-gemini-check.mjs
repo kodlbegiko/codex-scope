@@ -36,6 +36,10 @@ const codexManifestPath = valueAfter(
   "--codex-manifest",
   "conformance/manifest.json",
 );
+const externalEvidencePath = valueAfter(
+  "--external-evidence",
+  "conformance/research/external-evidence.json",
+);
 const probes = readJson(probesPath);
 
 function fail(message) {
@@ -415,6 +419,85 @@ function validateCoverageLedger(coverage, codexManifest, realRepositories) {
   };
 }
 
+function validateExternalEvidence(ledger) {
+  if (ledger.schema_version !== "codex-scope.external-evidence.v1") {
+    fail("unexpected external evidence schema_version");
+  }
+  if (!Array.isArray(ledger.interactions)) {
+    fail("external evidence interactions must be an array");
+  }
+  const ids = new Set();
+  const urls = new Set();
+  const allowedTypes = new Set([
+    "issue",
+    "comment",
+    "pr",
+    "correction",
+    "acknowledgement",
+  ]);
+  const allowedStatuses = new Set([
+    "submitted",
+    "acknowledged",
+    "corrected",
+    "merged",
+  ]);
+  for (const interaction of ledger.interactions) {
+    if (!interaction.id || typeof interaction.id !== "string") {
+      fail("external evidence interaction requires id");
+    }
+    if (ids.has(interaction.id)) {
+      fail("external evidence duplicate id: " + interaction.id);
+    }
+    ids.add(interaction.id);
+    if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(interaction.upstream_repository ?? "")) {
+      fail(interaction.id + ": invalid upstream_repository");
+    }
+    let url;
+    try {
+      url = new URL(interaction.url);
+    } catch {
+      fail(interaction.id + ": invalid url");
+    }
+    if (url.protocol !== "https:" || url.hostname !== "github.com") {
+      fail(interaction.id + ": external evidence url must be an https GitHub URL");
+    }
+    if (urls.has(interaction.url)) {
+      fail("external evidence duplicate interaction url: " + interaction.url);
+    }
+    urls.add(interaction.url);
+    if (!allowedTypes.has(interaction.interaction_type)) {
+      fail(interaction.id + ": invalid interaction_type");
+    }
+    if (!allowedStatuses.has(interaction.status)) {
+      fail(interaction.id + ": invalid status");
+    }
+    for (const field of [
+      "date",
+      "independent_finding",
+      "external_verification",
+      "impact",
+    ]) {
+      if (typeof interaction[field] !== "string" || !interaction[field].trim()) {
+        fail(interaction.id + ": " + field + " must be non-empty");
+      }
+    }
+  }
+  const required = ledger.gate?.required_distinct_interactions;
+  if (!Number.isInteger(required) || required < 3) {
+    fail("external evidence gate requires at least 3 distinct interactions");
+  }
+  const expectedStatus = urls.size >= required ? "pass" : "fail";
+  if (ledger.gate?.status !== expectedStatus) {
+    fail(
+      "external evidence gate status is dishonest or stale: expected " +
+        expectedStatus +
+        " but received " +
+        ledger.gate?.status,
+    );
+  }
+  return { interactions: urls.size, required, status: expectedStatus };
+}
+
 function validateResearchManifest(manifest, schema, realRepositories) {
   assertSchema(manifest, schema, "agent research manifest");
 
@@ -585,6 +668,8 @@ try {
   const realRepositories = readJson(realRepositoriesPath);
   const coverage = readJson(coveragePath);
   const codexManifest = readJson(codexManifestPath);
+  const externalEvidence = readJson(externalEvidencePath);
+  const externalEvidenceResult = validateExternalEvidence(externalEvidence);
   const coverageResult = validateCoverageLedger(
     coverage,
     codexManifest,
@@ -606,6 +691,12 @@ try {
       coverageResult.total +
       " coverage_status=" +
       coverageResult.status +
+      " external_evidence=" +
+      externalEvidenceResult.interactions +
+      "/" +
+      externalEvidenceResult.required +
+      " external_evidence_status=" +
+      externalEvidenceResult.status +
       " adapter_readiness=" +
       manifest.adapter_readiness,
   );
