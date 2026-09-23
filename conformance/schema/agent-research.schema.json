@@ -27,10 +27,16 @@
       "minLength": 1
     },
     "phase": {
-      "enum": ["research_spike"]
+      "enum": [
+        "research_spike"
+      ]
     },
     "implementation_status": {
-      "enum": ["research_only", "adapter_candidate", "implemented"]
+      "enum": [
+        "research_only",
+        "adapter_candidate",
+        "implemented"
+      ]
     },
     "evidence_date": {
       "type": "string",
@@ -39,7 +45,11 @@
     "upstream": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "commit", "commit_date"],
+      "required": [
+        "repository",
+        "commit",
+        "commit_date"
+      ],
       "properties": {
         "repository": {
           "type": "string",
@@ -56,16 +66,28 @@
       }
     },
     "adapter_readiness": {
-      "enum": ["blocked", "ready_for_implementation", "implemented"]
+      "enum": [
+        "blocked",
+        "ready_for_implementation",
+        "implemented"
+      ]
     },
     "selected_over": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["agent", "repository", "commit", "reason"],
+        "required": [
+          "agent",
+          "repository",
+          "commit",
+          "reason"
+        ],
         "properties": {
-          "agent": { "type": "string", "minLength": 1 },
+          "agent": {
+            "type": "string",
+            "minLength": 1
+          },
           "repository": {
             "type": "string",
             "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
@@ -74,7 +96,10 @@
             "type": "string",
             "pattern": "^[0-9a-f]{40}$"
           },
-          "reason": { "type": "string", "minLength": 1 }
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
@@ -92,6 +117,8 @@
           "supported_boundary",
           "unresolved_boundary",
           "fixture_path",
+          "assertion_status",
+          "probe_ids",
           "evidence"
         ],
         "properties": {
@@ -100,22 +127,46 @@
             "pattern": "^[a-z0-9-]+\\.[a-z0-9_.-]+$"
           },
           "surface": {
-            "enum": ["instructions", "config", "trust"]
+            "enum": [
+              "instructions",
+              "config",
+              "trust"
+            ]
           },
           "semantic_status": {
-            "enum": ["supported", "unsupported", "unresolved"]
+            "enum": [
+              "supported",
+              "unsupported",
+              "unresolved"
+            ]
           },
-          "summary": { "type": "string", "minLength": 1 },
-          "supported_boundary": { "type": "string", "minLength": 1 },
-          "unresolved_boundary": { "type": "string", "minLength": 1 },
-          "fixture_path": { "type": "string", "minLength": 1 },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supported_boundary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unresolved_boundary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fixture_path": {
+            "type": "string",
+            "minLength": 1
+          },
           "evidence": {
             "type": "array",
             "minItems": 1,
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["kind", "path", "url"],
+              "required": [
+                "kind",
+                "path",
+                "url"
+              ],
               "properties": {
                 "kind": {
                   "enum": [
@@ -126,9 +177,28 @@
                     "upstream_pr"
                   ]
                 },
-                "path": { "type": "string", "minLength": 1 },
-                "url": { "type": "string", "format": "uri" }
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
               }
+            }
+          },
+          "assertion_status": {
+            "enum": [
+              "covered",
+              "pending"
+            ]
+          },
+          "probe_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
             }
           }
         }
@@ -148,28 +218,53 @@
           "blocker_for_adapter"
         ],
         "properties": {
-          "discrepancy_id": { "type": "string", "minLength": 1 },
-          "rule_id": { "type": "string", "minLength": 1 },
+          "discrepancy_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rule_id": {
+            "type": "string",
+            "minLength": 1
+          },
           "status": {
-            "enum": ["open_research", "bounded", "resolved"]
+            "enum": [
+              "open_research",
+              "bounded",
+              "resolved"
+            ]
           },
           "classification": {
-            "enum": ["supported", "unsupported", "unresolved"]
+            "enum": [
+              "supported",
+              "unsupported",
+              "unresolved"
+            ]
           },
-          "summary": { "type": "string", "minLength": 1 },
-          "blocker_for_adapter": { "type": "boolean" }
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocker_for_adapter": {
+            "type": "boolean"
+          }
         }
       }
     },
     "known_unknowns": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "fixture_roots": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   }
 }
