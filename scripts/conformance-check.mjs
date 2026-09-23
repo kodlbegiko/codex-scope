@@ -14,6 +14,7 @@ const regressions = readJson("conformance/regressions.json");
 const regressionSchema = readJson("conformance/schema/regressions.schema.json");
 const matrix = readJson("conformance/compatibility-matrix.json");
 const matrixSchema = readJson("conformance/schema/compatibility.schema.json");
+const jsonMode = process.argv.includes("--json");
 
 function validateCorpus() {
   assertSchema(manifest, manifestSchema, "conformance manifest");
@@ -137,35 +138,72 @@ function executeRule(rule) {
   return { outcome: rule.expected_outcome, details: [] };
 }
 
+function runMetadata() {
+  return {
+    schema_version: "codex-scope.conformance-run.v1",
+    resolver_version: manifest.resolver_version,
+    adapter_version: matrix.adapter_version,
+    evidence_date: manifest.evidence_date,
+    tested_upstream_commit: manifest.upstream.commit,
+    tested_codex_version: manifest.upstream.tested_codex_version
+  };
+}
+
 try {
   validateCorpus();
 } catch (error) {
-  console.error("conformance: tool_error");
-  console.error(error instanceof Error ? error.stack ?? error.message : String(error));
+  const message = error instanceof Error ? error.stack ?? error.message : String(error);
+  if (jsonMode) {
+    console.log(JSON.stringify({
+      ...runMetadata(),
+      counts: { compatible: 0, behavior_drift: 0, unsupported: 0, unresolved: 0, tool_error: 1 },
+      results: [],
+      error: message
+    }, null, 2));
+  } else {
+    console.error("conformance: tool_error");
+    console.error(message);
+  }
   process.exit(2);
 }
 
 const counts = { compatible: 0, behavior_drift: 0, unsupported: 0, unresolved: 0, tool_error: 0 };
 const failures = [];
+const results = [];
 
 for (const rule of manifest.rules) {
   const result = executeRule(rule);
   counts[result.outcome] += 1;
+  const record = {
+    rule_id: rule.rule_id,
+    expected_outcome: rule.expected_outcome,
+    actual_outcome: result.outcome,
+    details: result.details
+  };
+  results.push(record);
   if (result.outcome === "behavior_drift" || result.outcome === "tool_error") {
-    failures.push({ rule_id: rule.rule_id, outcome: result.outcome, details: result.details });
+    failures.push(record);
   }
 }
 
-console.log(
-  "conformance: " +
-    Object.entries(counts)
-      .map(([key, value]) => key + "=" + value)
-      .join(" ")
-);
+if (jsonMode) {
+  console.log(JSON.stringify({
+    ...runMetadata(),
+    counts,
+    results
+  }, null, 2));
+} else {
+  console.log(
+    "conformance: " +
+      Object.entries(counts)
+        .map(([key, value]) => key + "=" + value)
+        .join(" ")
+  );
 
-for (const failure of failures) {
-  console.error(failure.outcome + ": " + failure.rule_id);
-  for (const detail of failure.details) console.error("  - " + detail);
+  for (const failure of failures) {
+    console.error(failure.actual_outcome + ": " + failure.rule_id);
+    for (const detail of failure.details) console.error("  - " + detail);
+  }
 }
 
 if (counts.tool_error > 0) process.exit(2);
