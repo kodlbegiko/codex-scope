@@ -267,6 +267,24 @@ test("Gemini research validation rejects dishonest external evidence gate status
   );
 });
 
+test("Gemini adapter readiness requires the external evidence gate to stay passed", () => {
+  withJson(
+    sourceExternalEvidence,
+    (ledger) => {
+      ledger.interactions = ledger.interactions.slice(0, 2);
+      ledger.gate.status = "fail";
+    },
+    (externalEvidencePath) => {
+      const result = run(sourceManifest, undefined, { externalEvidencePath });
+      assert.equal(result.status, 1);
+      assert.match(
+        result.stderr,
+        /adapter readiness requires external evidence gate status=pass/,
+      );
+    },
+  );
+});
+
 test("Gemini research validation rejects stale Phase 2 total", () => {
   withJson(
     sourceCoverage,
