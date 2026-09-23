@@ -64,6 +64,32 @@ test("Gemini research validation rejects missing fixtures", () => {
   );
 });
 
+test("Gemini research validation rejects fixture path traversal", () => {
+  withManifest(
+    (manifest) => {
+      manifest.rules[0].fixture_path = "fixtures/../package.json";
+    },
+    (manifestPath) => {
+      const result = run(manifestPath);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /fixture_path must remain inside fixtures/);
+    },
+  );
+});
+
+test("Gemini research validation rejects fixture root traversal", () => {
+  withManifest(
+    (manifest) => {
+      manifest.fixture_roots[0] = "fixtures/../package.json";
+    },
+    (manifestPath) => {
+      const result = run(manifestPath);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /fixture root must remain inside fixtures/);
+    },
+  );
+});
+
 test("Gemini research validation keeps readiness blocked by open blockers", () => {
   withManifest(
     (manifest) => {

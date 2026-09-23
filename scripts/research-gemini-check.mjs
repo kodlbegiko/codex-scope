@@ -26,6 +26,21 @@ function fail(message) {
   throw new Error(message);
 }
 
+const fixturesRoot = path.resolve(repoPath("fixtures"));
+
+function fixturePath(relativePath, label) {
+  const candidate = path.resolve(repoPath(relativePath));
+  const relativeToFixtures = path.relative(fixturesRoot, candidate);
+  if (
+    relativeToFixtures === ".." ||
+    relativeToFixtures.startsWith(".." + path.sep) ||
+    path.isAbsolute(relativeToFixtures)
+  ) {
+    fail(label + " must remain inside fixtures/: " + relativePath);
+  }
+  return candidate;
+}
+
 function validatePinnedEvidence(manifest, rule) {
   for (const evidence of rule.evidence) {
     if (
@@ -81,10 +96,11 @@ function validateResearchManifest(manifest, schema) {
     ids.add(rule.rule_id);
     rulesById.set(rule.rule_id, rule);
 
-    if (!rule.fixture_path.startsWith("fixtures/")) {
-      fail(rule.rule_id + ": fixture_path must remain inside fixtures/");
-    }
-    if (!fs.existsSync(repoPath(rule.fixture_path))) {
+    const resolvedFixturePath = fixturePath(
+      rule.fixture_path,
+      rule.rule_id + ": fixture_path",
+    );
+    if (!fs.existsSync(resolvedFixturePath)) {
       fail(
         rule.rule_id +
           ": fixture path does not exist: " +
@@ -121,10 +137,8 @@ function validateResearchManifest(manifest, schema) {
   }
 
   for (const root of manifest.fixture_roots) {
-    if (!root.startsWith("fixtures/")) {
-      fail("fixture root must remain inside fixtures/: " + root);
-    }
-    if (!fs.existsSync(repoPath(root))) {
+    const resolvedFixtureRoot = fixturePath(root, "fixture root");
+    if (!fs.existsSync(resolvedFixtureRoot)) {
       fail("fixture root does not exist: " + root);
     }
   }
