@@ -18,6 +18,6 @@ If Codex and Gemini CLI behaved differently in a real repository and that differ
 
 The published v0.3.0 CLI does not yet expose `compare`. Comparison artifacts are optional for reporters; maintainers can run the Phase D draft against the supplied reproduction. Do not post secrets, private instructions, confidential repository content, or sensitive absolute paths.
 
-The Phase D external gate counts only independent user cases that maintainers validate for uniqueness, reproducibility, a real configuration problem, and an evidence-backed comparison result. Fixtures, maintainer-created synthetic cases, earlier upstream interactions, and unverified reports do not count.
+The Phase D external gate counts only cases from distinct independent external reporters that maintainers validate for uniqueness, reproducibility, a real configuration problem, and an evidence-backed comparison result. One reporter cannot satisfy more than one verified gate slot. Fixtures, maintainer-created synthetic cases, earlier upstream interactions, and unverified reports do not count.
 
 Only after validation may a case be added to `conformance/comparison/external-user-cases.json`. The derived ledger count must remain synchronized with `conformance/comparison/phase-d-status.json`.
