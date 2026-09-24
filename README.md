@@ -224,6 +224,30 @@ The current matrix intentionally records the tested Codex binary version as `unk
 
 See [`docs/conformance-status.md`](docs/conformance-status.md) for the implementation gate.
 
+## v0.4 Codex Conformance Observatory
+
+The **v0.4 engineering gate is complete** as of 2026-09-24. This is an implementation/readiness statement, not a claim that v0.4 has already been published to npm; V0.3.x remains the current released line until a release is actually published.
+
+Verified v0.4 state:
+
+- **50** deterministic Codex semantic cases: 42 compatible, 3 unsupported, 5 unresolved;
+- **5** regression/change records with exact upstream commit/date and deterministic test bindings;
+- **3** retained upstream evidence snapshots with immutable historical files;
+- deterministic compatibility-history generation and drift classification;
+- one evidence-backed post-2026-09-24 upstream finding;
+- a machine-readable maintainer-facing upstream feedback artifact linked to `openai/codex#34193`;
+- clean package verification through `npm pack` and `npm publish --dry-run`;
+- no change to the existing `codex-scope.v0.1` public JSON contract.
+
+The current snapshot deliberately preserves carried-forward evidence and `evidence_gap` classifications instead of rewriting history to make the latest result look fully reverified.
+
+See:
+
+- [`docs/research/codex-conformance-coverage.md`](docs/research/codex-conformance-coverage.md)
+- [`docs/release/v0.4-readiness.md`](docs/release/v0.4-readiness.md)
+
+Phase D external proof remains a separate non-blocking track at **0 / 3** qualifying external-user cases; Draft PR #17 is not merged.
+
 ## Adapter and compatibility core
 
 Phase A routes the existing Codex resolver through a static `codexAdapter` behind shared inspection, provenance, capability, and evidence records. The neutral records are internal architecture: the public `inspect`, `instructions`, `config`, and `why` commands still emit the existing terminal formats and the `codex-scope.v0.1` JSON contract.

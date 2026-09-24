@@ -1,6 +1,6 @@
 # Conformance status
 
-Evidence dates: **Codex 2026-09-22 · Gemini CLI 2026-09-23**
+Evidence dates: **Codex 2026-09-24 · Gemini CLI 2026-09-23**
 
 This file tracks implementation state from checked-in code and reproducible evidence. It is not a wishlist.
 
@@ -116,22 +116,55 @@ The Gemini adapter remains a preview of the shared conformance core. No public c
 
 ## v0.4 — Codex Conformance Observatory
 
-Status: **active mainline**.
+Status: **engineering gate complete**.
 
-The observatory extends the completed Codex conformance foundation from a single current snapshot into reproducible change-over-time evidence.
+The observatory extends the Codex conformance foundation from a single current-state validator into retained, reproducible change-over-time evidence.
 
 | Gate | Current evidence | Status |
-|---|---|---|
-| ≥50 Codex semantic cases | 32 checked-in manifest rules | in progress (32 / 50) |
-| ≥5 regression/change records | 4 records in `conformance/regressions.json` | in progress (4 / 5) |
-| ≥2 retained upstream snapshots | current pinned Codex snapshot at `94174e44...` | in progress (1 / 2) |
-| Machine-readable compatibility history | current compatibility matrix exists, historical series does not | not started |
-| Deterministic cross-snapshot drift detector | current-state conformance validation exists; cross-snapshot detector does not | not started |
-| ≥1 new post-2026-09-24 upstream finding | none yet | not started (0 / 1) |
-| Zero false-certainty blockers | no known blocker in supported subset | satisfied |
-| Full clean-checkout CI/package verification | current release-line CI is green | satisfied |
+| --- | --- | --- |
+| ≥50 Codex semantic cases | 50 manifest rules: 42 compatible, 3 unsupported, 5 unresolved | satisfied |
+| ≥5 regression/change records | 5 records using `codex-scope.regressions.v2` | satisfied |
+| ≥2 retained upstream snapshots | 3 retained snapshots in `conformance/snapshots/index.json` | satisfied |
+| Machine-readable compatibility history | 2 deterministic comparison edges | satisfied |
+| Deterministic cross-snapshot drift detector | explicit drift taxonomy with `evidence_gap` and `tool_error` separated | satisfied |
+| ≥1 new post-2026-09-24 upstream finding | `codex-network-policy-extension-http-client-fix-2026-09-24` | satisfied |
+| Maintainer-facing upstream feedback | source-level recheck on `openai/codex#34193` recorded in `conformance/upstream-feedback.json` | satisfied |
+| Zero false-certainty blockers | no known blocker in supported deterministic subset | satisfied |
+| Full clean-checkout CI/package verification | CI includes observatory, feedback, `npm pack`, and `npm publish --dry-run` | satisfied |
 
-The current baseline therefore has **2 / 8 exit gates fully satisfied**, with three additional quantitative gates already partially progressed. This is intentionally separate from Phase D external proof.
+### Corpus
+
+```text
+semantic cases: 50
+compatible: 42
+unsupported: 3
+unresolved: 5
+tool_error: 0 expected steady-state cases
+```
+
+### Regression provenance
+
+The five retained regression/change records now require exact upstream repository, commit, date, compatibility classification, manifest-linked fixture path, assertion count, and coverage boundary.
+
+The `codex-project-doc-budget-shared-across-environments` record is intentionally partial: the local deterministic fixture protects the supported single-environment byte-limit behavior, while upstream multi-environment composition remains unresolved rather than being simulated.
+
+### Historical evidence
+
+```text
+codex-2026-09-22-94174e44              historical
+codex-2026-09-24-e0ef5a1a              historical
+codex-2026-09-24-e0ef5a1a-corpus50     current
+```
+
+Snapshot-index v2 makes lifecycle roles index-authoritative. Retained snapshot files remain immutable and are not rewritten when a newer current snapshot supersedes them.
+
+### Upstream loop
+
+The post-2026-09-24 network-policy finding is recorded as an unsupported runtime/network semantic; it does not authorize network execution in the inspector.
+
+The maintainer-facing source-level recheck on `openai/codex#34193` is recorded separately from findings. It explicitly states that Codex Scope did not perform a fresh current-binary reproduction. No duplicate upstream issue was fabricated to satisfy the gate.
+
+See [`docs/research/codex-conformance-coverage.md`](research/codex-conformance-coverage.md) and [`docs/release/v0.4-readiness.md`](release/v0.4-readiness.md).
 
 ## Phase D — cross-agent compare external proof
 
