@@ -171,8 +171,10 @@ Current checked-in gate:
 
 - E1 candidate matrix/selection: complete;
 - E2 semantic corpus: 31 rules with 3 verified regression/change records and deterministic fixtures/assertions;
-- E3 shared contracts, compatibility artifact, false-certainty audit, package gates: machine-complete in PR #25;
-- final adapter authorization: pending the final documentation/status PR-head CI pass.
+- E3 shared contracts, compatibility artifact, false-certainty audit, package gates: complete;
+- bounded OpenCode adapter authorization: complete, based on green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`;
+- engineering gate: complete;
+- release-ready: true for this bounded subset; publication remains a separate action.
 
 Native OpenCode remains authoritative for live runtime/session state. No OpenCode binary, hook, plugin, MCP server, or remote configuration/instruction source is executed or fetched by the adapter.
 
@@ -202,7 +204,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is now the bounded preview adapter; every additional adapter requires its own decision gate.
+Claude Code and Cursor remain later research candidates after the first validated second adapter. OpenCode has passed its separate Phase E third-adapter engineering gate as a bounded deterministic subset. Gemini CLI remains the bounded preview adapter; every future additional adapter still requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 
