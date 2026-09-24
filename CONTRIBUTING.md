@@ -11,3 +11,11 @@ For resolver changes:
 5. update `docs/semantics.md` or `docs/compatibility.md` if support boundaries changed.
 
 Do not add guessed Codex behavior. An explicit `unsupported` or `unresolved` result is preferable to an approximate resolver.
+
+## Cross-agent configuration cases
+
+If Codex and Gemini CLI behaved differently in a real repository and that difference caused a configuration problem, use the **Cross-agent configuration case** issue template. Include a sanitized minimal reproduction, expected and observed behavior, the relevant agent versions if known, and evidence independent of Codex Scope that the problem existed.
+
+The published v0.3.0 CLI does not yet expose `compare`. Comparison artifacts are optional for reporters; maintainers can run the Phase D draft against the supplied reproduction. Do not post secrets, private instructions, confidential repository content, or sensitive absolute paths.
+
+The Phase D external gate counts only independent user cases that maintainers validate for uniqueness, reproducibility, a real configuration problem, and an evidence-backed comparison result. Fixtures, maintainer-created synthetic cases, earlier upstream interactions, and unverified reports do not count.
