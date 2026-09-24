@@ -35,5 +35,6 @@ jobs:
       - run: npm run research:gemini:assert
       - run: npm run research:phase-e:validate
       - run: npm run research:opencode:validate
+      - run: npm run research:opencode:assert
       - run: npm pack
       - run: npm publish --dry-run
