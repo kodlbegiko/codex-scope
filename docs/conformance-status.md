@@ -181,7 +181,7 @@ Phase D remains truthful at 0 / 3 and does not block v0.4 Observatory work. It b
 
 ## Phase E — OpenCode third adapter
 
-Status: **E1/E2 complete; E3 machine gates complete; final authorization pending final PR-head CI after documentation/status synchronization**.
+Status: **Phase E third-adapter engineering gate complete; bounded OpenCode adapter authorized**.
 
 Selected candidate: `opencode`.
 
@@ -190,6 +190,23 @@ Selected upstream evidence revision:
 ```text
 anomalyco/opencode@0f549842ee746e400b1f72516b0b2e292e267e2c
 ```
+
+Authorization evidence:
+
+| Gate | Evidence | Status |
+| --- | --- | --- |
+| Candidate matrix + selection | `conformance/research/phase-e/candidates.json`, `selection.json` | pass |
+| Semantic corpus | 31 evidence-backed rules | pass |
+| Regression corpus | 3 exact upstream change/regression records | pass |
+| Fixtures + assertions | deterministic OpenCode fixture/assertion corpus | pass |
+| Shared adapter contracts | Codex / Gemini / OpenCode contract tests | pass |
+| Compatibility artifact | generated 31-rule compatibility record | pass |
+| False-certainty audit | 11 required checks | pass |
+| Full CI | PR #25 Run #187 on `62cd1e6ff68389709c007c48a3e666dac15bb2b9` | pass |
+| `npm pack` | CI Run #187 | pass |
+| `npm publish --dry-run` | CI Run #187 | pass |
+| Public Codex JSON contract | `codex-scope.v0.1` unchanged | pass |
+| Codex / Gemini regression | full CI suite | none detected |
 
 Machine-readable sources of truth:
 
