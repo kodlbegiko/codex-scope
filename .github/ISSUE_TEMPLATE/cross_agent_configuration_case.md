@@ -41,7 +41,7 @@ List the smallest steps a maintainer can follow with the sanitized files. If a s
 
 ## Comparison output, if available
 
-If you built the Phase D draft and ran `codex-scope compare codex gemini`, attach sanitized input artifacts and comparison JSON. The published v0.3.0 package does not include this command, so this section is optional; maintainers can reproduce the comparison from the information above.
+If you built the Phase D draft and ran `codex-scope compare codex gemini`, attach sanitized input artifacts and comparison JSON. The published v0.4.0 package does not include this command, so this section is optional; maintainers can reproduce the comparison from the information above.
 
 ## Privacy check
 
