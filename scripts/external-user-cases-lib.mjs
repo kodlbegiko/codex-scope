@@ -175,6 +175,7 @@ export function validateExternalUserCasesLedger(ledger) {
   const ids = new Set();
   const issueUrls = new Set();
   const reporterCaseKeys = new Set();
+  const verifiedReporters = new Set();
   let verifiedCount = 0;
 
   for (const [index, item] of ledger.cases.entries()) {
@@ -220,6 +221,14 @@ export function validateExternalUserCasesLedger(ledger) {
       item.source_type === "external_reporter"
     ) {
       validateVerifiedExternalCase(item);
+      const normalizedReporter = item.reporter.trim().toLowerCase();
+      if (verifiedReporters.has(normalizedReporter)) {
+        fail(
+          "verified external proof requires distinct reporters; duplicate reporter: " +
+            item.reporter,
+        );
+      }
+      verifiedReporters.add(normalizedReporter);
       verifiedCount += 1;
     }
   }
