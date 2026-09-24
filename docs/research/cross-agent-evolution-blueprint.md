@@ -295,7 +295,7 @@ Implementation status as of 2026-09-23:
 - three sanitized repository snapshots exercised through comparison: **PASS**;
 - sanitized reproducible JSON demonstrations: **PASS**;
 - stable versioned CI outcomes: **PASS** (`codex-scope.semantic-comparison-ci.v1`);
-- public JSON-only compare CLI: **PASS** (`codex-scope.semantic-comparison-cli.v1`);
+- draft-only JSON-only compare CLI: **PASS internally, not yet released** (`codex-scope.semantic-comparison-cli.v1`);
 - frozen compare process-exit semantics: **PASS** (`0` valid comparison, `1` internal tool error, `2` input/usage tool error);
 - version compatibility and package verification: **PASS**;
 - external-user evidence ledger, validation, issue template, and CI gate infrastructure: **PASS**;

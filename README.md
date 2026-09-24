@@ -40,6 +40,8 @@ If the first run is confusing, or Codex behaves differently from the report, sub
 
 If Codex and Gemini CLI behave differently in the same repository and that difference causes a real configuration problem, submit a sanitized [cross-agent configuration case](https://github.com/kodlbegiko/codex-scope/issues/new?template=cross_agent_configuration_case.md). You can report the case with the released v0.3.0 package; a maintainer will reproduce it with the Phase D draft comparison tool.
 
+Want to try the unreleased comparison yourself? Follow the [Phase D field-test guide](docs/phase-d-field-test.md). A report does not need comparison JSON; the problem and independent evidence are more important.
+
 ## See the answer, not the layer stack
 
 ```text
@@ -90,10 +92,10 @@ codex-scope instructions     instruction discovery + provenance
 codex-scope config           detailed supported config resolution
 codex-scope why <key>        explain one config decision chain
 codex-scope compatibility     report evidence/version compatibility boundaries
-codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json
+codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json  (Phase D draft only)
 ```
 
-The original four commands continue to use the versioned `codex-scope.v0.1` JSON marker. `codex-scope compatibility --json` emits the additive `codex-scope.compatibility.v1` contract. The public `compare` command is a separate JSON-only contract (`codex-scope.semantic-comparison-cli.v1`) that requires explicit Codex and Gemini input files; it does not inspect or invoke either agent at runtime.
+The original four commands continue to use the versioned `codex-scope.v0.1` JSON marker. `codex-scope compatibility --json` emits the additive `codex-scope.compatibility.v1` contract. The **unreleased Phase D draft** `compare` command has a separate JSON-only contract (`codex-scope.semantic-comparison-cli.v1`) that requires explicit Codex and Gemini input files; it does not invoke either agent at runtime. The published v0.3.0 package does not include `compare`.
 
 An explicit offline Codex version can be supplied with `--codex-version <version>`. Because the current evidence snapshot has no pinned tested Codex binary version, supplied versions remain `unresolved` rather than being guessed compatible.
 

@@ -50,13 +50,15 @@ The Phase D comparison contracts are versioned independently from the legacy V0.
 - sanitized deterministic snapshot: `conformance/comparison/codex-gemini-demo.json`;
 - machine-readable gate status: `conformance/comparison/phase-d-status.json`.
 
-The public comparison surface is:
+The unreleased Phase D draft comparison surface is:
 
 ```text
 codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json
 ```
 
 It is JSON-only and requires explicit input artifacts. It performs no live agent inspection, model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution.
+
+The published v0.3.0 package does not include this command. See the [field-test guide](phase-d-field-test.md) to run it from the Draft PR checkout.
 
 Comparison results retain each adapter's evidence date, upstream repository/commit, rule IDs, and references. Unsupported, unresolved, and evidence-gap states remain distinct from proven behavioral differences.
 
