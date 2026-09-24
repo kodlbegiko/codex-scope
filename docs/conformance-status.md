@@ -114,10 +114,40 @@ Gemini CLI was selected and implemented for the bounded deterministic subset rec
 
 The Gemini adapter remains a preview of the shared conformance core. No public cross-agent comparison command is included in Phase C.
 
-## Phase D — cross-agent compare
+## v0.4 — Codex Conformance Observatory
 
-Status: **not started**.
+Status: **active mainline**.
+
+The observatory extends the completed Codex conformance foundation from a single current snapshot into reproducible change-over-time evidence.
+
+| Gate | Current evidence | Status |
+|---|---|---|
+| ≥50 Codex semantic cases | 32 checked-in manifest rules | in progress (32 / 50) |
+| ≥5 regression/change records | 4 records in `conformance/regressions.json` | in progress (4 / 5) |
+| ≥2 retained upstream snapshots | current pinned Codex snapshot at `94174e44...` | in progress (1 / 2) |
+| Machine-readable compatibility history | current compatibility matrix exists, historical series does not | not started |
+| Deterministic cross-snapshot drift detector | current-state conformance validation exists; cross-snapshot detector does not | not started |
+| ≥1 new post-2026-09-24 upstream finding | none yet | not started (0 / 1) |
+| Zero false-certainty blockers | no known blocker in supported subset | satisfied |
+| Full clean-checkout CI/package verification | current release-line CI is green | satisfied |
+
+The current baseline therefore has **2 / 8 exit gates fully satisfied**, with three additional quantitative gates already partially progressed. This is intentionally separate from Phase D external proof.
+
+## Phase D — cross-agent compare external proof
+
+Status: **internal deterministic milestone complete; external gate blocked**.
+
+Draft PR #17 contains the deterministic comparison implementation and machine-readable Phase D status. The final proof-of-value gate requires three distinct independent external users.
+
+```text
+verified external user cases: 0 / 3
+phase status: blocked_external_proof
+```
+
+Phase D remains truthful at 0 / 3 and does not block v0.4 Observatory work. It becomes complete only when the external ledger reaches 3 / 3 and all validation/CI gates pass.
 
 ## Phase E — additional adapters
 
-Status: **not started**.
+Status: **not authorized**.
+
+A third adapter is not used as a substitute for Phase D evidence and is not the active mainline. Additional adapters require the separate sustained-expansion gate in the blueprint.
