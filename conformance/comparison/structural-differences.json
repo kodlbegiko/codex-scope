@@ -1,0 +1,226 @@
+{
+  "schema_version": "codex-scope.structural-differences.v1",
+  "expected_count": 5,
+  "proven_behaviorally_different_count": 5,
+  "cases": [
+    {
+      "id": "instructions.active-project-filenames.real-repository",
+      "semantic_dimension": "instructions.active_project_instruction_filenames",
+      "agents": [
+        "codex",
+        "gemini"
+      ],
+      "classification": "behaviorally_different",
+      "left_summary": "The sanitized netdata snapshot has no active Codex project instruction filename at the inspected root.",
+      "right_summary": "The same sanitized snapshot has GEMINI.md active as Gemini workspace context.",
+      "evidence": {
+        "left_rule_ids": [
+          "codex.instructions.project_root_to_cwd"
+        ],
+        "right_rule_ids": [
+          "gemini.instructions.workspace_hierarchy"
+        ],
+        "left_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "right_upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+        "references": [
+          "conformance/research/gemini-cli/real-repositories.json",
+          "tests/comparison-real-repositories.test.mjs"
+        ]
+      },
+      "provenance": {
+        "left": [
+          {
+            "scope": "sanitized_repository",
+            "path": "fixtures/gemini-research/real-repositories/netdata-netdata",
+            "reason": "Deterministic filesystem inspection of the pinned sanitized snapshot establishes the absence of an active Codex project instruction entrypoint at the inspected root."
+          }
+        ],
+        "right": [
+          {
+            "scope": "workspace",
+            "path": "fixtures/gemini-research/real-repositories/netdata-netdata/GEMINI.md",
+            "reason": "Pinned sanitized repository snapshot contains the active Gemini workspace context source."
+          }
+        ]
+      },
+      "comparison_reference": "tests/comparison-real-repositories.test.mjs#instructions.active-project-filenames",
+      "deterministic_status": "proven"
+    },
+    {
+      "id": "instructions.project-entrypoint-exists.real-repository",
+      "semantic_dimension": "instructions.project_instruction_entrypoint_exists",
+      "agents": [
+        "codex",
+        "gemini"
+      ],
+      "classification": "behaviorally_different",
+      "left_summary": "The sanitized netdata snapshot resolves no Codex project instruction entrypoint at the inspected root.",
+      "right_summary": "The sanitized netdata snapshot resolves a Gemini project/workspace instruction entrypoint.",
+      "evidence": {
+        "left_rule_ids": [
+          "codex.instructions.project_root_to_cwd"
+        ],
+        "right_rule_ids": [
+          "gemini.instructions.workspace_hierarchy"
+        ],
+        "left_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "right_upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+        "references": [
+          "conformance/research/gemini-cli/real-repositories.json",
+          "tests/comparison-real-repositories.test.mjs"
+        ]
+      },
+      "provenance": {
+        "left": [
+          {
+            "scope": "sanitized_repository",
+            "path": "fixtures/gemini-research/real-repositories/netdata-netdata",
+            "reason": "Pinned sanitized snapshot is the deterministic filesystem boundary used to resolve Codex entrypoint absence."
+          }
+        ],
+        "right": [
+          {
+            "scope": "workspace",
+            "path": "fixtures/gemini-research/real-repositories/netdata-netdata/GEMINI.md",
+            "reason": "Pinned sanitized snapshot contains the resolved Gemini workspace entrypoint."
+          }
+        ]
+      },
+      "comparison_reference": "tests/comparison-real-repositories.test.mjs#instructions.project-entrypoint-exists",
+      "deterministic_status": "proven"
+    },
+    {
+      "id": "instructions.default-project-filename-contract",
+      "semantic_dimension": "instructions.default_project_instruction_filename_contract",
+      "agents": [
+        "codex",
+        "gemini"
+      ],
+      "classification": "behaviorally_different",
+      "left_summary": "Pinned Codex project instruction evidence demonstrates AGENTS.md as the built-in project filename in the exercised contract.",
+      "right_summary": "Pinned Gemini evidence defines GEMINI.md as the built-in workspace context filename when context.fileName does not override it.",
+      "evidence": {
+        "left_rule_ids": [
+          "codex.instructions.project_root_to_cwd",
+          "codex.instructions.fallback_filename"
+        ],
+        "right_rule_ids": [
+          "gemini.instructions.default_filename"
+        ],
+        "left_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "right_upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+        "references": [
+          "conformance/manifest.json",
+          "conformance/research/gemini-cli/manifest.json",
+          "tests/comparison-structural.test.mjs"
+        ]
+      },
+      "provenance": {
+        "left": [
+          {
+            "scope": "project",
+            "path": "fixtures/agents/root-child/project/AGENTS.md",
+            "reason": "Deterministic Codex fixture demonstrates the active built-in project filename."
+          }
+        ],
+        "right": [
+          {
+            "scope": "workspace",
+            "path": "fixtures/gemini-research/hierarchy/project/GEMINI.md",
+            "reason": "Deterministic Gemini fixture demonstrates the active built-in workspace filename."
+          }
+        ]
+      },
+      "comparison_reference": "tests/comparison-structural.test.mjs#project-default-filename-contract",
+      "deterministic_status": "proven"
+    },
+    {
+      "id": "instructions.active-global-filename",
+      "semantic_dimension": "instructions.active_global_instruction_filename",
+      "agents": [
+        "codex",
+        "gemini"
+      ],
+      "classification": "behaviorally_different",
+      "left_summary": "The active Codex global instruction source resolves to AGENTS.md in the deterministic fixture.",
+      "right_summary": "The active Gemini global context source resolves to GEMINI.md in the deterministic fixture.",
+      "evidence": {
+        "left_rule_ids": [
+          "codex.instructions.global_agents_base"
+        ],
+        "right_rule_ids": [
+          "gemini.instructions.global_context"
+        ],
+        "left_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "right_upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+        "references": [
+          "conformance/manifest.json",
+          "conformance/research/gemini-cli/manifest.json",
+          "tests/comparison-structural.test.mjs"
+        ]
+      },
+      "provenance": {
+        "left": [
+          {
+            "scope": "global",
+            "path": "fixtures/agents/root-child/home/AGENTS.md",
+            "reason": "Deterministic Codex global instruction source."
+          }
+        ],
+        "right": [
+          {
+            "scope": "global",
+            "path": "fixtures/gemini-research/hierarchy/home/.gemini/GEMINI.md",
+            "reason": "Deterministic Gemini global context source."
+          }
+        ]
+      },
+      "comparison_reference": "tests/comparison-structural.test.mjs#active-global-filename",
+      "deterministic_status": "proven"
+    },
+    {
+      "id": "instructions.configured-filename-role",
+      "semantic_dimension": "instructions.configured_project_filename_role",
+      "agents": [
+        "codex",
+        "gemini"
+      ],
+      "classification": "behaviorally_different",
+      "left_summary": "Codex project_doc_fallback_filenames adds configured fallback names after built-in project candidates.",
+      "right_summary": "Gemini context.fileName replaces the default candidate filename set with the configured string/list.",
+      "evidence": {
+        "left_rule_ids": [
+          "codex.instructions.fallback_filename"
+        ],
+        "right_rule_ids": [
+          "gemini.instructions.configurable_filenames"
+        ],
+        "left_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "right_upstream_commit": "62364cb2000795537a6895261b37ec668e4cf527",
+        "references": [
+          "conformance/manifest.json",
+          "conformance/research/gemini-cli/manifest.json",
+          "tests/comparison-structural.test.mjs"
+        ]
+      },
+      "provenance": {
+        "left": [
+          {
+            "scope": "user",
+            "path": "fixtures/agents/fallback/home/config.toml",
+            "reason": "Deterministic Codex fixture explicitly configures project_doc_fallback_filenames."
+          }
+        ],
+        "right": [
+          {
+            "scope": "workspace",
+            "path": "fixtures/gemini-research/settings/workspace-settings.json",
+            "reason": "Deterministic Gemini fixture explicitly configures context.fileName."
+          }
+        ]
+      },
+      "comparison_reference": "tests/comparison-structural.test.mjs#configured-filename-role",
+      "deterministic_status": "proven"
+    }
+  ]
+}

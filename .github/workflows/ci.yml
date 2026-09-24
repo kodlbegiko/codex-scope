@@ -33,6 +33,10 @@ jobs:
       - run: npm run conformance:feedback:check
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
+      - run: npm run comparison:demo:check
+      - run: npm run phase:d:external:check
+      - run: npm run phase:d:status:check
+      - run: npm run package:contents:check
       - run: npm run research:phase-e:validate
       - run: npm run research:opencode:validate
       - run: npm run research:opencode:assert

@@ -172,6 +172,8 @@ Status: **internal deterministic milestone complete; external gate blocked**.
 
 Draft PR #17 contains the deterministic comparison implementation and machine-readable Phase D status. The final proof-of-value gate requires three distinct independent external users.
 
+This draft branch includes the versioned comparison core, JSON-only CLI, deterministic fixtures and demonstrations, sanitized repository validations, and machine-enforced package and external-evidence gates. Its authoritative machine-readable status is [`conformance/comparison/phase-d-status.json`](../conformance/comparison/phase-d-status.json).
+
 ```text
 verified external user cases: 0 / 3
 phase status: blocked_external_proof

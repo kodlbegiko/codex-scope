@@ -1,0 +1,25 @@
+{
+  "schema_version": "codex-scope.compare-input.gemini.v1",
+  "agent": "gemini",
+  "options": {
+    "cwd": "fixtures/gemini-research/hierarchy/project",
+    "trustedRoot": "fixtures/gemini-research/hierarchy/project",
+    "geminiHome": "fixtures/gemini-research/hierarchy/home/.gemini",
+    "trustInputs": {
+      "envWorkspace": "true"
+    },
+    "settings": {
+      "systemDefaults": "fixtures/gemini-research/settings/system-defaults.json",
+      "user": "fixtures/gemini-research/settings/user-settings.json",
+      "workspace": "fixtures/gemini-research/settings/workspace-settings.json",
+      "system": "fixtures/gemini-research/settings/system-settings.json"
+    },
+    "targetPath": "fixtures/gemini-research/hierarchy/project/packages/app/src/new-file.ts",
+    "userProjectMemoryDirectory": "fixtures/gemini-research/user-project-memory/preferred",
+    "extensionSnapshotPath": "fixtures/gemini-research/extension-memory/snapshot.json",
+    "mcpDeclarationPath": "fixtures/gemini-research/mcp-memory/declaration.json",
+    "memoryImportPaths": [
+      "fixtures/gemini-research/imports/GEMINI.md"
+    ]
+  }
+}

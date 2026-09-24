@@ -360,15 +360,32 @@ This does **not** make Phase D complete. Public repository scans, maintainer-cre
 
 Phase D is now a parallel validation track rather than the active engineering mainline. While the external gate is below 3 / 3, the truthful status remains `blocked_external_proof`; v0.4 Observatory work may continue without claiming Phase D completion.
 
+Implementation status as of 2026-09-23:
+
+- internal deterministic comparison milestone: **PASS**;
+- versioned schema and normalization contract: **PASS**;
+- all six comparison classifications: **PASS**;
+- Codex + Gemini neutral-report integration: **PASS**;
+- three sanitized repository snapshots exercised through comparison: **PASS**;
+- sanitized reproducible JSON demonstrations: **PASS**;
+- stable versioned CI outcomes: **PASS** (`codex-scope.semantic-comparison-ci.v1`);
+- draft-only JSON-only compare CLI: **PASS internally, not yet released** (`codex-scope.semantic-comparison-cli.v1`);
+- frozen compare process-exit semantics: **PASS** (`0` valid comparison, `1` internal tool error, `2` input/usage tool error);
+- version compatibility and package verification: **PASS**;
+- external-user evidence ledger, validation, issue template, and CI gate infrastructure: **PASS**;
+- external proof-of-value: **BLOCKED (0 / 3 qualifying independent external user cases)**.
+
+This does **not** make Phase D complete. Fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions are internal/repository evidence and are not counted as external user cases. The machine-readable gate is recorded in [`conformance/comparison/phase-d-status.json`](../../conformance/comparison/phase-d-status.json).
+
 Deliverables:
 
 - compare two supported adapter reports;
 - separate proven drift from unresolved and unsupported differences;
 - version the comparison JSON schema;
 - define stable CI outcomes;
-- expose a deterministic explicit-input compare CLI;
+- expose a deterministic JSON-only compare CLI with explicit versioned inputs;
 - publish sanitized, reproducible demonstrations;
-- validate external proof fail-closed.
+- validate the external proof ledger fail-closed.
 
 Current CI outcome taxonomy:
 
@@ -379,6 +396,12 @@ unresolved
 unsupported
 tool_error
 ```
+
+The public compare envelope freezes numeric process semantics independently from semantic classifications:
+
+- `0`: a valid comparison document was produced, including `clean`, `proven_drift`, `unresolved`, or `unsupported`;
+- `1`: unexpected internal tool failure before a valid comparison document exists;
+- `2`: malformed, unsupported, or incomplete explicit compare input / usage.
 
 Exit gate:
 
@@ -425,7 +448,7 @@ It does not execute or fetch:
 
 Those surfaces remain conditional, unresolved, or unsupported. Native OpenCode diagnostics/runtime state are authoritative for live state.
 
-The checked-in Phase E corpus contains 31 semantic rules and 3 exact upstream change/regression records. E3 has completed candidate validation, corpus/fixture/regression validation, deterministic assertions, Codex/Gemini/OpenCode shared contract tests, generated compatibility data, the false-certainty audit, lint/format/typecheck/tests/build, `npm pack`, and `npm publish --dry-run`. Green PR-head CI Run #187 on `62cd1e6ff68389709c007c48a3e666dac15bb2b9` authorized the bounded adapter. The engineering gate is complete and release-ready for this bounded subset; npm publication and any GitHub release remain separate actions.
+The checked-in Phase E corpus contains 31 semantic rules and 3 exact upstream change/regression records. E3 has completed candidate validation, corpus/fixture/regression validation, deterministic assertions, Codex/Gemini/OpenCode shared contract tests, generated compatibility data, the false-certainty audit, lint/format/typecheck/tests/build, `npm pack`, and `npm publish --dry-run`. Green PR-head CI Run #187 on `62cd1e6ff68389709c007c48a3e666dac15bb2b9` authorized the bounded adapter. The engineering gate is complete, and this bounded subset was published in v0.4.0 without a new public OpenCode CLI command.
 
 This third-adapter gate does not rename the project, publish a new release, or change `codex-scope.v0.1`.
 

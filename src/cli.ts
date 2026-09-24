@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require("node:path");
 import { buildCompatibilitySummary } from "./compatibility";
+import { runCompareCli } from "./compare-cli";
 import { defaultCodexHome } from "./config";
 import { ConfigParseError, UsageError } from "./errors";
 import { buildEnvironment } from "./environment";
@@ -25,7 +26,7 @@ interface ParsedArgs {
 }
 
 function usage(): string {
-  return `Codex Scope ${VERSION}\n\nUsage:\n  codex-scope inspect [options]\n  codex-scope instructions [path] [options]\n  codex-scope config [options]\n  codex-scope why <key> [options]\n  codex-scope compatibility [options]\n\nOptions:\n  --json                       Machine-readable, versioned output\n  --cwd <path>                 Target working directory\n  --codex-home <path>          Override CODEX_HOME for inspection\n  --trust trusted|untrusted|unknown\n  --profile <name>             Known Codex profile file (<name>.config.toml)\n  -c, --config <key=value>     Known Codex invocation override; repeatable\n  --invocation-complete        Assert supplied profile/-c state is complete\n  --codex-version <version>      Explicit offline Codex version for compatibility reporting\n  --version\n  --help\n\nCodex Scope is read-only. It makes no LLM calls and executes no discovered hooks.`;
+  return `Codex Scope ${VERSION}\n\nUsage:\n  codex-scope inspect [options]\n  codex-scope instructions [path] [options]\n  codex-scope config [options]\n  codex-scope why <key> [options]\n  codex-scope compatibility [options]\n  codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json\n\nOptions:\n  --json                       Machine-readable, versioned output\n  --cwd <path>                 Target working directory\n  --codex-home <path>          Override CODEX_HOME for inspection\n  --trust trusted|untrusted|unknown\n  --profile <name>             Known Codex profile file (<name>.config.toml)\n  -c, --config <key=value>     Known Codex invocation override; repeatable\n  --invocation-complete        Assert supplied profile/-c state is complete\n  --codex-version <version>      Explicit offline Codex version for compatibility reporting\n  --version\n  --help\n\nCodex Scope is read-only. It makes no LLM calls and executes no discovered hooks.`;
 }
 
 function takeValue(args: string[], index: number, option: string): string {
@@ -123,6 +124,10 @@ function parseArgs(argv: string[]): ParsedArgs {
 }
 
 export function main(argv = process.argv.slice(2)): number {
+  if (argv[0] === "compare") {
+    return runCompareCli(argv.slice(1));
+  }
+
   try {
     const args = parseArgs(argv);
     if (args.command === "compatibility") {

@@ -141,11 +141,11 @@ The accepted adapter has:
 - a documented native-diagnostics comparison;
 - sanitized real-repository validation.
 
-The first cross-agent release should compare provenance and applicability facts. It must not claim semantic equivalence between arbitrary Markdown instructions.
-
 ## PARALLEL TRACK — Phase D external proof of value
 
 Phase D's deterministic comparison core is implemented in Draft PR #17. Internal schema, normalization, classifications, provenance, compare CLI, demonstrations, package checks, and CI gates pass.
+
+The draft-only command is JSON-only: `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json`. Machine-readable status is recorded in [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json). The command is not part of the published v0.4.0 package.
 
 The remaining exit condition is deliberately external:
 
