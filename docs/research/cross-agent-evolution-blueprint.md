@@ -425,7 +425,7 @@ It does not execute or fetch:
 
 Those surfaces remain conditional, unresolved, or unsupported. Native OpenCode diagnostics/runtime state are authoritative for live state.
 
-The checked-in Phase E corpus contains 31 semantic rules and 3 exact upstream change/regression records. E3 requires candidate validation, corpus/fixture/regression validation, deterministic assertions, Codex/Gemini/OpenCode shared contract tests, generated compatibility data, a false-certainty audit, lint/format/typecheck/tests/build, `npm pack`, `npm publish --dry-run`, and green PR-head CI before `adapter_authorized` may become true.
+The checked-in Phase E corpus contains 31 semantic rules and 3 exact upstream change/regression records. E3 has completed candidate validation, corpus/fixture/regression validation, deterministic assertions, Codex/Gemini/OpenCode shared contract tests, generated compatibility data, the false-certainty audit, lint/format/typecheck/tests/build, `npm pack`, and `npm publish --dry-run`. Green PR-head CI Run #187 on `62cd1e6ff68389709c007c48a3e666dac15bb2b9` authorized the bounded adapter. The engineering gate is complete and release-ready for this bounded subset; npm publication and any GitHub release remain separate actions.
 
 This third-adapter gate does not rename the project, publish a new release, or change `codex-scope.v0.1`.
 
