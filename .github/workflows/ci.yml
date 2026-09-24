@@ -30,6 +30,7 @@ jobs:
       - run: npm run conformance:history:check
       - run: npm run conformance:drift
       - run: npm run conformance:findings:check
+      - run: npm run conformance:feedback:check
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
       - run: npm pack
