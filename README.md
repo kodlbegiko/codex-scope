@@ -10,7 +10,7 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.1.x is the current public release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.1 intentionally covers a documented subset rather than claiming full Codex compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.3.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the Codex CLI and V0.1 JSON contract while adding a bounded Gemini CLI conformance-adapter preview. This Phase D draft adds a JSON-only comparison command; its external proof gate is 0 / 3. Neither agent is claimed fully compatible. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
@@ -187,7 +187,7 @@ Normal inspection:
 - never mutates the inspected project, Codex config, or `AGENTS.md` files;
 - redacts secret-like config keys in terminal and JSON output.
 
-Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.1.
+Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.3.
 
 ## Accuracy and compatibility
 
@@ -229,8 +229,9 @@ Phase A routes the existing Codex resolver through a static `codexAdapter` behin
 
 Phase B exposes the checked-in compatibility boundary without changing those semantics. The generated matrix pins resolver/adapter/evidence metadata, `codex-scope compatibility` reports rule counts and version provenance, and `conformance:validate:json` records expected versus actual outcome for every rule.
 
-Phase C adds the bounded `gemini-adapter.v1` after evidence, fixtures, deterministic probes, and sanitized real-repository validation. Phase D adds a versioned neutral comparison engine, sanitized deterministic demonstrations, and a public JSON-only `compare` surface backed by separate input/output schemas and frozen process-exit semantics. Existing V0.1 command schemas remain unchanged. The external Phase D proof-of-value gate remains open at 0 / 3 qualifying external user cases. See [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
+Phase C adds a bounded Gemini CLI adapter and executable evidence corpus. Its 27 deterministic research cases cover only the explicitly pinned subset, including context hierarchy, settings precedence, trust provenance, explicit-target JIT discovery, inert extension snapshots, MCP declarations, and conservative memory-import detection. Run `npm run research:gemini:validate` and `npm run research:gemini:assert` from a source checkout to verify the gate.
 
+This Phase D draft adds a versioned neutral comparison engine, sanitized deterministic demonstrations, and a JSON-only `compare` command backed by explicit input/output schemas and frozen process-exit semantics. The currently released V0.3 CLI remains Codex-facing. The external Phase D proof-of-value gate remains open at 0 / 3 qualifying external user cases. See [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
 
 The deterministic path still does not add dynamic loading, plugins, subprocess execution, runtime network access, model calls, or mutation. Unknown versions remain unknown; explicit supplied versions do not become compatibility claims without matching tested evidence.
 
@@ -256,7 +257,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.1 does **not** expose hooks, MCP execution, plugins, snapshots, directory diffs, telemetry, a web UI, heuristic comparison of arbitrary instruction prose, structured/granular approval-policy semantics, the full Codex config schema, or managed enterprise constraints. Phase D's cross-agent comparison is deterministic and limited to evidence-backed structural semantic dimensions. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.1 reports those historical values as `unsupported` rather than current resolved semantics.
+Codex Scope V0.3 does **not** execute or fully model hooks, MCP servers, plugins, snapshots, directory diffs, telemetry, a web UI, heuristic comparison of arbitrary instruction prose, structured/granular approval-policy semantics, the full Codex/Gemini config schemas, or managed enterprise constraints. The Phase D draft comparison is limited to evidence-backed structural dimensions. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; those historical values are reported as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 

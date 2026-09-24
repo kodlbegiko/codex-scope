@@ -8,9 +8,9 @@ Codex remains the conformance-backed foundation for its explicitly supported V0.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
-## Shipped — V0.1.x Codex foundation
+## Shipped — V0.3.x Codex foundation + Gemini adapter preview
 
-Current public line: **V0.1.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch.
+Current release line: **V0.3.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the V0.1 Codex semantic subset and JSON contract while shipping the evidence-backed Gemini CLI adapter as a bounded preview.
 
 Shipped surfaces:
 
@@ -25,8 +25,15 @@ Shipped surfaces:
 - fail-closed TOML/config handling for the modeled subset
 - read-only, no-model, no-runtime-network inspection
 - conformance-oriented fixtures
+- a 32-rule semantic corpus and 4 regression/change records
+- generated compatibility matrix and `compatibility` command
+- neutral static adapter seam for evidence-gated expansion
+- 27 deterministic Gemini CLI research cases, for 59 combined semantic cases
+- a bounded Gemini adapter with explicit unresolved/unsupported boundaries
+- three sanitized real-repository validations and three external evidence records
+- machine-enforced Gemini research and implementation gates
 
-V0.1.x intentionally does **not** claim full Codex compatibility.
+V0.3.x intentionally does **not** claim full Codex or Gemini CLI compatibility, and does not yet expose a public cross-agent comparison command.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -77,7 +84,7 @@ Initial evidence gate:
 - at least 1 verified upstream discrepancy, ambiguity, issue, patch, or evidence correction;
 - zero known false-certainty blockers in the supported subset.
 
-Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). As of the 2026-09-22 Phase 0 branch, the corpus contains 32 explicit semantic rules and 4 regression/change records; the gate is not considered complete until the full CI run and upstream-interaction check are green.
+Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). The shipped corpus contains 32 explicit semantic rules and 4 regression/change records; the Phase B implementation and review fixes pass the full clean-checkout CI suite.
 
 ### 1. Compatibility matrix
 
@@ -118,45 +125,52 @@ Phase B now makes the compatibility boundary deterministic and queryable:
 - generated matrix drift remains a CI failure;
 - the existing four commands and `codex-scope.v0.1` JSON stay backward compatible.
 
-Clean-checkout CI run #37 validates the Phase B implementation before this documentation update.
+The Phase B implementation and follow-up review fixes are validated by clean-checkout CI on the release line.
 
-## COMPLETED — Phase C second-agent conformance adapter
+## COMPLETED — Phase C second-agent adapter
 
-Phase C selected **Gemini CLI** after evidence-first candidate research and completed the conformance gate before adapter implementation.
+Phase C selected **Gemini CLI** after comparing current official documentation and inspectable upstream source for Gemini CLI, Claude Code, and Cursor.
 
-The checked-in Phase C baseline includes:
+The implemented gate contains:
 
-- pinned official documentation, upstream source, and upstream tests;
-- deterministic Gemini probes and fixtures;
-- explicit supported, unresolved, and unsupported boundaries;
+- a pinned `google-gemini/gemini-cli` evidence snapshot;
+- 27 deterministic Gemini cases and 59 combined Codex/Gemini cases;
 - three sanitized real-repository validations;
-- external evidence gating;
-- `gemini-adapter.v1` limited to the authorized deterministic subset.
+- three distinct external upstream evidence records;
+- a bounded static adapter with explicit unresolved/unsupported states;
+- validation that rejects stale coverage, dishonest readiness, unsafe fixture paths, and missing implementation artifacts.
 
-Runtime/JIT-dependent state, omitted Folder Trust defaults, live extension activation, effective MCP instruction content, and recursive memory imports remain unresolved or unsupported rather than guessed.
+See [`docs/research/second-agent-selection-2026-09-23.md`](docs/research/second-agent-selection-2026-09-23.md) for the evidence and selection record.
 
-## ACTIVE — Phase D neutral semantic comparison
+## SHIPPED PREVIEW — one second adapter
 
-Phase D's deterministic internal engineering is complete on the current branch. The phase-level exit gate remains blocked only by the required independent external proof.
+Gemini CLI is the first evidence-backed second adapter. The preview covers only the deterministic subset authorized by its corpus; it does not claim complete runtime context or semantic equivalence with Codex.
+
+The accepted adapter has:
+
+- an official-documentation and implementation-evidence ledger;
+- version/evidence-date boundaries;
+- deterministic fixtures for precedence and path-scoped behavior;
+- explicit conditional/unresolved handling;
+- redaction and path-privacy review;
+- a documented native-diagnostics comparison;
+- sanitized real-repository validation.
+
+## ACTIVE DRAFT — Phase D neutral semantic comparison
+
+Phase D's deterministic internal engineering is complete on this draft branch. Its phase-level exit gate awaits independent external proof.
 
 Implemented milestones:
 
-- versioned `codex-scope.semantic-comparison.v1` JSON schema;
-- versioned `codex-scope.semantic-normalization.v1` normalization contract;
-- closed classifications: `same`, `semantically_equivalent`, `behaviorally_different`, `unsupported_on_one_side`, `unresolved`, and `evidence_gap`;
-- deterministic fixture coverage for every classification and negative contract cases;
-- Codex + Gemini neutral-report integration without agent-specific branches in the shared comparison engine;
-- adapter/upstream/rule/reference provenance retention;
-- three sanitized repositories exercised through cross-agent instruction comparison;
-- sanitized byte-stable machine-readable demonstrations enforced by CI;
-- versioned `codex-scope.semantic-comparison-ci.v1` CI summary with conservative `unresolved > unsupported > proven_drift > clean` precedence;
-- public JSON-only `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json`;
-- versioned `codex-scope.semantic-comparison-cli.v1` envelope with frozen exit semantics: `0` valid comparison, `1` unexpected internal tool error before a valid document, `2` input/usage tool error;
-- fail-closed comparison version contract and package verification;
+- versioned comparison and normalization contracts;
+- six closed classifications with deterministic positive and negative fixtures;
+- Codex/Gemini neutral-report integration with retained provenance;
+- three sanitized repositories and byte-stable demonstrations enforced by CI;
+- versioned CI summary and JSON-only `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json` command;
+- frozen process-exit semantics, fail-closed version contract, and package verification;
 - machine-validated external-user evidence ledger, issue template, and CI gate.
 
-Machine-readable status is recorded in
-[`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
+Machine-readable status is recorded in [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
 
 The blueprint's external proof-of-value gate remains **0 / 3 qualifying external user cases** where comparison identifies a real configuration problem. Repository fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions do not count. Therefore the internal deterministic milestone is PASS, the overall Phase D status remains `blocked_external_proof`, and Phase E remains blocked.
 

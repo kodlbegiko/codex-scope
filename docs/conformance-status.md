@@ -1,6 +1,6 @@
 # Conformance status
 
-Evidence date: **2026-09-22**
+Evidence dates: **Codex 2026-09-22 · Gemini CLI 2026-09-23**
 
 This file tracks implementation state from checked-in code and reproducible evidence. It is not a wishlist.
 
@@ -94,17 +94,31 @@ Phase A satisfies the current exit gate. Phase B may proceed; second-agent work 
 | Semantic drift vs tool failure distinguishable | per-rule JSON + exit 1 vs exit 2 | satisfied |
 | Phase A/B tests and clean checkout green | GitHub Actions run #37 | satisfied |
 
-Phase B satisfies the current core exit gate. Phase C may begin as a research-only spike; no second-agent adapter is yet authorized by evidence.
+Phase B satisfies the Codex core exit gate. Phase C subsequently completed its independent research, authorization, and implementation gates.
 
 ## Phase C — second-agent research spike
 
-Status: **not started**.
+Status: **complete**.
 
-No Gemini CLI, Claude Code, Cursor, or OpenCode adapter is implemented by Phase 0.
+Gemini CLI was selected and implemented for the bounded deterministic subset recorded in [`conformance/research/gemini-cli/manifest.json`](../conformance/research/gemini-cli/manifest.json).
+
+| Gate | Evidence | Status |
+|---|---|---|
+| Candidate selection pinned | Gemini/Claude/Cursor evidence comparison | satisfied |
+| Deterministic corpus threshold | 32 Codex + 27 Gemini = 59 cases | satisfied |
+| Sanitized repository validation | three public repository fixtures | satisfied |
+| External evidence | three distinct upstream interactions | satisfied |
+| Adapter boundary explicit | supported/unresolved/unsupported manifest states | satisfied |
+| Runtime safety | no CLI/model/network/hook/plugin/MCP execution | satisfied |
+| Implementation integrity | source, fixture, contract tests, and machine gates | satisfied |
+
+The Gemini adapter remains a preview of the shared conformance core. No public cross-agent comparison command is included in Phase C.
 
 ## Phase D — cross-agent compare
 
-Status: **not started**.
+Status: **internal deterministic milestone complete; external proof blocked (0 / 3)**.
+
+This draft branch has a versioned Codex/Gemini comparison core, JSON-only CLI, deterministic fixtures and demonstrations, three sanitized repository validations, and machine-enforced package and external-evidence gates. The authoritative machine-readable status is [`conformance/comparison/phase-d-status.json`](../conformance/comparison/phase-d-status.json). Phase D remains open until three independent, qualifying external user cases are verified.
 
 ## Phase E — additional adapters
 
