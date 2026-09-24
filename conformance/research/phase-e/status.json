@@ -6,9 +6,9 @@
   "selected_upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
   "e1": "complete",
   "e2": "complete",
-  "e3": "pending_pr_head_ci",
-  "authorization_status": "pending_ci",
-  "adapter_authorized": false,
+  "e3": "complete",
+  "authorization_status": "authorized",
+  "adapter_authorized": true,
   "gates": {
     "candidate_research": true,
     "selection": true,
@@ -22,18 +22,25 @@
     "public_json_contract_preserved": true,
     "codex_regression_suite": true,
     "gemini_regression_suite": true,
-    "lint": "ci_required",
-    "format": "ci_required",
-    "typecheck": "ci_required",
-    "tests": "ci_required",
-    "build": "ci_required",
-    "npm_pack": "ci_required",
-    "npm_publish_dry_run": "ci_required",
-    "pr_head_ci": false
+    "lint": true,
+    "format": true,
+    "typecheck": true,
+    "tests": true,
+    "build": true,
+    "npm_pack": true,
+    "npm_publish_dry_run": true,
+    "pr_head_ci": true
   },
-  "blocker": "PR-head CI must pass after all E3 machine gates are checked in.",
+  "blocker": null,
   "phase_d": {
     "external_users": "0 / 3",
     "status": "blocked_external_proof"
+  },
+  "authorization_evidence": {
+    "validated_parent_head": "62cd1e6ff68389709c007c48a3e666dac15bb2b9",
+    "workflow_run_id": 35967453286,
+    "workflow_run_number": 187,
+    "workflow_status": "completed",
+    "workflow_conclusion": "success"
   }
 }
