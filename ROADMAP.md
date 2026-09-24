@@ -8,9 +8,9 @@ Codex remains the conformance-backed foundation for its explicitly supported V0.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
-## Shipped — V0.3.x Codex foundation + Gemini adapter preview
+## Shipped — V0.4.x Codex Conformance Observatory + bounded adapters
 
-Current release line: **V0.3.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the V0.1 Codex semantic subset and JSON contract while shipping the evidence-backed Gemini CLI adapter as a bounded preview.
+Current release line: **V0.4.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.4 preserves the V0.1 Codex CLI/JSON contract while adding retained conformance evidence, compatibility history, drift detection, and a bounded OpenCode offline adapter alongside the Gemini CLI preview.
 
 Shipped surfaces:
 
@@ -25,15 +25,18 @@ Shipped surfaces:
 - fail-closed TOML/config handling for the modeled subset
 - read-only, no-model, no-runtime-network inspection
 - conformance-oriented fixtures
-- a 32-rule semantic corpus and 4 regression/change records
+- a 50-rule Codex semantic corpus and 5 regression/change records
+- three retained Codex upstream evidence snapshots, compatibility history, and a deterministic drift detector
 - generated compatibility matrix and `compatibility` command
 - neutral static adapter seam for evidence-gated expansion
 - 27 deterministic Gemini CLI research cases, for 59 combined semantic cases
 - a bounded Gemini adapter with explicit unresolved/unsupported boundaries
 - three sanitized real-repository validations and three external evidence records
 - machine-enforced Gemini research and implementation gates
+- a 31-rule OpenCode corpus, three regression/change records, and a bounded inert-snapshot adapter
+- machine-enforced OpenCode compatibility and false-certainty gates
 
-V0.3.x intentionally does **not** claim full Codex or Gemini CLI compatibility, and does not yet expose a public cross-agent comparison command.
+V0.4.x intentionally does **not** claim full Codex, Gemini CLI, or OpenCode compatibility, and does not yet expose a public cross-agent comparison command. The Gemini and OpenCode adapters are evidence-backed internal surfaces, not new public CLI commands.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -61,7 +64,7 @@ Core constraints remain:
 
 See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the revised conformance-first architecture and gates.
 
-## COMPLETED ENGINEERING GATE — v0.4 Codex Conformance Observatory
+## SHIPPED — v0.4 Codex Conformance Observatory
 
 The current product decision remains **C: conformance-first**.
 
@@ -90,7 +93,7 @@ Coverage and readiness records:
 - [`docs/research/codex-conformance-coverage.md`](docs/research/codex-conformance-coverage.md)
 - [`docs/release/v0.4-readiness.md`](docs/release/v0.4-readiness.md)
 
-Publication is a separate release action. Completing the v0.4 engineering gate does not claim an npm release occurred.
+The Observatory is included in the v0.4.0 package; its retained evidence artifacts do not change the original Codex CLI contract.
 
 ## COMPLETED CORE GATES — Phase A + Phase B
 
@@ -174,11 +177,11 @@ Current checked-in gate:
 - E3 shared contracts, compatibility artifact, false-certainty audit, package gates: complete;
 - bounded OpenCode adapter authorization: complete, based on green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`;
 - engineering gate: complete;
-- release-ready: true for this bounded subset; publication remains a separate action.
+- release-ready: true for this bounded subset; packaged in v0.4.0 without a new public OpenCode CLI command.
 
 Native OpenCode remains authoritative for live runtime/session state. No OpenCode binary, hook, plugin, MCP server, or remote configuration/instruction source is executed or fetched by the adapter.
 
-This gate does not imply npm publication or a GitHub release. Package version remains on the existing V0.3.x release line unless a separate release decision is made.
+Phase E is included in the v0.4.0 release as a bounded internal adapter. It does not satisfy Phase D's independent external-user gate.
 
 ## SECONDARY CANDIDATES
 

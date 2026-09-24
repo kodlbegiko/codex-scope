@@ -1,6 +1,6 @@
 {
   "schema_version": "codex-scope.compatibility.v1",
-  "codex_scope_version": "0.3.0",
+  "codex_scope_version": "0.4.0",
   "resolver_version": "codex-resolver.v0.1",
   "adapter_version": "codex-adapter.v1",
   "evidence_date": "2026-09-24",

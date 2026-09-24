@@ -10,7 +10,7 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 **No LLM calls · No OpenAI API key · No runtime network · No hook execution**
 
-> **Status:** V0.3.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the Codex CLI and V0.1 JSON contract while adding a bounded Gemini CLI conformance-adapter preview. It does not yet add a public cross-agent comparison command or claim full compatibility with either agent. See [`docs/compatibility.md`](docs/compatibility.md).
+> **Status:** V0.4.x is the current release line; use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.4 adds the Codex Conformance Observatory and a bounded OpenCode offline adapter. The existing CLI remains Codex-facing with its V0.1 JSON contract; there is still no public cross-agent comparison command or claim of full agent compatibility. See [`docs/compatibility.md`](docs/compatibility.md).
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
@@ -38,7 +38,7 @@ Look for three things:
 
 If the first run is confusing, or Codex behaves differently from the report, submit a **sanitized** [first-run feedback issue](https://github.com/kodlbegiko/codex-scope/issues/new?template=first_run_feedback.md) or [real-world conformance case](https://github.com/kodlbegiko/codex-scope/issues/new?template=real_world_case.md).
 
-If Codex and Gemini CLI behave differently in the same repository and that difference causes a real configuration problem, submit a sanitized [cross-agent configuration case](https://github.com/kodlbegiko/codex-scope/issues/new?template=cross_agent_configuration_case.md). You can report the case with the released v0.3.0 package; a maintainer will reproduce it with the Phase D draft comparison tool.
+If Codex and Gemini CLI behave differently in the same repository and that difference causes a real configuration problem, submit a sanitized [cross-agent configuration case](https://github.com/kodlbegiko/codex-scope/issues/new?template=cross_agent_configuration_case.md). You do not need a comparison command to report it; a maintainer will reproduce it with the Phase D draft comparison tool.
 
 ## See the answer, not the layer stack
 
@@ -188,7 +188,7 @@ Normal inspection:
 - never mutates the inspected project, Codex config, or `AGENTS.md` files;
 - redacts secret-like config keys in terminal and JSON output.
 
-Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.3.
+Redaction is heuristic, not a mathematical guarantee. There is no raw-secret output option in V0.4.
 
 ## Accuracy and compatibility
 
@@ -226,7 +226,7 @@ See [`docs/conformance-status.md`](docs/conformance-status.md) for the implement
 
 ## v0.4 Codex Conformance Observatory
 
-The **v0.4 engineering gate is complete** as of 2026-09-24. This is an implementation/readiness statement, not a claim that v0.4 has already been published to npm; V0.3.x remains the current released line until a release is actually published.
+The **v0.4 engineering gate is complete** as of 2026-09-24 and is included in the v0.4.0 release.
 
 Verified v0.4 state:
 
@@ -265,7 +265,7 @@ The adapter is deliberately narrower than the native OpenCode runtime. It can re
 
 For live runtime state, **native OpenCode diagnostics and runtime state are authoritative**. Codex Scope contributes offline reproducibility, provenance, compatibility boundaries, regression evidence, and a neutral representation that can be compared with the existing Codex and Gemini adapters.
 
-The Phase E machine artifacts live under `conformance/research/phase-e/` and `conformance/research/opencode/`. E1, E2, and E3 are complete, and the bounded OpenCode adapter is authorized by the Phase E engineering gate. Authorization is backed by green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`; the final merge still requires green CI on the current documentation/status HEAD. This is an engineering-gate statement only: the package remains unpublished as a Phase E release, the public `codex-scope.v0.1` JSON contract is unchanged, and Phase D remains **0 / 3** at `blocked_external_proof`.
+The Phase E machine artifacts live under `conformance/research/phase-e/` and `conformance/research/opencode/`. E1, E2, and E3 are complete, and the bounded OpenCode adapter is authorized by the Phase E engineering gate. It is packaged in v0.4.0 as an internal, evidence-backed adapter, **not** as a new public OpenCode CLI command. The public `codex-scope.v0.1` JSON contract is unchanged, and Phase D remains **0 / 3** at `blocked_external_proof`.
 
 ## Adapter and compatibility core
 
@@ -301,7 +301,7 @@ npm run build
 
 ## Current non-goals
 
-Codex Scope V0.3 does **not** execute or fully model hooks, MCP servers, plugins, snapshots, directory diffs, telemetry, a web UI, a public cross-agent comparison command, structured/granular approval-policy semantics, the full Codex/Gemini config schemas, or managed enterprise constraints. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.3 reports those historical values as `unsupported` rather than current resolved semantics.
+Codex Scope V0.4 does **not** execute or fully model hooks, MCP servers, plugins, user-facing environment snapshots, directory diffs, telemetry, a web UI, a public cross-agent comparison command, structured/granular approval-policy semantics, the full Codex/Gemini/OpenCode config schemas, or managed enterprise constraints. The Observatory's retained conformance evidence snapshots are not user environment snapshots. Current Codex also no longer supports `approval_policy="untrusted"` and deprecates `on-failure`; V0.4 reports those historical values as `unsupported` rather than current resolved semantics.
 
 The post-v0.1.1 strategy explicitly gates volatile surfaces rather than shipping them because they appear on an older roadmap. See [`ROADMAP.md`](ROADMAP.md).
 

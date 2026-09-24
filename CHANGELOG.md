@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.4.0 — 2026-09-24
+
+Codex Conformance Observatory and a bounded OpenCode adapter, without changing the Codex-facing CLI contract.
+
 ### Added
 
 - Add the Phase E OpenCode candidate matrix, source-pinned selection record, 31-rule semantic manifest, deterministic fixtures/assertions, and three exact upstream regression/change records.
@@ -17,7 +21,7 @@
 
 - Select OpenCode as the third conformance adapter candidate while keeping Claude Code and Cursor as documented non-selected candidates for this gate.
 - Extend CI with Phase E candidate, OpenCode corpus/regression/fixture, shared adapter contract, compatibility, and false-certainty checks.
-- Record the Phase E third-adapter engineering gate as complete and the bounded OpenCode adapter as authorized after green PR-head CI; no npm publication is implied.
+- Record the Phase E third-adapter engineering gate as complete and the bounded OpenCode adapter as authorized after green PR-head CI.
 - Make snapshot lifecycle roles index-authoritative so retained immutable snapshots can be superseded without rewriting historical files.
 - Treat carried-forward evidence as `evidence_gap` rather than silently upgrading it to unchanged/reverified state.
 - Extend CI with snapshot, compatibility-history, drift, upstream-finding, and upstream-feedback gates plus `npm pack` and `npm publish --dry-run`.
