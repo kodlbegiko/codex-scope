@@ -78,6 +78,12 @@
       "rule_id": "codex.config.approval_policy_untrusted_removed",
       "kind": "upstream_semantic_change",
       "expected_result": "unsupported"
+    },
+    {
+      "regression_id": "codex-project-doc-budget-shared-across-environments",
+      "rule_id": "codex.instructions.cumulative_byte_limit",
+      "kind": "upstream_semantic_change",
+      "expected_result": "unresolved"
     }
   ],
   "known_upstream_discrepancies": [

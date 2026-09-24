@@ -1,6 +1,6 @@
 {
   "schema_version": "codex-scope.regressions.v1",
-  "evidence_date": "2026-09-22",
+  "evidence_date": "2026-09-24",
   "upstream": {
     "repository": "openai/codex",
     "current_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
@@ -59,6 +59,19 @@
         "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
       ],
       "expected_result": "unsupported"
+    },
+    {
+      "regression_id": "codex-project-doc-budget-shared-across-environments",
+      "rule_id": "codex.instructions.cumulative_byte_limit",
+      "kind": "upstream_semantic_change",
+      "historical_behavior": "Before openai/codex commit 85e0661c3baacc62db7b006d2b8085b006d0795e, project_doc_max_bytes was applied independently to each selected environment, so total project instruction bytes could grow by one full budget per environment.",
+      "current_behavior": "Since commit 85e0661c3baacc62db7b006d2b8085b006d0795e, project_doc_max_bytes is one aggregate budget consumed in selected-environment order; the entry reaching the remaining limit is truncated and later environments are skipped once the budget is exhausted.",
+      "why_regression_case": "Per-environment budgeting can exceed the current aggregate safety/semantic boundary. Codex Scope's local cumulative-byte fixture remains compatible for one environment, while multi-environment composition stays explicitly outside the supported deterministic resolver boundary.",
+      "evidence": [
+        "https://github.com/openai/codex/commit/85e0661c3baacc62db7b006d2b8085b006d0795e",
+        "https://developers.openai.com/codex/config-file/config-reference"
+      ],
+      "expected_result": "unresolved"
     }
   ]
 }
