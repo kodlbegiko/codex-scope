@@ -17,6 +17,7 @@
 
 - Select OpenCode as the third conformance adapter candidate while keeping Claude Code and Cursor as documented non-selected candidates for this gate.
 - Extend CI with Phase E candidate, OpenCode corpus/regression/fixture, shared adapter contract, compatibility, and false-certainty checks.
+- Record the Phase E third-adapter engineering gate as complete and the bounded OpenCode adapter as authorized after green PR-head CI; no npm publication is implied.
 - Make snapshot lifecycle roles index-authoritative so retained immutable snapshots can be superseded without rewriting historical files.
 - Treat carried-forward evidence as `evidence_gap` rather than silently upgrading it to unchanged/reverified state.
 - Extend CI with snapshot, compatibility-history, drift, upstream-finding, and upstream-feedback gates plus `npm pack` and `npm publish --dry-run`.
