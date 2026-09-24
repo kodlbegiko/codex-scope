@@ -99,6 +99,18 @@ test("same reporter and case identity cannot be counted twice", () => {
   );
 });
 
+test("one external reporter cannot satisfy multiple verified gate slots", () => {
+  const state = clone(loadExternalUserCasesState());
+  setCases(state, [
+    validCase("case-a", "alice", 1011, "problem-a"),
+    validCase("case-b", "Alice", 1012, "problem-b"),
+  ]);
+  assert.throws(
+    () => validateExternalUserCasesState(state),
+    /distinct reporters.*duplicate reporter/i,
+  );
+});
+
 for (const [field, pattern] of [
   ["codex_input_reference", /Codex input/i],
   ["gemini_input_reference", /Gemini input/i],
