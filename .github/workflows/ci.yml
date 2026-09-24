@@ -45,6 +45,4 @@ jobs:
       - run: npm run audit:phase-e
       - run: npm run phase-e:gate
       - run: npm pack
-      # A published version cannot pass npm's dry-run collision check without --force.
-      # --dry-run still prevents any registry write; the package itself is not republished.
-      - run: npm publish --dry-run --force
+      - run: npm publish --dry-run
