@@ -1,0 +1,24 @@
+{
+  "schema_version": "codex-scope.snapshot-index.v1",
+  "agent": "codex",
+  "current_snapshot_id": "codex-2026-09-24-e0ef5a1a",
+  "snapshots": [
+    {
+      "snapshot_id": "codex-2026-09-22-94174e44",
+      "path": "conformance/snapshots/codex-2026-09-22-94174e44.json",
+      "role": "historical"
+    },
+    {
+      "snapshot_id": "codex-2026-09-24-e0ef5a1a",
+      "path": "conformance/snapshots/codex-2026-09-24-e0ef5a1a.json",
+      "role": "current"
+    }
+  ],
+  "comparison_pairs": [
+    {
+      "from_snapshot_id": "codex-2026-09-22-94174e44",
+      "to_snapshot_id": "codex-2026-09-24-e0ef5a1a"
+    }
+  ],
+  "migration_policy": "Snapshot schema migrations must be explicit and additive. Historical snapshot files are never silently rewritten."
+}
