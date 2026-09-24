@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/upstream-findings.schema.json",
+  "title": "Codex Scope upstream findings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.upstream-findings.v1"
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "discovered_date",
+          "kind",
+          "upstream_repository",
+          "upstream_commit",
+          "upstream_url",
+          "related_rule_ids",
+          "historical_behavior",
+          "current_behavior",
+          "codex_scope_impact",
+          "verification",
+          "evidence"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "discovered_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "kind": {
+            "enum": [
+              "upstream_regression_fix",
+              "semantic_change",
+              "documentation_ambiguity",
+              "evidence_correction",
+              "compatibility_boundary_change"
+            ]
+          },
+          "upstream_repository": {
+            "const": "openai/codex"
+          },
+          "upstream_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "upstream_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "related_rule_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^codex\\."
+            }
+          },
+          "historical_behavior": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_behavior": {
+            "type": "string",
+            "minLength": 1
+          },
+          "codex_scope_impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    }
+  }
+}

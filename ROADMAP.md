@@ -8,9 +8,9 @@ Codex remains the conformance-backed foundation for its explicitly supported V0.
 
 The roadmap is evidence-gated. A feature appearing here does not authorize implementation when upstream semantics are unstable, cannot be inspected safely, or are already better answered by a native diagnostic.
 
-## Shipped — V0.3.x Codex foundation + Gemini adapter preview
+## Shipped — V0.4.x Codex Conformance Observatory + bounded adapters
 
-Current release line: **V0.3.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.3 preserves the V0.1 Codex semantic subset and JSON contract while shipping the evidence-backed Gemini CLI adapter as a bounded preview.
+Current release line: **V0.4.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.4 preserves the V0.1 Codex CLI/JSON contract while adding retained conformance evidence, compatibility history, drift detection, and a bounded OpenCode offline adapter alongside the Gemini CLI preview.
 
 Shipped surfaces:
 
@@ -25,15 +25,18 @@ Shipped surfaces:
 - fail-closed TOML/config handling for the modeled subset
 - read-only, no-model, no-runtime-network inspection
 - conformance-oriented fixtures
-- a 32-rule semantic corpus and 4 regression/change records
+- a 50-rule Codex semantic corpus and 5 regression/change records
+- three retained Codex upstream evidence snapshots, compatibility history, and a deterministic drift detector
 - generated compatibility matrix and `compatibility` command
 - neutral static adapter seam for evidence-gated expansion
 - 27 deterministic Gemini CLI research cases, for 59 combined semantic cases
 - a bounded Gemini adapter with explicit unresolved/unsupported boundaries
 - three sanitized real-repository validations and three external evidence records
 - machine-enforced Gemini research and implementation gates
+- a 31-rule OpenCode corpus, three regression/change records, and a bounded inert-snapshot adapter
+- machine-enforced OpenCode compatibility and false-certainty gates
 
-V0.3.x intentionally does **not** claim full Codex or Gemini CLI compatibility, and does not yet expose a public cross-agent comparison command.
+V0.4.x intentionally does **not** claim full Codex, Gemini CLI, or OpenCode compatibility, and does not yet expose a public cross-agent comparison command. The Gemini and OpenCode adapters are evidence-backed internal surfaces, not new public CLI commands.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -61,54 +64,36 @@ Core constraints remain:
 
 See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the revised conformance-first architecture and gates.
 
-## NOW — Codex conformance foundation
+## SHIPPED — v0.4 Codex Conformance Observatory
 
-The current product decision is **C: conformance-first**.
+The current product decision remains **C: conformance-first**.
 
-External adoption is useful evidence but is **not** the gate for core progress. The immediate goal is to turn confirmed Codex semantics and upstream behavior changes into a durable regression/compatibility corpus.
+Phase D still depends on three distinct external users and remains a parallel external-validation track. Its waiting time does not block Codex conformance engineering.
 
-### 0. Conformance harness and evidence ledger
+### Verified v0.4 result
 
-Priorities:
+| Gate | Verified evidence | Status |
+| --- | --- | --- |
+| ≥50 Codex semantic cases | 50 manifest rules: 42 compatible, 3 unsupported, 5 unresolved | satisfied |
+| ≥5 regression/change records | 5 records in `conformance/regressions.json` using the v2 provenance schema | satisfied |
+| ≥2 retained upstream snapshots | 3 retained snapshots in snapshot-index v2 | satisfied |
+| Machine-readable compatibility history | `conformance/compatibility-history.json` generated deterministically | satisfied |
+| Deterministic drift detector | `unchanged`, `behavior_drift`, `evidence_gap`, `support_boundary_change`, `added_rule`, `removed_rule`, `tool_error` | satisfied |
+| ≥1 post-2026-09-24 upstream finding | network-policy extension HTTP-client fix at `1d87af5f...` | satisfied |
+| Maintainer-facing feedback loop | source-level recheck recorded against `openai/codex#34193` | satisfied |
+| Zero known false-certainty blocker | no known blocker in the supported deterministic subset | satisfied |
+| Clean checkout / package verification | CI enforces tests, observatory checks, `npm pack`, and `npm publish --dry-run` | satisfied |
 
-- formalize fixture metadata for agent, surface, evidence source, evidence date, upstream version/commit, expected behavior, and unsupported boundaries;
-- expand deterministic fixtures for instructions, config precedence, project/trust behavior, profiles/overrides, and CODEX_HOME interactions;
-- distinguish compatibility success, behavior drift, unsupported state, unresolved state, and tool failure in CI;
-- keep evidence reproducible from a clean checkout;
-- convert verified upstream discrepancies into high-quality upstream issues, patches, or documentation corrections.
+The old 2026-09-22 and earlier 2026-09-24 snapshot files remain retained evidence. The current snapshot was added rather than created by silently rewriting those files. Snapshot-index v2 makes lifecycle roles index-authoritative so a previously current immutable snapshot can become historical without file mutation.
 
-Initial evidence gate:
+The regression corpus is also machine-bound to exact upstream commit/date, manifest fixture path, assertion count, compatibility classification, and explicit coverage limitations. The multi-environment project-doc budget semantic remains unresolved outside the deterministic supported boundary rather than being simulated.
 
-- at least 20 explicit semantic fixtures;
-- at least 3 regression/behavior-change fixtures;
-- at least 1 verified upstream discrepancy, ambiguity, issue, patch, or evidence correction;
-- zero known false-certainty blockers in the supported subset.
+Coverage and readiness records:
 
-Implementation status is tracked from repository evidence in [`docs/conformance-status.md`](docs/conformance-status.md). The shipped corpus contains 32 explicit semantic rules and 4 regression/change records; the Phase B implementation and review fixes pass the full clean-checkout CI suite.
+- [`docs/research/codex-conformance-coverage.md`](docs/research/codex-conformance-coverage.md)
+- [`docs/release/v0.4-readiness.md`](docs/release/v0.4-readiness.md)
 
-### 1. Compatibility matrix
-
-Generate a machine-readable record of what Codex Scope has actually tested, including evidence date and version/commit boundaries. Unknown versions remain unknown; configuration shape is not used as a version guess.
-
-### 2. Preserve the CLI as a thin diagnostic surface
-
-Keep the existing `inspect`, `instructions`, `config`, and `why` commands stable. User feedback remains valuable, but new CLI features do not outrank conformance coverage.
-
-### 3. Ecosystem contribution loop
-
-Prefer this maintenance loop:
-
-```text
-upstream change
-→ reproduce semantics
-→ fixture/test
-→ detect drift or ambiguity
-→ upstream issue/fix/docs correction
-→ compatibility record
-→ release when warranted
-```
-
-This produces externally verifiable maintainer evidence without requiring broad early user acquisition.
+The Observatory is included in the v0.4.0 package; its retained evidence artifacts do not change the original Codex CLI contract.
 
 ## COMPLETED CORE GATES — Phase A + Phase B
 
@@ -156,27 +141,47 @@ The accepted adapter has:
 - a documented native-diagnostics comparison;
 - sanitized real-repository validation.
 
-## ACTIVE DRAFT — Phase D neutral semantic comparison
+## PARALLEL TRACK — Phase D external proof of value
 
-Phase D's deterministic internal engineering is complete on this draft branch. Its phase-level exit gate awaits independent external proof.
+Phase D's deterministic comparison core is implemented in Draft PR #17. Internal schema, normalization, classifications, provenance, compare CLI, demonstrations, package checks, and CI gates pass.
 
-Implemented milestones:
+The draft-only command is JSON-only: `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json`. Machine-readable status is recorded in [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json). The command is not part of the published v0.4.0 package.
 
-- versioned comparison and normalization contracts;
-- six closed classifications with deterministic positive and negative fixtures;
-- Codex/Gemini neutral-report integration with retained provenance;
-- three sanitized repositories and byte-stable demonstrations enforced by CI;
-- versioned CI summary and JSON-only `codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --json` command;
-- frozen process-exit semantics, fail-closed version contract, and package verification;
-- machine-validated external-user evidence ledger, issue template, and CI gate.
+The remaining exit condition is deliberately external:
 
-Machine-readable status is recorded in [`conformance/comparison/phase-d-status.json`](conformance/comparison/phase-d-status.json).
+```text
+required distinct external users: 3
+verified qualifying cases: 0
+status: blocked_external_proof
+```
 
-The blueprint's external proof-of-value gate remains **0 / 3 qualifying external user cases** where comparison identifies a real configuration problem. Repository fixtures, sanitized public snapshots, maintainer-created cases, and prior upstream interactions do not count. Therefore the internal deterministic milestone is PASS, the overall Phase D status remains `blocked_external_proof`, and Phase E remains blocked.
+This state is truthful and non-blocking for v0.4. Public-repository scans, maintainer fixtures, sanitized demos, and synthetic examples cannot satisfy the gate. When a qualifying external report arrives, it is reproduced and validated independently; otherwise the count remains unchanged.
 
-## AFTER PHASE D — later expansion
+Phase D becomes review-ready only after **3 / 3** distinct external user cases pass the repository validator and evidence review. Until then PR #17 remains Draft.
+## PHASE E — OpenCode third-adapter engineering gate
 
-Only after the external Phase D exit gate is satisfied should additional adapter work or broader comparison surfaces proceed. Any later comparison expansion must preserve the existing fail-closed distinctions between proven differences, unresolved state, unsupported semantics, and evidence gaps. It must not rank agents or infer semantic equivalence from arbitrary instruction prose.
+Phase E is decoupled from Phase D's external-user proof gate. It does not weaken Phase D and does not use adapter breadth as a substitute for external validation.
+
+Candidate research evaluates exactly three third-adapter candidates:
+
+- **OpenCode** — selected because the instruction/config/permission implementation is source-inspectable and can be bounded to inert deterministic snapshots.
+- **Claude Code** — evidence-rich, but current instruction behavior has a larger hook/Read/attachment/managed runtime surface.
+- **Cursor** — documentation-rich, but the production resolver source is not sufficiently inspectable and some applicability is Agent/relevance/context selected.
+
+The selected OpenCode evidence revision is `0f549842ee746e400b1f72516b0b2e292e267e2c`. The implementation is constrained to the shared adapter architecture and preserves `codex-scope.v0.1`.
+
+Current checked-in gate:
+
+- E1 candidate matrix/selection: complete;
+- E2 semantic corpus: 31 rules with 3 verified regression/change records and deterministic fixtures/assertions;
+- E3 shared contracts, compatibility artifact, false-certainty audit, package gates: complete;
+- bounded OpenCode adapter authorization: complete, based on green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`;
+- engineering gate: complete;
+- release-ready: true for this bounded subset; packaged in v0.4.0 without a new public OpenCode CLI command.
+
+Native OpenCode remains authoritative for live runtime/session state. No OpenCode binary, hook, plugin, MCP server, or remote configuration/instruction source is executed or fetched by the adapter.
+
+Phase E is included in the v0.4.0 release as a bounded internal adapter. It does not satisfy Phase D's independent external-user gate.
 
 ## SECONDARY CANDIDATES
 
@@ -202,7 +207,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Claude Code, Cursor, and OpenCode remain research candidates after the Phase D external exit gate. Gemini CLI is the proven second adapter used by the current Phase D comparison contract. Every additional adapter requires its own decision gate.
+Claude Code and Cursor remain later research candidates after the first validated second adapter. OpenCode has passed its separate Phase E third-adapter engineering gate as a bounded deterministic subset. Gemini CLI remains the bounded preview adapter; every future additional adapter still requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 

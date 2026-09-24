@@ -1,0 +1,18 @@
+{
+  "schema_version": "codex-scope.phase-e-selection.v1",
+  "evidence_date": "2026-09-24",
+  "selected_candidate": "opencode",
+  "selected_upstream_repository": "anomalyco/opencode",
+  "selected_upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+  "candidate_matrix": "conformance/research/phase-e/candidates.json",
+  "validator": "scripts/research-phase-e-check.mjs",
+  "selection_gate": {
+    "unique_selected_candidate": true,
+    "official_evidence_for_all_candidates": true,
+    "source_inspected_candidates_minimum": 2,
+    "selected_deterministic_surface_sufficient": true,
+    "filename_only_primary_proof_forbidden": true
+  },
+  "e1_status": "complete",
+  "reason": "OpenCode is selected for the third-adapter conformance spike because its static semantics are source-inspectable and regression-backed while live/network/session surfaces can be excluded explicitly. Claude Code remains evidence-rich but has a larger hook/attachment runtime surface; Cursor remains documentation-rich but resolver-source-poor."
+}

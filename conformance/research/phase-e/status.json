@@ -1,0 +1,46 @@
+{
+  "schema_version": "codex-scope.phase-e-status.v1",
+  "evidence_date": "2026-09-24",
+  "branch": "feat/phase-e-opencode-adapter",
+  "selected_candidate": "opencode",
+  "selected_upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+  "e1": "complete",
+  "e2": "complete",
+  "e3": "complete",
+  "authorization_status": "authorized",
+  "adapter_authorized": true,
+  "gates": {
+    "candidate_research": true,
+    "selection": true,
+    "semantic_manifest_minimum_20": true,
+    "regression_corpus_minimum_3": true,
+    "fixture_validation": true,
+    "deterministic_assertions": true,
+    "shared_adapter_contracts": true,
+    "compatibility_artifact": true,
+    "false_certainty_audit": true,
+    "public_json_contract_preserved": true,
+    "codex_regression_suite": true,
+    "gemini_regression_suite": true,
+    "lint": true,
+    "format": true,
+    "typecheck": true,
+    "tests": true,
+    "build": true,
+    "npm_pack": true,
+    "npm_publish_dry_run": true,
+    "pr_head_ci": true
+  },
+  "blocker": null,
+  "phase_d": {
+    "external_users": "0 / 3",
+    "status": "blocked_external_proof"
+  },
+  "authorization_evidence": {
+    "validated_parent_head": "62cd1e6ff68389709c007c48a3e666dac15bb2b9",
+    "workflow_run_id": 35967453286,
+    "workflow_run_number": 187,
+    "workflow_status": "completed",
+    "workflow_conclusion": "success"
+  }
+}

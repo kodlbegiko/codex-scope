@@ -1,0 +1,19 @@
+{
+  "permission": {
+    "*": "ask",
+    "bash": {
+      "*": "ask",
+      "git *": "allow",
+      "git push *": "deny"
+    },
+    "edit": {
+      "*": "deny",
+      "src/*.ts": "allow"
+    },
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.example": "allow"
+    }
+  }
+}

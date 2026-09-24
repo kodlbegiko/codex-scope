@@ -1,6 +1,6 @@
 {
   "schema_version": "codex-scope.conformance.v1",
-  "evidence_date": "2026-09-22",
+  "evidence_date": "2026-09-24",
   "resolver_version": "codex-resolver.v0.1",
   "upstream": {
     "repository": "openai/codex",
@@ -1788,6 +1788,863 @@
         }
       ],
       "expected_outcome": "unresolved",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.default_project_root_markers",
+      "agent": "codex",
+      "surface": "config",
+      "description": "The baseline project_root_markers default is the .git marker.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+        ]
+      },
+      "expected_behavior": "With no configured override, project_root_markers resolves to [\".git\"].",
+      "supported_boundary": "Codex Scope models the documented local default deterministically.",
+      "unsupported_boundary": "Managed/cloud overrides can change effective discovery and remain outside a pure-default claim.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/no-root/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/empty-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "project_root_markers",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": [
+            ".git"
+          ]
+        },
+        {
+          "path": [
+            "values",
+            "project_root_markers",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "default"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.default_project_doc_fallback_filenames",
+      "agent": "codex",
+      "surface": "config",
+      "description": "The baseline project_doc_fallback_filenames default is an empty list.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "With no configured override, project_doc_fallback_filenames resolves to [].",
+      "supported_boundary": "Local documented default only.",
+      "unsupported_boundary": "Runtime filesystem behavior for later user-configured fallback names is covered separately.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/no-root/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/empty-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "project_doc_fallback_filenames",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": []
+        },
+        {
+          "path": [
+            "values",
+            "project_doc_fallback_filenames",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "default"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.project_doc_max_bytes_zero",
+      "agent": "codex",
+      "surface": "config",
+      "description": "project_doc_max_bytes accepts zero as a valid non-negative integer boundary.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A configured value of 0 is preserved exactly and resolves without coercion.",
+      "supported_boundary": "Validation and provenance of the scalar config value.",
+      "unsupported_boundary": "Cross-environment instruction loading is not executed by this config-only probe.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "project_doc_max_bytes",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": 0
+        },
+        {
+          "path": [
+            "values",
+            "project_doc_max_bytes",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.empty_project_root_markers",
+      "agent": "codex",
+      "surface": "config",
+      "description": "An explicit empty project_root_markers list disables ancestor-marker discovery for the modeled local resolver.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "With project_root_markers=[], the modeled project root is the current working directory.",
+      "supported_boundary": "Deterministic local path discovery with an explicit empty list.",
+      "unsupported_boundary": "Managed discovery inputs can override local values and are classified separately.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/no-root/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/empty-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=[]"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "project_root_markers",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": []
+        },
+        {
+          "path": [
+            "projectRoot"
+          ],
+          "operator": "ends_with",
+          "value": "fixtures/config/semantic-expansion/no-root/a/b"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.project_root_markers_type_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "project_root_markers must be an array of strings.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A string-valued project_root_markers override is rejected with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Type validation before project-root discovery.",
+      "unsupported_boundary": "No heuristic coercion from a scalar to an array is attempted.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/no-root/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/empty-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_root_markers=\".git\""
+          ],
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.project_doc_fallback_filenames_type_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "project_doc_fallback_filenames must be an array of strings.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A scalar fallback-filename value is rejected with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Type validation of the documented local key.",
+      "unsupported_boundary": "Filename path-safety semantics are tracked separately from this shape check.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/no-root/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/empty-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "project_doc_fallback_filenames=\"TEAM.md\""
+          ],
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.managed_configuration_uncertainty",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Detected managed configuration prevents local-layer resolution from being reported with false certainty.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+        ]
+      },
+      "expected_behavior": "When a managed requirements file is present, locally resolved approval_policy is retained as known-so-far but its state becomes unresolved.",
+      "supported_boundary": "Fail-closed observability for detected managed files.",
+      "unsupported_boundary": "Codex Scope does not interpret enterprise/MDM requirements semantics.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "managed_config_paths": [
+            "fixtures/config/semantic-expansion/managed/requirements.toml"
+          ]
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "on-request"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "unresolved"
+        }
+      ],
+      "expected_outcome": "unresolved",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.approval_policy_on_request",
+      "agent": "codex",
+      "surface": "config",
+      "description": "approval_policy=\"on-request\" is a supported baseline string policy.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The exact string \"on-request\" resolves as supported without coercion.",
+      "supported_boundary": "Recognition/provenance of the policy value.",
+      "unsupported_boundary": "Runtime approval prompting is not executed by the inspector.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "on-request"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.approval_policy_never",
+      "agent": "codex",
+      "surface": "config",
+      "description": "approval_policy=\"never\" is a supported baseline string policy.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The exact string \"never\" resolves as supported when selected by the profile.",
+      "supported_boundary": "Recognition/provenance of the policy value.",
+      "unsupported_boundary": "Runtime approval behavior is not executed by the inspector.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "never"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "profile"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.approval_policy_unknown_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Unknown approval_policy strings are rejected rather than treated as a known current policy.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "An undocumented string policy fails with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Fail-closed validation of string policy values.",
+      "unsupported_boundary": "Structured granular approval-policy objects are tracked as unsupported rather than interpreted.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "invalid-approval",
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.sandbox_mode_read_only",
+      "agent": "codex",
+      "surface": "config",
+      "description": "sandbox_mode=\"read-only\" is a recognized baseline mode.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The exact string \"read-only\" resolves as supported.",
+      "supported_boundary": "Recognition/provenance of the sandbox mode.",
+      "unsupported_boundary": "Codex Scope does not execute or simulate the sandbox.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "read-only"
+        },
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.sandbox_mode_workspace_write",
+      "agent": "codex",
+      "surface": "config",
+      "description": "sandbox_mode=\"workspace-write\" is a recognized baseline mode.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The exact string \"workspace-write\" resolves as supported.",
+      "supported_boundary": "Recognition/provenance of the sandbox mode.",
+      "unsupported_boundary": "Filesystem permission enforcement is not executed by the inspector.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "workspace"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "workspace-write"
+        },
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.sandbox_mode_danger_full_access",
+      "agent": "codex",
+      "surface": "config",
+      "description": "sandbox_mode=\"danger-full-access\" is a recognized baseline mode.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "The exact string \"danger-full-access\" resolves as supported.",
+      "supported_boundary": "Recognition/provenance of the sandbox mode.",
+      "unsupported_boundary": "Codex Scope never turns this value into actual unrestricted execution.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "danger"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "danger-full-access"
+        },
+        {
+          "path": [
+            "values",
+            "sandbox_mode",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.sandbox_mode_unknown_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Unknown sandbox_mode strings are rejected.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "An undocumented sandbox mode fails with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Fail-closed validation of the documented enum.",
+      "unsupported_boundary": "No sandbox behavior is inferred for unknown values.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "invalid-sandbox",
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.model_string_value",
+      "agent": "codex",
+      "surface": "config",
+      "description": "The modeled model key requires a string value.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A string model identifier is preserved with resolved provenance.",
+      "supported_boundary": "Shape/provenance only; no model availability or capability lookup.",
+      "unsupported_boundary": "The inspector does not contact a model catalog or hosted service.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "model",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "gpt-5.6-codex"
+        },
+        {
+          "path": [
+            "values",
+            "model",
+            "state"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.model_non_string_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "A non-string model value is rejected by the modeled semantic subset.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "An array-valued model fails with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Deterministic type validation.",
+      "unsupported_boundary": "No coercion or remote model-catalog lookup is attempted.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "invalid-model",
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.model_provider_non_string_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "A non-string model_provider value is rejected by the modeled semantic subset.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A numeric model_provider fails with UNSUPPORTED_CONFIG_VALUE.",
+      "supported_boundary": "Deterministic type validation of the user-level scalar.",
+      "unsupported_boundary": "Provider execution, authentication, and remote discovery are not performed.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "invalid-provider",
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.project_doc_max_bytes_negative_fail_closed",
+      "agent": "codex",
+      "surface": "config",
+      "description": "project_doc_max_bytes rejects negative integers.",
+      "evidence_date": "2026-09-24",
+      "upstream": {
+        "docs": [
+          "https://developers.openai.com/codex/config-file/config-reference"
+        ],
+        "repository": "openai/codex",
+        "commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+        "source": [
+          "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+        ]
+      },
+      "expected_behavior": "A value of -1 fails with UNSUPPORTED_CONFIG_VALUE rather than being clamped or coerced.",
+      "supported_boundary": "Deterministic validation of the non-negative integer boundary.",
+      "unsupported_boundary": "Runtime multi-environment byte consumption is tracked as a separate regression boundary.",
+      "fixture": {
+        "path": "fixtures/config/semantic-expansion",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/semantic-expansion/project/a/b",
+          "codex_home": "fixtures/config/semantic-expansion/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "profile": "invalid-max",
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
       "regression": false
     }
   ]

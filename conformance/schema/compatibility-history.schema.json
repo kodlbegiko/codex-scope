@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/compatibility-history.schema.json",
+  "title": "Codex Scope compatibility history",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agent",
+    "generated_from",
+    "comparisons"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.compatibility-history.v1"
+    },
+    "agent": {
+      "const": "codex"
+    },
+    "generated_from": {
+      "const": "conformance/snapshots/index.json"
+    },
+    "comparisons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from_snapshot_id",
+          "to_snapshot_id",
+          "from_upstream_commit",
+          "to_upstream_commit",
+          "counts",
+          "rules"
+        ],
+        "properties": {
+          "from_snapshot_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to_snapshot_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_upstream_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "to_upstream_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "unchanged",
+              "behavior_drift",
+              "evidence_gap",
+              "support_boundary_change",
+              "added_rule",
+              "removed_rule",
+              "tool_error"
+            ],
+            "properties": {
+              "unchanged": {
+                "type": "integer"
+              },
+              "behavior_drift": {
+                "type": "integer"
+              },
+              "evidence_gap": {
+                "type": "integer"
+              },
+              "support_boundary_change": {
+                "type": "integer"
+              },
+              "added_rule": {
+                "type": "integer"
+              },
+              "removed_rule": {
+                "type": "integer"
+              },
+              "tool_error": {
+                "type": "integer"
+              }
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rule_id",
+                "classification",
+                "reason",
+                "from",
+                "to"
+              ],
+              "properties": {
+                "rule_id": {
+                  "type": "string",
+                  "pattern": "^codex\\."
+                },
+                "classification": {
+                  "enum": [
+                    "unchanged",
+                    "behavior_drift",
+                    "evidence_gap",
+                    "support_boundary_change",
+                    "added_rule",
+                    "removed_rule",
+                    "tool_error"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "from": {},
+                "to": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

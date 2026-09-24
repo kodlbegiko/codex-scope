@@ -1,0 +1,667 @@
+{
+  "schema_version": "codex-scope.upstream-snapshot.v1",
+  "snapshot_id": "codex-2026-09-22-94174e44",
+  "agent": "codex",
+  "upstream_repository": "openai/codex",
+  "upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+  "upstream_version_if_known": "unknown",
+  "evidence_date": "2026-09-22",
+  "coverage": "full_baseline",
+  "source_references": [
+    "https://github.com/openai/codex/commit/94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+  ],
+  "semantic_rules": [
+    {
+      "rule_id": "codex.compatibility.unknown_version",
+      "expected_outcome": "unresolved",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unresolved",
+        "expected_behavior": "The compatibility matrix records tested_codex_version as unknown while pinning the tested upstream commit.",
+        "supported_boundary": "Static evidence commit is known; installed Codex binary version was not deterministically detected in this inspection environment.",
+        "unsupported_boundary": "No shell-out or heuristic version inference is allowed in the deterministic core."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ]
+    },
+    {
+      "rule_id": "codex.config.approval_policy_on_failure_deprecated",
+      "expected_outcome": "unsupported",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unsupported",
+        "expected_behavior": "A selected profile carrying on-failure is labeled unsupported.",
+        "supported_boundary": "Conservative current-surface classification; provenance remains visible.",
+        "unsupported_boundary": "This does not claim that every historical/current binary rejects the deprecated value."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ]
+    },
+    {
+      "rule_id": "codex.config.approval_policy_untrusted_removed",
+      "expected_outcome": "unsupported",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unsupported",
+        "expected_behavior": "Codex Scope labels the explicit historical value unsupported instead of presenting it as a current resolved policy.",
+        "supported_boundary": "Evidence reflects current docs on 2026-09-22.",
+        "unsupported_boundary": "Historical Codex releases may have accepted this value; no version inference is performed."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ]
+    },
+    {
+      "rule_id": "codex.config.cli_precedence",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "CLI approval_policy=never wins over project/profile/user/system/default candidates.",
+        "supported_boundary": "Explicitly supplied CLI override list only.",
+        "unsupported_boundary": "Unseen invocation flags remain unresolved unless invocation_complete is asserted."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.closest_project_wins",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The nested app/.codex/config.toml beats the project-root .codex/config.toml.",
+        "supported_boundary": "Trusted local project config layers.",
+        "unsupported_boundary": "Managed/cloud constraints that can override or constrain results remain unresolved/unsupported."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.codex_home_project_layer_exclusion",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a + current main",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The root .codex directory used as CODEX_HOME appears only as user config; a nested child project config can still win.",
+        "supported_boundary": "Normalized/canonical best-effort local path identity.",
+        "unsupported_boundary": "Filesystem identity races and exotic mount behavior are outside the deterministic boundary."
+      },
+      "source_references": [
+        "https://github.com/openai/codex/commit/dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.malformed_toml_fail_closed",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The fixture raises CONFIG_PARSE_ERROR.",
+        "supported_boundary": "V0.1 zero-dependency safe TOML subset.",
+        "unsupported_boundary": "Valid TOML syntax outside the subset may be rejected even when Codex accepts it."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.config.profile_precedence",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "sandbox_mode from the selected dev profile wins over the user config when project does not override it.",
+        "supported_boundary": "Codex 0.134.0+ profile-v2 separate file semantics modeled as CODEX_HOME/<name>.config.toml.",
+        "unsupported_boundary": "Legacy [profiles.name] table selection is not modeled as current behavior."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://developers.openai.com/codex/config-file/config-advanced",
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.config.project_config_trusted",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "A trusted project approval_policy can supersede the user layer.",
+        "supported_boundary": "Explicit trust input only.",
+        "unsupported_boundary": "Codex Scope does not auto-detect trust from runtime state."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.protected_machine_local_key",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "Project model_provider is ignored and the user model_provider remains effective.",
+        "supported_boundary": "Current documented/project-protected prefix set modeled by V0.1.",
+        "unsupported_boundary": "Future protected keys outside the evidence date are not inferred automatically."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.repeated_cli_override",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The second approval_policy override wins.",
+        "supported_boundary": "Ordering of the explicitly supplied repeated -c values.",
+        "unsupported_boundary": "Shell/launcher transformations outside the supplied argv are not inferred."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.system_config",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "When it is the only explicit approval source, the injected system config wins.",
+        "supported_boundary": "Deterministic Unix-style system path supplied by the test harness.",
+        "unsupported_boundary": "Windows system-config location is not claimed by V0.1."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.unknown_trust",
+      "expected_outcome": "unresolved",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unresolved",
+        "expected_behavior": "A known-so-far user winner is retained but the final approval_policy state is unresolved.",
+        "supported_boundary": "Explicit trust=unknown diagnostic state.",
+        "unsupported_boundary": "Codex Scope does not guess trust from repository contents."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.unsupported_key",
+      "expected_outcome": "unsupported",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unsupported",
+        "expected_behavior": "reasoning_effort is visible with provenance but state=unsupported.",
+        "supported_boundary": "Safe parsing/provenance can exceed semantic support.",
+        "unsupported_boundary": "Codex Scope does not claim semantic validation for arbitrary Codex config keys."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ]
+    },
+    {
+      "rule_id": "codex.config.untrusted_project",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The user value remains effective and the project candidate is ignored.",
+        "supported_boundary": "Explicit trust=untrusted input.",
+        "unsupported_boundary": "Trust discovery and UI decisions are not performed by Codex Scope."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.config.user_config",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The user approval_policy candidate participates in resolution.",
+        "supported_boundary": "Supported V0.1 config keys and safe TOML subset.",
+        "unsupported_boundary": "Full Codex config schema and full TOML grammar remain unsupported."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.codex_home_env",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "An explicit CODEX_HOME environment value is used instead of ~/.codex.",
+        "supported_boundary": "Codex Scope models CODEX_HOME and its explicit --codex-home inspection override.",
+        "unsupported_boundary": "Home-directory discovery beyond CODEX_HOME and platform-specific environment policy is not inferred."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.codex_home_project_root_duplication",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "codex-cli 0.144.6 reproduction + current main 94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The same path appears as both global and project active instruction sources.",
+        "supported_boundary": "Implementation-parity fixture for open upstream issue #34193; this is not desired behavior.",
+        "unsupported_boundary": "Do not preserve duplication after upstream canonical-path deduplication lands."
+      },
+      "source_references": [
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.cumulative_byte_limit",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "A 10-byte budget includes 9 bytes from root and only 1 byte from the child file.",
+        "supported_boundary": "Project-document bytes only; global user instructions are outside this project budget.",
+        "unsupported_boundary": "Multi-environment host contributions beyond the local filesystem resolver are not modeled."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.empty_project_override_blocks_fallback",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The empty AGENTS.override.md is ignored after selection and AGENTS.md is also ignored because it lost discovery precedence.",
+        "supported_boundary": "Pinned to current openai/codex implementation evidence where metadata discovery precedes content filtering.",
+        "unsupported_boundary": "If upstream changes discovery to skip empty project candidates before filename selection, this rule must become behavior_drift and be updated."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.fallback_filename",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "TEAM.md is selected when no override or AGENTS.md exists in the directory.",
+        "supported_boundary": "Safe plain fallback filenames supplied by config.",
+        "unsupported_boundary": "Path-like fallback entries and executor-specific invalid filenames are outside the V0.1 fallback parser contract."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.global_agents_base",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "AGENTS.md is active as the global instruction source.",
+        "supported_boundary": "Readable AGENTS.md under supplied Codex home.",
+        "unsupported_boundary": "Host-provided remote/account instruction sources are not modeled."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.global_empty_override_falls_through",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The empty override is ignored and the base global AGENTS.md is selected.",
+        "supported_boundary": "Empty means whitespace-only after decoding.",
+        "unsupported_boundary": "Read failures are not treated as empty."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.global_override_precedence",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The first non-empty global candidate in override/base order is active and the lower candidate is ignored.",
+        "supported_boundary": "Readable local files under the supplied Codex home.",
+        "unsupported_boundary": "Transient read errors and host-managed instruction providers are outside the deterministic local-file model."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.per_directory_override_precedence",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The override is active and the ordinary AGENTS.md in the same directory is ignored.",
+        "supported_boundary": "Filename discovery precedence only; prose semantics are not compared.",
+        "unsupported_boundary": "Model adherence to either instruction file is outside inspection."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.project_doc_default_limit",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "With no overriding value the project instruction byte limit is 32768.",
+        "supported_boundary": "Resolver-critical built-in default at the pinned evidence commit.",
+        "unsupported_boundary": "Future upstream defaults outside the evidence boundary must be re-verified."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/config.schema.json"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.project_root_markers",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "A configured .scope-root marker establishes the project root above cwd.",
+        "supported_boundary": "Explicit local marker configuration that Codex Scope can parse deterministically.",
+        "unsupported_boundary": "Trust inference from repository state is not performed."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-advanced",
+        "https://developers.openai.com/codex/config-file/config-reference",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.project_root_to_cwd",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "One selected project instruction source per applicable directory is ordered root to cwd.",
+        "supported_boundary": "Filesystem hierarchy between the deterministic project root and cwd.",
+        "unsupported_boundary": "Runtime environment overlays and remote executor filesystems are not modeled."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/agent-configuration/agents-md",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.unknown_project_trust",
+      "expected_outcome": "unresolved",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unresolved",
+        "expected_behavior": "Global instructions remain known, project instruction candidates are unresolved, and the instruction report remains unresolved.",
+        "supported_boundary": "Explicit trust=unknown diagnostic state.",
+        "unsupported_boundary": "No runtime trust prompt or trust-state discovery is executed."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.instructions.untrusted_project_skips_project",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": true,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "Global instructions may remain active, but discovered project instruction candidates are ignored and do not enter the active chain.",
+        "supported_boundary": "Explicit trust=untrusted diagnostic input with local filesystem instruction discovery.",
+        "unsupported_boundary": "Codex Scope does not infer trust from runtime UI state or repository history."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://developers.openai.com/codex/security",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs"
+      ]
+    },
+    {
+      "rule_id": "codex.invocation.incomplete",
+      "expected_outcome": "unresolved",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "unresolved",
+        "expected_behavior": "Affected supported values and instruction discovery remain unresolved until invocation_complete is asserted.",
+        "supported_boundary": "Explicit diagnostic completeness boundary.",
+        "unsupported_boundary": "Codex Scope does not inspect parent launchers, aliases, or future runtime flags."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://developers.openai.com/codex/config-file/config-basic",
+        "https://github.com/openai/codex/tree/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/loader"
+      ]
+    },
+    {
+      "rule_id": "codex.invocation.missing_profile",
+      "expected_outcome": "compatible",
+      "evidence_state": "verified",
+      "regression": false,
+      "evidence_date": "2026-09-22",
+      "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "semantic_signature": {
+        "expected_outcome": "compatible",
+        "expected_behavior": "The fixture raises PROFILE_NOT_FOUND rather than silently ignoring the requested profile.",
+        "supported_boundary": "Explicit profile-v2 file selection.",
+        "unsupported_boundary": "Runtime-generated or remote profile sources are not inferred."
+      },
+      "source_references": [
+        "https://developers.openai.com/codex/cli/reference",
+        "https://developers.openai.com/codex/config-file/config-advanced",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/config/src/config_toml.rs"
+      ]
+    }
+  ],
+  "regression_references": [
+    "codex-config-home-project-layer-exclusion",
+    "codex-agents-home-project-root-duplication",
+    "codex-profile-v2-file-selection",
+    "codex-approval-policy-untrusted-removed"
+  ],
+  "compatibility_boundary": {
+    "supported_rules": [
+      "codex.config.cli_precedence",
+      "codex.config.closest_project_wins",
+      "codex.config.codex_home_project_layer_exclusion",
+      "codex.config.malformed_toml_fail_closed",
+      "codex.config.profile_precedence",
+      "codex.config.project_config_trusted",
+      "codex.config.protected_machine_local_key",
+      "codex.config.repeated_cli_override",
+      "codex.config.system_config",
+      "codex.config.untrusted_project",
+      "codex.config.user_config",
+      "codex.instructions.codex_home_env",
+      "codex.instructions.codex_home_project_root_duplication",
+      "codex.instructions.cumulative_byte_limit",
+      "codex.instructions.empty_project_override_blocks_fallback",
+      "codex.instructions.fallback_filename",
+      "codex.instructions.global_agents_base",
+      "codex.instructions.global_empty_override_falls_through",
+      "codex.instructions.global_override_precedence",
+      "codex.instructions.per_directory_override_precedence",
+      "codex.instructions.project_doc_default_limit",
+      "codex.instructions.project_root_markers",
+      "codex.instructions.project_root_to_cwd",
+      "codex.instructions.untrusted_project_skips_project",
+      "codex.invocation.missing_profile"
+    ],
+    "unsupported_rules": [
+      "codex.config.approval_policy_on_failure_deprecated",
+      "codex.config.approval_policy_untrusted_removed",
+      "codex.config.unsupported_key"
+    ],
+    "unresolved_rules": [
+      "codex.compatibility.unknown_version",
+      "codex.config.unknown_trust",
+      "codex.instructions.unknown_project_trust",
+      "codex.invocation.incomplete"
+    ]
+  },
+  "retention": {
+    "role": "historical",
+    "immutable": true,
+    "migration_policy": "Historical snapshot content is immutable. Future schema changes require an explicit migration artifact; current evidence updates create a new snapshot."
+  }
+}

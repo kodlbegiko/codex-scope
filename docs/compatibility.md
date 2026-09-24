@@ -58,7 +58,7 @@ codex-scope compare codex gemini --codex-input <file> --gemini-input <file> --js
 
 It is JSON-only and requires explicit input artifacts. It performs no live agent inspection, model calls, runtime network access, agent subprocess probing, extension execution, or MCP execution.
 
-The published v0.3.0 package does not include this command. See the [field-test guide](phase-d-field-test.md) to run it from the Draft PR checkout.
+The published v0.4.0 package does not include this command. See the [field-test guide](phase-d-field-test.md) to run it from the Draft PR checkout.
 
 Comparison results retain each adapter's evidence date, upstream repository/commit, rule IDs, and references. Unsupported, unresolved, and evidence-gap states remain distinct from proven behavioral differences.
 
@@ -66,7 +66,7 @@ The CI summary uses conservative precedence `unresolved > unsupported > proven_d
 
 The compare CLI freezes process semantics separately from semantic classifications: any valid comparison document exits `0`, including non-clean semantic outcomes; malformed or unsupported explicit input exits `2` with a versioned JSON `tool_error`; an unexpected internal failure before a valid comparison document exists exits `1` with the same fail-closed JSON shape.
 
-Phase D remains externally gated: the blueprint requires three qualifying independent external user cases where comparison finds a real configuration problem. The current count is 0 / 3, so the internal deterministic milestone is PASS while overall Phase D remains `blocked_external_proof` and Phase E is not authorized.
+Phase D remains externally gated: the blueprint requires three qualifying independent external user cases where comparison finds a real configuration problem. The current count is 0 / 3, so the internal deterministic milestone is PASS while overall Phase D remains `blocked_external_proof`. Phase E was authorized independently and its bounded OpenCode adapter is included in v0.4.0; it does not count as Phase D external proof.
 
 ## Conformance outcome taxonomy
 

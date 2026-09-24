@@ -1,0 +1,91 @@
+{
+  "schema_version": "codex-scope.opencode-compatibility.v1",
+  "agent": "opencode",
+  "adapter_version": "opencode-adapter.v1",
+  "source_manifest": "conformance/research/opencode/manifest.json",
+  "evidence": {
+    "date": "2026-09-24",
+    "upstream_repository": "anomalyco/opencode",
+    "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+    "version_detection": "none"
+  },
+  "counts": {
+    "total": 31,
+    "compatible": 17,
+    "conditional": 4,
+    "unsupported": 3,
+    "unresolved": 11,
+    "tool_error": 0
+  },
+  "compatible_rule_ids": [
+    "opencode.config.custom_overrides_global",
+    "opencode.config.deep_merge",
+    "opencode.config.global_overrides_remote",
+    "opencode.config.inline_overrides_project",
+    "opencode.config.instructions_concat_dedup",
+    "opencode.config.project_overrides_custom",
+    "opencode.config.remote_base_precedence",
+    "opencode.instructions.custom_config_dir_precedence",
+    "opencode.instructions.deduplicate_paths",
+    "opencode.instructions.global_agents",
+    "opencode.instructions.nested_directory_applicability",
+    "opencode.instructions.project_config_disabled",
+    "opencode.instructions.project_upward",
+    "opencode.permissions.declaration_order",
+    "opencode.permissions.last_matching_rule",
+    "opencode.permissions.wildcard_patterns",
+    "opencode.version.supplied"
+  ],
+  "conditional_rule_ids": [
+    "opencode.permissions.session_approvals",
+    "opencode.runtime.managed_account_org",
+    "opencode.runtime.remote_config",
+    "opencode.version.detected"
+  ],
+  "unsupported_rule_ids": [
+    "opencode.instructions.remote_url",
+    "opencode.runtime.mcp",
+    "opencode.runtime.plugins"
+  ],
+  "unresolved_rule_ids": [
+    "opencode.config.snapshot_completeness",
+    "opencode.instructions.claude_compatibility_fallback",
+    "opencode.instructions.custom_local_pattern",
+    "opencode.instructions.outside_project_root",
+    "opencode.instructions.project_read_failure",
+    "opencode.permissions.session_approvals",
+    "opencode.runtime.managed_account_org",
+    "opencode.runtime.remote_config",
+    "opencode.version.detected",
+    "opencode.version.outside_evidence",
+    "opencode.version.unknown"
+  ],
+  "tool_error_rule_ids": [],
+  "version_boundary": {
+    "supported_states": [
+      "supplied"
+    ],
+    "provenance_only_states": [
+      "detected"
+    ],
+    "fail_closed_states": [
+      "unknown",
+      "outside_evidence"
+    ],
+    "binary_execution": false
+  },
+  "runtime_boundary": {
+    "network": false,
+    "subprocess": false,
+    "plugins": false,
+    "mcp": false,
+    "hooks": false,
+    "live_session_approvals": false,
+    "native_diagnostics_authoritative": true
+  },
+  "public_contract": {
+    "codex_json_schema": "codex-scope.v0.1",
+    "changed": false,
+    "adapter_artifact_visibility": "internal_conformance_artifact"
+  }
+}

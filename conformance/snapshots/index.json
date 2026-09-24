@@ -1,0 +1,40 @@
+{
+  "schema_version": "codex-scope.snapshot-index.v2",
+  "agent": "codex",
+  "current_snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50",
+  "role_semantics": "index_authoritative",
+  "snapshots": [
+    {
+      "snapshot_id": "codex-2026-09-22-94174e44",
+      "path": "conformance/snapshots/codex-2026-09-22-94174e44.json",
+      "role": "historical"
+    },
+    {
+      "snapshot_id": "codex-2026-09-24-e0ef5a1a",
+      "path": "conformance/snapshots/codex-2026-09-24-e0ef5a1a.json",
+      "role": "historical"
+    },
+    {
+      "snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50",
+      "path": "conformance/snapshots/codex-2026-09-24-e0ef5a1a-corpus50.json",
+      "role": "current"
+    }
+  ],
+  "comparison_pairs": [
+    {
+      "from_snapshot_id": "codex-2026-09-22-94174e44",
+      "to_snapshot_id": "codex-2026-09-24-e0ef5a1a"
+    },
+    {
+      "from_snapshot_id": "codex-2026-09-24-e0ef5a1a",
+      "to_snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50"
+    }
+  ],
+  "migration": {
+    "from_schema_version": "codex-scope.snapshot-index.v1",
+    "migrated_on": "2026-09-24",
+    "reason": "Allow an immutable snapshot captured as current to be superseded without rewriting retained evidence.",
+    "immutable_snapshot_policy": "Snapshot files retain capture-time retention.role metadata; lifecycle current/historical status is authoritative in this index."
+  },
+  "migration_policy": "Snapshot schema migrations are explicit and additive. Retained snapshot files are never silently rewritten when lifecycle roles change."
+}

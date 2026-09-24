@@ -1,0 +1,6 @@
+{
+  "plugin_declarations": [
+    "example-plugin"
+  ],
+  "execution_attempted": false
+}

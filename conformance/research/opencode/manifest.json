@@ -1,0 +1,940 @@
+{
+  "schema_version": "codex-scope.opencode-manifest.v1",
+  "evidence_date": "2026-09-24",
+  "agent": "opencode",
+  "upstream_repository": "anomalyco/opencode",
+  "inspected_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+  "adapter_scope": "Offline deterministic replay of explicitly supplied filesystem/config/permission/version state only; no OpenCode execution or live loader reuse.",
+  "native_runtime_authority": "Native OpenCode diagnostics/runtime state are authoritative for live session, remote, managed/account/org, plugin, MCP, provider, tool, model, and approval state.",
+  "counts": {
+    "total": 31,
+    "semantic_states": {
+      "resolved": 17,
+      "unresolved": 7,
+      "conditional": 4,
+      "unsupported": 3
+    },
+    "compatibility_outcomes": {
+      "compatible": 17,
+      "unresolved": 11,
+      "unsupported": 3
+    }
+  },
+  "rules": [
+    {
+      "id": "opencode.instructions.project_upward",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "Project AGENTS.md files are discovered upward from cwd to the explicit project root when project config is enabled and cwd is within the project.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/project",
+      "assertion_binding": "assert.opencode.instructions.project_upward",
+      "runtime_dependency_classification": "static",
+      "false_certainty_notes": "No filename match outside the supplied project root is promoted to active semantics.",
+      "supported_rationale": "The adapter walks the supplied root-to-cwd directory chain and records existing AGENTS.md files.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.nested_directory_applicability",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "A nested AGENTS.md on the supplied cwd ancestry is applicable to that directory context.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/project/packages/app",
+      "assertion_binding": "assert.opencode.instructions.nested_directory_applicability",
+      "runtime_dependency_classification": "static",
+      "false_certainty_notes": "Future tool-access or unrelated directory context is not inferred.",
+      "supported_rationale": "Directory applicability is bounded to the explicit cwd ancestry.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.global_agents",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "A supplied global OpenCode config directory may contribute AGENTS.md instructions.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/global/AGENTS.md",
+      "assertion_binding": "assert.opencode.instructions.global_agents",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Live environment-derived config directory state is not inferred.",
+      "supported_rationale": "The explicit global config directory is inspected without deriving account state.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.custom_config_dir_precedence",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "When an explicit custom config directory contains AGENTS.md it takes precedence over the ordinary global AGENTS.md source.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "6daa962aaa38058a29d30fcfa824d61c128b8a19",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/6daa962aaa38058a29d30fcfa824d61c128b8a19"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/custom/AGENTS.md",
+      "assertion_binding": "assert.opencode.instructions.custom_config_dir_precedence",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "The adapter does not read OPENCODE_CONFIG_DIR from a live process environment.",
+      "supported_rationale": "The caller supplies both directories; the custom AGENTS.md is preferred when present.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.deduplicate_paths",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "Instruction paths are de-duplicated before neutral records are emitted.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/project/AGENTS.md",
+      "assertion_binding": "assert.opencode.instructions.deduplicate_paths",
+      "runtime_dependency_classification": "static",
+      "false_certainty_notes": "Content-equivalence across different paths is not guessed.",
+      "supported_rationale": "Canonical resolved paths are de-duplicated deterministically.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.project_read_failure",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "An explicitly reported unreadable discovered project instruction source makes the bounded instruction result unresolved instead of silently dropping it.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/instruction-read-error.json",
+      "assertion_binding": "assert.opencode.instructions.project_read_failure",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "The adapter does not manufacture or suppress filesystem permission failures.",
+      "supported_rationale": "An inert read-error snapshot can mark a discovered project instruction unavailable.",
+      "unsupported_or_unresolved_rationale": "The adapter does not manufacture or suppress filesystem permission failures."
+    },
+    {
+      "id": "opencode.instructions.project_config_disabled",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "When project instruction discovery is explicitly disabled by the caller snapshot, project AGENTS.md sources are ignored.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/project-config-disabled.json",
+      "assertion_binding": "assert.opencode.instructions.project_config_disabled",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Omitted disable state is not inferred from filenames.",
+      "supported_rationale": "The explicit disable state is honored without reading a live environment flag.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.instructions.outside_project_root",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "A cwd outside the supplied project root does not receive project instruction semantics and is reported unresolved for project applicability.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/outside-project.json",
+      "assertion_binding": "assert.opencode.instructions.outside_project_root",
+      "runtime_dependency_classification": "static",
+      "false_certainty_notes": "No ancestor search outside the supplied project root is treated as semantic proof.",
+      "supported_rationale": "Root containment is checked deterministically.",
+      "unsupported_or_unresolved_rationale": "No ancestor search outside the supplied project root is treated as semantic proof."
+    },
+    {
+      "id": "opencode.instructions.claude_compatibility_fallback",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "OpenCode documents Claude Code instruction fallbacks, but this Phase E adapter does not claim the complete fallback resolver from the bounded native AGENTS.md source alone.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        },
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/core/src/instruction-context.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/core/src/instruction-context.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/claude-fallback.json",
+      "assertion_binding": "assert.opencode.instructions.claude_compatibility_fallback",
+      "runtime_dependency_classification": "runtime_only",
+      "false_certainty_notes": "CLAUDE.md is not promoted by filename-only inference.",
+      "supported_rationale": "The boundary is surfaced explicitly.",
+      "unsupported_or_unresolved_rationale": "CLAUDE.md is not promoted by filename-only inference."
+    },
+    {
+      "id": "opencode.config.remote_base_precedence",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "A supplied inert remote-config snapshot is treated as a lower-precedence base than local snapshots.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/4ba0b22b04fb593fde23ba72c75735af3cb29af6"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/remote.json",
+      "assertion_binding": "assert.opencode.config.remote_base_precedence",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "No .well-known or remote URL is fetched.",
+      "supported_rationale": "Only already-materialized JSON is replayed.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.global_overrides_remote",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "A supplied global config snapshot overrides conflicting remote-base values.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/4ba0b22b04fb593fde23ba72c75735af3cb29af6"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/global.json",
+      "assertion_binding": "assert.opencode.config.global_overrides_remote",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Live account or organization state remains outside this claim.",
+      "supported_rationale": "Bounded snapshot order is remote then global.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.custom_overrides_global",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "A supplied custom config snapshot overrides conflicting global values in the bounded replay.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/custom.json",
+      "assertion_binding": "assert.opencode.config.custom_overrides_global",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "No custom path is discovered by executing OpenCode.",
+      "supported_rationale": "The custom snapshot is explicitly supplied and ordered after global.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.project_overrides_custom",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "A supplied project config snapshot overrides lower local layers in the bounded replay.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/4ba0b22b04fb593fde23ba72c75735af3cb29af6"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/project.json",
+      "assertion_binding": "assert.opencode.config.project_overrides_custom",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Additional live .opencode directory state is not invented.",
+      "supported_rationale": "The project snapshot is explicitly supplied and ordered after custom.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.inline_overrides_project",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "A supplied inert inline-config snapshot has the highest precedence in the bounded replay.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/inline.json",
+      "assertion_binding": "assert.opencode.config.inline_overrides_project",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Environment-derived OPENCODE_CONFIG_CONTENT is never read automatically.",
+      "supported_rationale": "The inline snapshot is an explicit caller input.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.deep_merge",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "Supported object fields are deep-merged across supplied snapshots instead of replacing the entire object.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config",
+      "assertion_binding": "assert.opencode.config.deep_merge",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Schema coercion, variable substitution, plugin resolution, and side effects are not reproduced.",
+      "supported_rationale": "Plain JSON object fields are recursively merged for the bounded snapshot subset.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.instructions_concat_dedup",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "When multiple supplied config snapshots contain instructions arrays, the arrays concatenate in precedence order and duplicate entries are removed.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config",
+      "assertion_binding": "assert.opencode.config.instructions_concat_dedup",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Instruction content loading remains a separate boundary.",
+      "supported_rationale": "The adapter reproduces the current mergeConfigConcatArrays rule for inert strings.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.config.snapshot_completeness",
+      "agent": "opencode",
+      "surface": "config",
+      "statement": "If the caller does not declare the bounded config snapshot set complete, the merged snapshot remains unresolved rather than treating missing layers as empty live config.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/partial-config.json",
+      "assertion_binding": "assert.opencode.config.snapshot_completeness",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Missing managed/account/remote/session state is never interpreted as absence.",
+      "supported_rationale": "Known supplied layers may be shown while final bounded state is unresolved.",
+      "unsupported_or_unresolved_rationale": "Missing managed/account/remote/session state is never interpreted as absence."
+    },
+    {
+      "id": "opencode.instructions.custom_local_pattern",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "Custom instruction glob declarations are visible in supplied config, but Phase E does not expand arbitrary globs into effective instruction content.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/project.json",
+      "assertion_binding": "assert.opencode.instructions.custom_local_pattern",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Glob expansion and effective content are not guessed.",
+      "supported_rationale": "Pattern declarations are preserved with provenance.",
+      "unsupported_or_unresolved_rationale": "Glob expansion and effective content are not guessed."
+    },
+    {
+      "id": "opencode.permissions.declaration_order",
+      "agent": "opencode",
+      "surface": "permissions",
+      "statement": "Permission declaration order is semantically significant and must be preserved.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/permission/index.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/permission/index.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/permissions.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/permissions.mdx"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "0276885181da3a7f32491069e36836fbb4ae0dbc",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/0276885181da3a7f32491069e36836fbb4ae0dbc"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/permissions/config.json",
+      "assertion_binding": "assert.opencode.permissions.declaration_order",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Rules are not alphabetically sorted or normalized in a way that changes precedence.",
+      "supported_rationale": "JSON object insertion order is retained while flattening the supplied permission snapshot.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.permissions.last_matching_rule",
+      "agent": "opencode",
+      "surface": "permissions",
+      "statement": "The last permission rule matching both permission and pattern wins.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/permission/index.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/permission/index.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/permissions.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/permissions.mdx"
+        },
+        {
+          "kind": "upstream_change",
+          "repository": "anomalyco/opencode",
+          "commit": "0276885181da3a7f32491069e36836fbb4ae0dbc",
+          "path": "commit",
+          "url": "https://github.com/anomalyco/opencode/commit/0276885181da3a7f32491069e36836fbb4ae0dbc"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/permissions/config.json",
+      "assertion_binding": "assert.opencode.permissions.last_matching_rule",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Session approval overlays are not folded into static config rules.",
+      "supported_rationale": "The bounded matcher evaluates rules in declaration order and returns the last match.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.permissions.wildcard_patterns",
+      "agent": "opencode",
+      "surface": "permissions",
+      "statement": "Permission patterns use deterministic wildcard matching for * and ? in the bounded snapshot matcher.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/permissions.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/permissions.mdx"
+        },
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/permission/index.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/permission/index.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/permissions/config.json",
+      "assertion_binding": "assert.opencode.permissions.wildcard_patterns",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Shell parsing semantics beyond the supplied comparison string are not inferred.",
+      "supported_rationale": "The supported wildcard subset is explicit and tested.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.permissions.session_approvals",
+      "agent": "opencode",
+      "surface": "permissions",
+      "statement": "Once/always approval choices are live session state and cannot be derived from static permission config.",
+      "expected_semantic_state": "conditional",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/permissions.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/permissions.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/session-approvals.json",
+      "assertion_binding": "assert.opencode.permissions.session_approvals",
+      "runtime_dependency_classification": "session_runtime",
+      "false_certainty_notes": "No current-session approval is invented.",
+      "supported_rationale": "The adapter reports session approval state as conditional/unresolved unless an explicitly supported immutable snapshot exists.",
+      "unsupported_or_unresolved_rationale": "No current-session approval is invented."
+    },
+    {
+      "id": "opencode.runtime.remote_config",
+      "agent": "opencode",
+      "surface": "runtime",
+      "statement": "Live .well-known or other remote config retrieval is outside deterministic inspection.",
+      "expected_semantic_state": "conditional",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/remote-config.json",
+      "assertion_binding": "assert.opencode.runtime.remote_config",
+      "runtime_dependency_classification": "network_runtime",
+      "false_certainty_notes": "Network fetches are never performed and supplied snapshots do not prove current remote state.",
+      "supported_rationale": "Already-materialized inert remote JSON may participate in bounded replay.",
+      "unsupported_or_unresolved_rationale": "Network fetches are never performed and supplied snapshots do not prove current remote state."
+    },
+    {
+      "id": "opencode.instructions.remote_url",
+      "agent": "opencode",
+      "surface": "instructions",
+      "statement": "Remote instruction URLs declared in config are not fetched by Codex Scope.",
+      "expected_semantic_state": "unsupported",
+      "compatibility_outcome": "unsupported",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/rules.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/config/project.json",
+      "assertion_binding": "assert.opencode.instructions.remote_url",
+      "runtime_dependency_classification": "network_runtime",
+      "false_certainty_notes": "Remote instruction content is unsupported in the deterministic core.",
+      "supported_rationale": "The declaration can be reported.",
+      "unsupported_or_unresolved_rationale": "Remote instruction content is unsupported in the deterministic core."
+    },
+    {
+      "id": "opencode.runtime.plugins",
+      "agent": "opencode",
+      "surface": "runtime",
+      "statement": "OpenCode plugin discovery and execution are not performed.",
+      "expected_semantic_state": "unsupported",
+      "compatibility_outcome": "unsupported",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/plugins.json",
+      "assertion_binding": "assert.opencode.runtime.plugins",
+      "runtime_dependency_classification": "runtime_only",
+      "false_certainty_notes": "Plugin code, hooks, tools, and outputs are never executed.",
+      "supported_rationale": "Plugin declarations can be recognized as an excluded surface.",
+      "unsupported_or_unresolved_rationale": "Plugin code, hooks, tools, and outputs are never executed."
+    },
+    {
+      "id": "opencode.runtime.mcp",
+      "agent": "opencode",
+      "surface": "runtime",
+      "statement": "MCP declarations do not authorize connecting to or executing MCP servers.",
+      "expected_semantic_state": "unsupported",
+      "compatibility_outcome": "unsupported",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "official_docs",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/web/src/content/docs/config.mdx",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/mcp.json",
+      "assertion_binding": "assert.opencode.runtime.mcp",
+      "runtime_dependency_classification": "runtime_only",
+      "false_certainty_notes": "MCP-provided instructions, tools, and runtime state are unsupported.",
+      "supported_rationale": "Declaration presence may be recorded as excluded.",
+      "unsupported_or_unresolved_rationale": "MCP-provided instructions, tools, and runtime state are unsupported."
+    },
+    {
+      "id": "opencode.runtime.managed_account_org",
+      "agent": "opencode",
+      "surface": "runtime",
+      "statement": "Managed, MDM, account, and organization-derived effective state remains runtime/installation state unless a separately supported inert snapshot is supplied.",
+      "expected_semantic_state": "conditional",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        },
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/managed.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/managed.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/runtime/managed.json",
+      "assertion_binding": "assert.opencode.runtime.managed_account_org",
+      "runtime_dependency_classification": "runtime_only",
+      "false_certainty_notes": "Missing managed/account/org snapshots are not treated as empty.",
+      "supported_rationale": "The adapter exposes the missing runtime boundary.",
+      "unsupported_or_unresolved_rationale": "Missing managed/account/org snapshots are not treated as empty."
+    },
+    {
+      "id": "opencode.version.supplied",
+      "agent": "opencode",
+      "surface": "version",
+      "statement": "A caller-supplied OpenCode version/revision is recorded as supplied provenance without executing the OpenCode binary.",
+      "expected_semantic_state": "resolved",
+      "compatibility_outcome": "compatible",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/version/cases.json",
+      "assertion_binding": "assert.opencode.version.supplied",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "A supplied marketing/package version is not automatically claimed compatible with the pinned source revision.",
+      "supported_rationale": "Version provenance is caller supplied and the evidence revision is checked separately.",
+      "unsupported_or_unresolved_rationale": "Outside the stated supported boundary the adapter fails closed."
+    },
+    {
+      "id": "opencode.version.detected",
+      "agent": "opencode",
+      "surface": "version",
+      "statement": "An externally detected version may be recorded only as caller-provided detected provenance; the deterministic core performs no detection.",
+      "expected_semantic_state": "conditional",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/version/cases.json",
+      "assertion_binding": "assert.opencode.version.detected",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Codex Scope does not invoke the OpenCode executable.",
+      "supported_rationale": "The source of detection is represented explicitly.",
+      "unsupported_or_unresolved_rationale": "Codex Scope does not invoke the OpenCode executable."
+    },
+    {
+      "id": "opencode.version.unknown",
+      "agent": "opencode",
+      "surface": "version",
+      "statement": "When no version/revision provenance is supplied, version state remains unknown.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/version/cases.json",
+      "assertion_binding": "assert.opencode.version.unknown",
+      "runtime_dependency_classification": "static",
+      "false_certainty_notes": "Config shape and filenames are never used to guess a version.",
+      "supported_rationale": "Unknown remains unknown.",
+      "unsupported_or_unresolved_rationale": "Config shape and filenames are never used to guess a version."
+    },
+    {
+      "id": "opencode.version.outside_evidence",
+      "agent": "opencode",
+      "surface": "version",
+      "statement": "A supplied evidence revision different from the pinned inspected revision is classified outside_evidence.",
+      "expected_semantic_state": "unresolved",
+      "compatibility_outcome": "unresolved",
+      "upstream_repository": "anomalyco/opencode",
+      "upstream_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "upstream_evidence": [
+        {
+          "kind": "upstream_source",
+          "repository": "anomalyco/opencode",
+          "commit": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+          "path": "packages/opencode/src/config/config.ts",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/opencode/src/config/config.ts"
+        }
+      ],
+      "fixture_binding": "fixtures/opencode/version/cases.json",
+      "assertion_binding": "assert.opencode.version.outside_evidence",
+      "runtime_dependency_classification": "caller_snapshot",
+      "false_certainty_notes": "Behavior at uninspected revisions is not silently labeled compatible.",
+      "supported_rationale": "The mismatch is explicit and fail-closed.",
+      "unsupported_or_unresolved_rationale": "Behavior at uninspected revisions is not silently labeled compatible."
+    }
+  ]
+}

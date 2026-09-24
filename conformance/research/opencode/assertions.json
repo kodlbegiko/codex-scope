@@ -1,0 +1,253 @@
+{
+  "schema_version": "codex-scope.opencode-assertions.v1",
+  "assertions": [
+    {
+      "id": "assert.opencode.instructions.project_upward",
+      "rule_id": "opencode.instructions.project_upward",
+      "fixture_path": "fixtures/opencode/project",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.project_upward",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.nested_directory_applicability",
+      "rule_id": "opencode.instructions.nested_directory_applicability",
+      "fixture_path": "fixtures/opencode/project/packages/app",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.nested_directory_applicability",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.global_agents",
+      "rule_id": "opencode.instructions.global_agents",
+      "fixture_path": "fixtures/opencode/global/AGENTS.md",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.global_agents",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.custom_config_dir_precedence",
+      "rule_id": "opencode.instructions.custom_config_dir_precedence",
+      "fixture_path": "fixtures/opencode/custom/AGENTS.md",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.custom_config_dir_precedence",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.deduplicate_paths",
+      "rule_id": "opencode.instructions.deduplicate_paths",
+      "fixture_path": "fixtures/opencode/project/AGENTS.md",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.deduplicate_paths",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.project_read_failure",
+      "rule_id": "opencode.instructions.project_read_failure",
+      "fixture_path": "fixtures/opencode/runtime/instruction-read-error.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.project_read_failure",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.instructions.project_config_disabled",
+      "rule_id": "opencode.instructions.project_config_disabled",
+      "fixture_path": "fixtures/opencode/runtime/project-config-disabled.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.project_config_disabled",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.instructions.outside_project_root",
+      "rule_id": "opencode.instructions.outside_project_root",
+      "fixture_path": "fixtures/opencode/runtime/outside-project.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.outside_project_root",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.instructions.claude_compatibility_fallback",
+      "rule_id": "opencode.instructions.claude_compatibility_fallback",
+      "fixture_path": "fixtures/opencode/runtime/claude-fallback.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.claude_compatibility_fallback",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.config.remote_base_precedence",
+      "rule_id": "opencode.config.remote_base_precedence",
+      "fixture_path": "fixtures/opencode/config/remote.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.remote_base_precedence",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.global_overrides_remote",
+      "rule_id": "opencode.config.global_overrides_remote",
+      "fixture_path": "fixtures/opencode/config/global.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.global_overrides_remote",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.custom_overrides_global",
+      "rule_id": "opencode.config.custom_overrides_global",
+      "fixture_path": "fixtures/opencode/config/custom.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.custom_overrides_global",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.project_overrides_custom",
+      "rule_id": "opencode.config.project_overrides_custom",
+      "fixture_path": "fixtures/opencode/config/project.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.project_overrides_custom",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.inline_overrides_project",
+      "rule_id": "opencode.config.inline_overrides_project",
+      "fixture_path": "fixtures/opencode/config/inline.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.inline_overrides_project",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.deep_merge",
+      "rule_id": "opencode.config.deep_merge",
+      "fixture_path": "fixtures/opencode/config",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.deep_merge",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.instructions_concat_dedup",
+      "rule_id": "opencode.config.instructions_concat_dedup",
+      "fixture_path": "fixtures/opencode/config",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.instructions_concat_dedup",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.config.snapshot_completeness",
+      "rule_id": "opencode.config.snapshot_completeness",
+      "fixture_path": "fixtures/opencode/runtime/partial-config.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.config.snapshot_completeness",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.instructions.custom_local_pattern",
+      "rule_id": "opencode.instructions.custom_local_pattern",
+      "fixture_path": "fixtures/opencode/config/project.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.custom_local_pattern",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.permissions.declaration_order",
+      "rule_id": "opencode.permissions.declaration_order",
+      "fixture_path": "fixtures/opencode/permissions/config.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.permissions.declaration_order",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.permissions.last_matching_rule",
+      "rule_id": "opencode.permissions.last_matching_rule",
+      "fixture_path": "fixtures/opencode/permissions/config.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.permissions.last_matching_rule",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.permissions.wildcard_patterns",
+      "rule_id": "opencode.permissions.wildcard_patterns",
+      "fixture_path": "fixtures/opencode/permissions/config.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.permissions.wildcard_patterns",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.permissions.session_approvals",
+      "rule_id": "opencode.permissions.session_approvals",
+      "fixture_path": "fixtures/opencode/runtime/session-approvals.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.permissions.session_approvals",
+      "expected_semantic_state": "conditional",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.runtime.remote_config",
+      "rule_id": "opencode.runtime.remote_config",
+      "fixture_path": "fixtures/opencode/runtime/remote-config.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.runtime.remote_config",
+      "expected_semantic_state": "conditional",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.instructions.remote_url",
+      "rule_id": "opencode.instructions.remote_url",
+      "fixture_path": "fixtures/opencode/config/project.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.instructions.remote_url",
+      "expected_semantic_state": "unsupported",
+      "expected_compatibility_outcome": "unsupported"
+    },
+    {
+      "id": "assert.opencode.runtime.plugins",
+      "rule_id": "opencode.runtime.plugins",
+      "fixture_path": "fixtures/opencode/runtime/plugins.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.runtime.plugins",
+      "expected_semantic_state": "unsupported",
+      "expected_compatibility_outcome": "unsupported"
+    },
+    {
+      "id": "assert.opencode.runtime.mcp",
+      "rule_id": "opencode.runtime.mcp",
+      "fixture_path": "fixtures/opencode/runtime/mcp.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.runtime.mcp",
+      "expected_semantic_state": "unsupported",
+      "expected_compatibility_outcome": "unsupported"
+    },
+    {
+      "id": "assert.opencode.runtime.managed_account_org",
+      "rule_id": "opencode.runtime.managed_account_org",
+      "fixture_path": "fixtures/opencode/runtime/managed.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.runtime.managed_account_org",
+      "expected_semantic_state": "conditional",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.version.supplied",
+      "rule_id": "opencode.version.supplied",
+      "fixture_path": "fixtures/opencode/version/cases.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.version.supplied",
+      "expected_semantic_state": "resolved",
+      "expected_compatibility_outcome": "compatible"
+    },
+    {
+      "id": "assert.opencode.version.detected",
+      "rule_id": "opencode.version.detected",
+      "fixture_path": "fixtures/opencode/version/cases.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.version.detected",
+      "expected_semantic_state": "conditional",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.version.unknown",
+      "rule_id": "opencode.version.unknown",
+      "fixture_path": "fixtures/opencode/version/cases.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.version.unknown",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    },
+    {
+      "id": "assert.opencode.version.outside_evidence",
+      "rule_id": "opencode.version.outside_evidence",
+      "fixture_path": "fixtures/opencode/version/cases.json",
+      "implementation_test": "tests/opencode-adapter.test.mjs#opencode.version.outside_evidence",
+      "expected_semantic_state": "unresolved",
+      "expected_compatibility_outcome": "unresolved"
+    }
+  ]
+}

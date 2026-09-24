@@ -1,6 +1,6 @@
 # Phase D field test (unreleased)
 
-The published v0.3.0 package does **not** include `compare`. This guide runs the Draft PR implementation from source so an external user can evaluate it without treating the draft as a release. The tool reads only local files supplied in explicit input JSON; it does not invoke Codex or Gemini CLI.
+The published v0.4.0 package does **not** include `compare`. This guide runs the Draft PR implementation from source so an external user can evaluate it without treating the draft as a release. The tool reads only local files supplied in explicit input JSON; it does not invoke Codex or Gemini CLI.
 
 ## Try the deterministic example
 

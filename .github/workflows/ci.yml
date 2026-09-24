@@ -26,11 +26,25 @@ jobs:
       - run: npm run build
       - run: npm run conformance:matrix:check
       - run: npm run conformance:validate
+      - run: npm run conformance:snapshots:check
+      - run: npm run conformance:history:check
+      - run: npm run conformance:drift
+      - run: npm run conformance:findings:check
+      - run: npm run conformance:feedback:check
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
       - run: npm run comparison:demo:check
       - run: npm run phase:d:external:check
       - run: npm run phase:d:status:check
       - run: npm run package:contents:check
+      - run: npm run research:phase-e:validate
+      - run: npm run research:opencode:validate
+      - run: npm run research:opencode:assert
+      - run: npm run test:adapter-contracts
+      - run: npm run conformance:opencode:compatibility:check
+      - run: npm run audit:phase-e
+      - run: npm run phase-e:gate
       - run: npm pack
-      - run: npm publish --dry-run
+      # A published version cannot pass npm's dry-run collision check without --force.
+      # --dry-run still prevents any registry write; the package itself is not republished.
+      - run: npm publish --dry-run --force

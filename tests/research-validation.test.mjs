@@ -201,9 +201,15 @@ test("Gemini research validation rejects fewer than three real repositories", ()
   realRepositoryExpansion.cases = 2;
   coverage.gemini.real_repository_validations = 2;
   coverage.gemini.distinct_real_repositories = 2;
-  coverage.gemini.deterministic_cases = 26;
-  coverage.calculation.gemini_research_cases = 26;
-  coverage.calculation.total = 58;
+  coverage.gemini.deterministic_cases = coverage.gemini.case_expansion.reduce(
+    (total, entry) => total + entry.cases,
+    0,
+  );
+  coverage.calculation.gemini_research_cases =
+    coverage.gemini.deterministic_cases;
+  coverage.calculation.total =
+    coverage.calculation.codex_rule_fixture_cases +
+    coverage.calculation.gemini_research_cases;
 
   fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n");
   fs.writeFileSync(probesPath, JSON.stringify(probes, null, 2) + "\n");
