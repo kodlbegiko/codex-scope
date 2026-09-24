@@ -30,6 +30,52 @@ upstream Codex docs / source / releases
 
 This does **not** mean users, downloads, issues, or stars are irrelevant. They remain useful secondary evidence. They are no longer the gate that authorizes core conformance work.
 
+## Strategic revision — 2026-09-24
+
+Phase D now has a deterministic Codex ↔ Gemini comparison implementation in Draft PR #17, but its final proof-of-value gate depends on three distinct external users submitting real configuration cases. That dependency has high and unpredictable wall-clock cost.
+
+The project will **not** weaken or remove that gate. Instead, the roadmap is decoupled:
+
+- **Phase D remains an opportunistic external-validation track** and stays `blocked_external_proof` until three qualifying independent users are verified.
+- **The active engineering mainline becomes v0.4 Codex Conformance Observatory**, which can advance from reproducible upstream evidence without waiting for external user acquisition.
+- Candidate repository scans, maintainer fixtures, sanitized demonstrations, and synthetic cases still do not count toward Phase D external proof.
+- A third adapter is not authorized merely because Phase D is waiting. Breadth remains subordinate to conformance depth.
+
+The active v0.4 loop is:
+
+```text
+pinned Codex upstream snapshot
+            ↓
+ semantic corpus + regression corpus
+            ↓
+ deterministic conformance validation
+            ↓
+ compare against prior evidence snapshot
+            ↓
+ same / behavior_drift / evidence_gap
+            ↓
+ compatibility history
+            ↓
+ upstream issue / docs correction / patch
+            ↓
+ release when a verified semantic change warrants it
+```
+
+### v0.4 Codex Conformance Observatory exit gate
+
+The v0.4 mainline is complete only when all of the following are true:
+
+1. **≥50 evidence-backed Codex semantic cases** are checked in and deterministic.
+2. **≥5 regression / behavior-change records** are checked in.
+3. **≥2 pinned Codex upstream evidence snapshots** are retained so change-over-time can be reproduced.
+4. A **machine-readable compatibility history** records snapshot-to-snapshot semantic outcomes rather than only the latest state.
+5. A deterministic **upstream drift detector** classifies supported changes without LLM calls or runtime network access during inspection.
+6. At least **1 newly discovered post-2026-09-24 upstream discrepancy, ambiguity, semantic change, or evidence correction** is converted into a durable Codex Scope record and, when appropriate, an upstream issue, patch, or documentation correction.
+7. **Zero known false-certainty blockers** remain in the supported subset.
+8. The complete clean-checkout CI and package verification suite passes.
+
+Progress toward this gate is evidence-counted. External user adoption may strengthen the case for the project, but it does not block v0.4 engineering.
+
 ## 1. Problem
 
 Repositories increasingly carry overlapping AI coding-agent configuration:
@@ -284,7 +330,18 @@ Exit gate:
 
 If the exit gate fails, keep the adapter experimental or do not ship it.
 
-### Phase D — compare proof of value
+### Phase D — compare proof of value (opportunistic external-validation track)
+
+Implementation status as of 2026-09-24:
+
+- internal deterministic comparison milestone: **PASS** in Draft PR #17;
+- versioned comparison/normalization/CI contracts: **PASS**;
+- deterministic compare CLI, provenance, structural differences, demonstrations, and package checks: **PASS**;
+- external proof-of-value: **BLOCKED (0 / 3 distinct qualifying external users)**.
+
+This does **not** make Phase D complete. Public repository scans, maintainer-created cases, fixtures, sanitized snapshots, and earlier upstream interactions are not counted as external user cases.
+
+Phase D is now a parallel validation track rather than the active engineering mainline. While the external gate is below 3 / 3, the truthful status remains `blocked_external_proof`; v0.4 Observatory work may continue without claiming Phase D completion.
 
 Deliverables:
 
@@ -292,9 +349,11 @@ Deliverables:
 - separate proven drift from unresolved and unsupported differences;
 - version the comparison JSON schema;
 - define stable CI outcomes;
-- publish a sanitized, reproducible demonstration.
+- expose a deterministic explicit-input compare CLI;
+- publish sanitized, reproducible demonstrations;
+- validate external proof fail-closed.
 
-Candidate CI outcome taxonomy:
+Current CI outcome taxonomy:
 
 ```text
 clean
@@ -304,14 +363,11 @@ unsupported
 tool_error
 ```
 
-Numeric exit codes are not frozen until common CI conventions and composability are reviewed.
-
 Exit gate:
 
-- external users provide at least three cases where comparison finds a real configuration problem;
+- at least three **different external users** each provide an independent qualifying case where comparison finds a real configuration problem;
 - output remains actionable without requiring knowledge of adapter internals;
 - false certainty is treated as a release-blocking defect.
-
 ### Phase E — additional adapters
 
 Evaluate Cursor, Gemini CLI, and OpenCode individually. Do not batch them into one milestone.
