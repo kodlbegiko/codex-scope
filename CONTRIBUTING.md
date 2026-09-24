@@ -12,10 +12,12 @@ For resolver changes:
 
 Do not add guessed Codex behavior. An explicit `unsupported` or `unresolved` result is preferable to an approximate resolver.
 
-## Cross-agent external case contribution
+## Cross-agent configuration cases
 
-Phase D external proof requires independent, real user cases where the Codex/Gemini comparison identifies a genuine configuration problem. Use the **Cross-agent configuration case** issue template and provide sanitized Codex input, sanitized Gemini input, the comparison output, independent evidence that the problem existed, and deterministic reproduction steps.
+If Codex and Gemini CLI behaved differently in a real repository and that difference caused a configuration problem, use the **Cross-agent configuration case** issue template. Include a sanitized minimal reproduction, expected and observed behavior, the relevant agent versions if known, and evidence independent of Codex Scope that the problem existed.
 
-A submission is **not** verified evidence. Repository fixtures, maintainer-created synthetic cases, the Phase C sanitized public-repository snapshots, prior upstream interactions, duplicate reports, pending reports, and unvalidated reports do not count toward the Phase D external gate.
+The published v0.3.0 CLI does not yet expose `compare`. Comparison artifacts are optional for reporters; maintainers can run the Phase D draft against the supplied reproduction. Do not post secrets, private instructions, confidential repository content, or sensitive absolute paths.
 
-Only after maintainers validate the source, uniqueness, evidence, reproduction, and sanitization may a case be added to `conformance/comparison/external-user-cases.json`. The derived ledger count must remain synchronized with `conformance/comparison/phase-d-status.json`.
+The Phase D external gate counts only independent user cases that maintainers validate for uniqueness, reproducibility, a real configuration problem, and an evidence-backed comparison result. Fixtures, maintainer-created synthetic cases, earlier upstream interactions, and unverified reports do not count.
+
+Only after validation may a case be added to `conformance/comparison/external-user-cases.json`. The derived ledger count must remain synchronized with `conformance/comparison/phase-d-status.json`.

@@ -1,64 +1,48 @@
 ---
 name: Cross-agent configuration case
-description: Submit a sanitized external Codex/Gemini configuration problem for Phase D validation
+description: Share a sanitized Codex/Gemini configuration problem for Phase D validation
 ---
 
-## Observed configuration problem
+## What went wrong?
 
-Describe the real configuration problem you encountered before adapting it into Codex Scope input.
+Describe a real configuration or instruction problem you encountered while using Codex and Gemini CLI in the same repository. When did you notice it?
 
-## Repository or context
+## Repository and agent context
 
-Provide the public repository, sanitized reproduction repository, or enough non-sensitive context to identify the environment.
+- Public repository or sanitized reproduction:
+- Codex version, if known:
+- Gemini CLI version, if known:
+- Relevant working directory or target file, with private paths removed:
 
-## Codex environment / sanitized input
+## Minimal sanitized layout and settings
 
-- Codex version / surface:
-- Sanitized Codex input artifact or excerpt:
-
-## Gemini environment / sanitized input
-
-- Gemini version / surface:
-- Sanitized Gemini input artifact or excerpt:
-
-## Minimal sanitized layout
+Show only the files and settings needed to reproduce the difference. Remove secrets, private instructions, and personal paths.
 
 ```text
 project/
   ...
 ```
 
-## Expected behavior
+## Expected and observed behavior
 
-What configuration behavior did you expect?
+- Expected:
+- Observed with Codex:
+- Observed with Gemini CLI:
 
-## Observed behavior
+## Independent evidence
 
-What happened in the real environment?
-
-## Codex Scope comparison
-
-Command used:
-
-```sh
-codex-scope compare codex gemini \
-  --codex-input <file> \
-  --gemini-input <file> \
-  --json
-```
-
-Attach or paste the sanitized comparison JSON, or the smallest relevant excerpt that preserves the classification and evidence references.
-
-## Independent evidence that the problem existed
-
-Provide evidence independent of Codex Scope showing that this configuration problem existed before or outside the comparison result, such as an external issue, reproduction log, public repository state, or other verifiable artifact.
+Link a public issue, repository state, sanitized log, or other artifact that shows the problem existed outside the Codex Scope comparison. Explain how the evidence relates to this case.
 
 ## Reproduction steps
 
-List deterministic steps a maintainer can use with the sanitized evidence.
+List the smallest steps a maintainer can follow with the sanitized files. If a step depends on trust, invocation options, or a target file, include that input.
 
-## Privacy / sanitization acknowledgement
+## Comparison output, if available
 
-Confirm that the submission does **not** include API keys, auth tokens, secrets, private instruction content, confidential repository content, or sensitive absolute paths.
+If you built the Phase D draft and ran `codex-scope compare codex gemini`, attach sanitized input artifacts and comparison JSON. The published v0.3.0 package does not include this command, so this section is optional; maintainers can reproduce the comparison from the information above.
 
-Submitting this issue does not make it verified Phase D evidence. A maintainer must validate the case, sanitization, uniqueness, reproduction, and independent evidence before it can be added to the machine-readable external-user ledger.
+## Privacy check
+
+Confirm that this issue contains no API keys, auth tokens, secrets, private instruction content, confidential repository content, or sensitive absolute paths.
+
+Submitting a case does not automatically count toward the Phase D gate. A maintainer must validate its independence, uniqueness, reproduction, comparison result, and sanitization.
