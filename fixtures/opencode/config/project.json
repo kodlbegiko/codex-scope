@@ -1,0 +1,12 @@
+{
+  "model": "project/model",
+  "nested": {
+    "project": true,
+    "winner": "project"
+  },
+  "instructions": [
+    "CONTRIBUTING.md",
+    ".cursor/rules/*.md",
+    "https://example.invalid/shared.md"
+  ]
+}

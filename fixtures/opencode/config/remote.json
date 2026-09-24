@@ -1,0 +1,10 @@
+{
+  "model": "remote/model",
+  "nested": {
+    "remote": true,
+    "winner": "remote"
+  },
+  "instructions": [
+    "docs/base.md"
+  ]
+}

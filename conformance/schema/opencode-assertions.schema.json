@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assertions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.opencode-assertions.v1"
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rule_id",
+          "fixture_path",
+          "implementation_test",
+          "expected_semantic_state",
+          "expected_compatibility_outcome"
+        ]
+      }
+    }
+  }
+}
