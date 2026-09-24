@@ -331,7 +331,7 @@ The public compare envelope freezes numeric process semantics independently from
 
 Exit gate:
 
-- external users provide at least three independent qualifying cases where comparison finds a real configuration problem;
+- at least three different external users each provide an independent qualifying case where comparison finds a real configuration problem;
 - output remains actionable without requiring knowledge of adapter internals;
 - false certainty is treated as a release-blocking defect.
 
