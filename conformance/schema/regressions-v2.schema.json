@@ -154,12 +154,7 @@
                   "partial_supported_boundary"
                 ]
               },
-              "limitation": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              }
+              "limitation": {}
             }
           }
         }
