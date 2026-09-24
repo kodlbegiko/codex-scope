@@ -86,9 +86,20 @@ export function compareSnapshots(from, to) {
   };
 }
 
+const SNAPSHOT_INDEX_SCHEMAS = {
+  "codex-scope.snapshot-index.v1":
+    "conformance/schema/snapshot-index.schema.json",
+  "codex-scope.snapshot-index.v2":
+    "conformance/schema/snapshot-index-v2.schema.json"
+};
+
 export function loadSnapshotIndex() {
   const index = readJson("conformance/snapshots/index.json");
-  const schema = readJson("conformance/schema/snapshot-index.schema.json");
+  const schemaPath = SNAPSHOT_INDEX_SCHEMAS[index.schema_version];
+  if (!schemaPath) {
+    throw new Error("unsupported snapshot index schema_version: " + index.schema_version);
+  }
+  const schema = readJson(schemaPath);
   assertSchema(index, schema, "snapshot index");
   return index;
 }
@@ -102,8 +113,18 @@ export function loadSnapshots(index) {
     if (snapshot.snapshot_id !== entry.snapshot_id) {
       throw new Error(entry.path + ": snapshot_id does not match index entry");
     }
-    if (snapshot.retention.role !== entry.role) {
+    const indexRoleIsAuthoritative =
+      index.schema_version === "codex-scope.snapshot-index.v2" &&
+      index.role_semantics === "index_authoritative";
+    if (!indexRoleIsAuthoritative && snapshot.retention.role !== entry.role) {
       throw new Error(entry.path + ": retention role does not match index entry");
+    }
+    if (
+      indexRoleIsAuthoritative &&
+      entry.role === "current" &&
+      snapshot.retention.role !== "current"
+    ) {
+      throw new Error(entry.path + ": current index entry must be captured as current");
     }
     if (snapshots.has(snapshot.snapshot_id)) {
       throw new Error("duplicate snapshot_id: " + snapshot.snapshot_id);
