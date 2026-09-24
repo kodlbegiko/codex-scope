@@ -265,7 +265,7 @@ The adapter is deliberately narrower than the native OpenCode runtime. It can re
 
 For live runtime state, **native OpenCode diagnostics and runtime state are authoritative**. Codex Scope contributes offline reproducibility, provenance, compatibility boundaries, regression evidence, and a neutral representation that can be compared with the existing Codex and Gemini adapters.
 
-The Phase E machine artifacts live under `conformance/research/phase-e/` and `conformance/research/opencode/`. PR #25 has completed the E1/E2 implementation gates and the E3 machine suite; final adapter authorization remains gated on the final documentation/status PR-head CI pass. This is an engineering-gate statement only: it does not publish a new npm release and it does not change Phase D's external-user requirement.
+The Phase E machine artifacts live under `conformance/research/phase-e/` and `conformance/research/opencode/`. E1, E2, and E3 are complete, and the bounded OpenCode adapter is authorized by the Phase E engineering gate. Authorization is backed by green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`; the final merge still requires green CI on the current documentation/status HEAD. This is an engineering-gate statement only: the package remains unpublished as a Phase E release, the public `codex-scope.v0.1` JSON contract is unchanged, and Phase D remains **0 / 3** at `blocked_external_proof`.
 
 ## Adapter and compatibility core
 
