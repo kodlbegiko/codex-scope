@@ -1,11 +1,13 @@
 ---
 name: Cross-agent configuration case
-description: Share a sanitized Codex/Gemini configuration problem for Phase D validation
+about: Share a sanitized Codex/Gemini configuration problem for Phase D validation
 ---
 
 ## What went wrong?
 
 Describe a real configuration or instruction problem you encountered while using Codex and Gemini CLI in the same repository. When did you notice it?
+
+If you are not sure whether this is a Codex bug, a Gemini CLI bug, or a configuration mismatch, that is fine. Report the observed difference; maintainers will classify it from deterministic evidence.
 
 ## Repository and agent context
 
