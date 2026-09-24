@@ -179,8 +179,47 @@ phase status: blocked_external_proof
 
 Phase D remains truthful at 0 / 3 and does not block v0.4 Observatory work. It becomes complete only when the external ledger reaches 3 / 3 and all validation/CI gates pass.
 
-## Phase E — additional adapters
+## Phase E — OpenCode third adapter
 
-Status: **not authorized**.
+Status: **E1/E2 complete; E3 machine gates complete; final authorization pending final PR-head CI after documentation/status synchronization**.
 
-A third adapter is not used as a substitute for Phase D evidence and is not the active mainline. Additional adapters require the separate sustained-expansion gate in the blueprint.
+Selected candidate: `opencode`.
+
+Selected upstream evidence revision:
+
+```text
+anomalyco/opencode@0f549842ee746e400b1f72516b0b2e292e267e2c
+```
+
+Machine-readable sources of truth:
+
+- `conformance/research/phase-e/candidates.json`
+- `conformance/research/phase-e/selection.json`
+- `conformance/research/opencode/manifest.json`
+- `conformance/research/opencode/regressions.json`
+- `conformance/research/opencode/compatibility.json`
+- `conformance/research/phase-e/false-certainty-audit.json`
+- `conformance/research/phase-e/status.json`
+
+Corpus:
+
+```text
+semantic rules: 31
+compatible: 17
+conditional semantic states: 4
+unsupported: 3
+unresolved compatibility outcomes: 11
+tool_error: 0 expected steady-state cases
+regression/change records: 3
+```
+
+The OpenCode adapter is an offline inert-snapshot resolver, not a live runtime emulator. Remote config/instructions, plugins, hooks, MCP, session approvals, managed/account/org state, provider/tool availability, and model adherence remain unresolved or unsupported unless explicitly authorized by a future evidence gate. Native OpenCode diagnostics/runtime state remain authoritative for live state.
+
+The public Codex CLI and `codex-scope.v0.1` JSON contract remain unchanged.
+
+Phase D remains independent:
+
+```text
+verified external user cases: 0 / 3
+phase status: blocked_external_proof
+```

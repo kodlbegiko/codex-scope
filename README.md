@@ -248,6 +248,25 @@ See:
 
 Phase D external proof remains a separate non-blocking track at **0 / 3** qualifying external-user cases; Draft PR #17 is not merged.
 
+## Phase E OpenCode conformance adapter
+
+Phase E has selected **OpenCode** as the third conformance adapter candidate at pinned upstream revision `anomalyco/opencode@0f549842ee746e400b1f72516b0b2e292e267e2c`.
+
+The checked-in Phase E corpus contains **31** evidence-backed semantic rules:
+
+- 17 compatible within the bounded inert-snapshot subset;
+- 4 conditional semantic states;
+- 3 explicitly unsupported surfaces;
+- 11 compatibility outcomes that remain unresolved;
+- 0 expected steady-state `tool_error` cases;
+- 3 exact upstream behavior-change/regression records.
+
+The adapter is deliberately narrower than the native OpenCode runtime. It can replay explicitly supplied project/global AGENTS.md state, selected inert config snapshots, permission declaration order/last-match behavior, and caller-supplied version provenance. It does **not** fetch remote config or instructions, execute OpenCode, run plugins/hooks/MCP, resolve live session approvals, or infer managed/account/org/provider/tool/model state.
+
+For live runtime state, **native OpenCode diagnostics and runtime state are authoritative**. Codex Scope contributes offline reproducibility, provenance, compatibility boundaries, regression evidence, and a neutral representation that can be compared with the existing Codex and Gemini adapters.
+
+The Phase E machine artifacts live under `conformance/research/phase-e/` and `conformance/research/opencode/`. PR #25 has completed the E1/E2 implementation gates and the E3 machine suite; final adapter authorization remains gated on the final documentation/status PR-head CI pass. This is an engineering-gate statement only: it does not publish a new npm release and it does not change Phase D's external-user requirement.
+
 ## Adapter and compatibility core
 
 Phase A routes the existing Codex resolver through a static `codexAdapter` behind shared inspection, provenance, capability, and evidence records. The neutral records are internal architecture: the public `inspect`, `instructions`, `config`, and `why` commands still emit the existing terminal formats and the `codex-scope.v0.1` JSON contract.
