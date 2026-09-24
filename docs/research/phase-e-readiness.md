@@ -6,7 +6,7 @@ Date: **2026-09-24**
 
 E1 and E2 are complete. The E3 machine suite has passed on PR #25, including the shared adapter contracts, generated compatibility check, false-certainty audit, full repository tests, build, and package dry-run gates.
 
-Final `adapter_authorized=true` remains intentionally withheld until the documentation/status synchronization commit itself receives green PR-head CI. The machine source of truth is `conformance/research/phase-e/status.json`.
+`adapter_authorized=true` is now recorded in `conformance/research/phase-e/status.json`, based on green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`. The authorization commit and documentation synchronization still require their own final current-head CI before merge.
 
 ## Candidate decision
 
@@ -26,9 +26,10 @@ For live OpenCode state, **native OpenCode diagnostics/runtime state are authori
 
 Phase E engineering readiness is separate from release state:
 
-- engineering gate: pending final authorization CI;
-- release-ready: not declared by this document;
-- npm published: no Phase E release has been published by this work;
+- engineering gate: complete;
+- adapter authorized: true;
+- release-ready: true for the bounded engineering subset, subject to final current-head CI before merge;
+- npm published: false; no Phase E release has been published by this work;
 - package version: unchanged from the existing package line.
 
 ## Phase D invariant
