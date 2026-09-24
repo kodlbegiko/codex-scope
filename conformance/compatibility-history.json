@@ -1,0 +1,580 @@
+{
+  "schema_version": "codex-scope.compatibility-history.v1",
+  "agent": "codex",
+  "generated_from": "conformance/snapshots/index.json",
+  "comparisons": [
+    {
+      "from_snapshot_id": "codex-2026-09-22-94174e44",
+      "to_snapshot_id": "codex-2026-09-24-e0ef5a1a",
+      "from_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "to_upstream_commit": "e0ef5a1a0f6421601baaa679fb37eddaa4e9c8c1",
+      "counts": {
+        "unchanged": 0,
+        "behavior_drift": 0,
+        "evidence_gap": 32,
+        "support_boundary_change": 0,
+        "added_rule": 1,
+        "removed_rule": 0,
+        "tool_error": 0
+      },
+      "rules": [
+        {
+          "rule_id": "codex.compatibility.unknown_version",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.approval_policy_on_failure_deprecated",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.approval_policy_untrusted_removed",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.cli_precedence",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.closest_project_wins",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.codex_home_project_layer_exclusion",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a + current main"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a + current main"
+          }
+        },
+        {
+          "rule_id": "codex.config.malformed_toml_fail_closed",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.profile_precedence",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.project_config_trusted",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.protected_machine_local_key",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.repeated_cli_override",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.system_config",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.unknown_trust",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.unsupported_key",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.untrusted_project",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.config.user_config",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.codex_home_env",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.codex_home_project_root_duplication",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "codex-cli 0.144.6 reproduction + current main 94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "codex-cli 0.144.6 reproduction + current main 94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.cumulative_byte_limit",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.empty_project_override_blocks_fallback",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.fallback_filename",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.global_agents_base",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.global_empty_override_falls_through",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.global_override_precedence",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.per_directory_override_precedence",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.project_doc_default_limit",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.project_root_markers",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.project_root_to_cwd",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.unknown_project_trust",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.instructions.untrusted_project_skips_project",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.invocation.incomplete",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "unresolved",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.invocation.missing_profile",
+          "classification": "evidence_gap",
+          "reason": "Newer snapshot carries the rule forward without revalidating it against the pinned upstream commit.",
+          "from": {
+            "expected_outcome": "compatible",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          },
+          "to": {
+            "expected_outcome": "compatible",
+            "evidence_state": "carried_forward",
+            "evidence_date": "2026-09-22",
+            "evidence_commit_or_version": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          }
+        },
+        {
+          "rule_id": "codex.network.application_policy_extension_backends",
+          "classification": "added_rule",
+          "reason": "Rule exists only in the newer snapshot.",
+          "from": null,
+          "to": {
+            "expected_outcome": "unsupported",
+            "evidence_state": "verified",
+            "evidence_date": "2026-09-24",
+            "evidence_commit_or_version": "1d87af5faa75c2c09785cd088353d3236333673f"
+          }
+        }
+      ]
+    }
+  ]
+}
