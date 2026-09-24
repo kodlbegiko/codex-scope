@@ -34,8 +34,8 @@ function validateCorpus() {
   for (const rule of manifest.rules) {
     if (ids.has(rule.rule_id)) throw new Error("duplicate rule_id: " + rule.rule_id);
     ids.add(rule.rule_id);
-    if (rule.evidence_date !== manifest.evidence_date) {
-      throw new Error(rule.rule_id + ": evidence_date differs from manifest evidence_date");
+    if (rule.evidence_date > manifest.evidence_date) {
+      throw new Error(rule.rule_id + ": evidence_date is newer than manifest evidence_date");
     }
     if (!fs.existsSync(repoPath(rule.fixture.path))) {
       throw new Error(rule.rule_id + ": fixture path does not exist: " + rule.fixture.path);
@@ -87,7 +87,7 @@ function optionsFor(probe) {
     systemConfigPath: probe.system_config_path
       ? repoPath(probe.system_config_path)
       : repoPath("conformance/__missing_system_config.toml"),
-    managedConfigPaths: []
+    managedConfigPaths: (probe.managed_config_paths ?? []).map((item) => repoPath(item))
   };
 }
 

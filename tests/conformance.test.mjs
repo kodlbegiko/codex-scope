@@ -30,13 +30,13 @@ test("conformance JSON reports expected and actual outcomes separately", () => {
   assert.equal(parsed.schema_version, "codex-scope.conformance-run.v1");
   assert.equal(parsed.adapter_version, "codex-adapter.v1");
   assert.deepEqual(parsed.counts, {
-    compatible: 25,
+    compatible: 42,
     behavior_drift: 0,
     unsupported: 3,
-    unresolved: 4,
+    unresolved: 5,
     tool_error: 0,
   });
-  assert.equal(parsed.results.length, 32);
+  assert.equal(parsed.results.length, 50);
 
   const unknownVersion = parsed.results.find(
     (item) => item.rule_id === "codex.compatibility.unknown_version",
