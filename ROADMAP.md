@@ -61,61 +61,37 @@ Core constraints remain:
 
 See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the revised conformance-first architecture and gates.
 
-## NOW — v0.4 Codex Conformance Observatory
+## COMPLETED ENGINEERING GATE — v0.4 Codex Conformance Observatory
 
 The current product decision remains **C: conformance-first**.
 
-Phase D's internal compare implementation is mature, but its final gate depends on three distinct external users. The project will not weaken that evidence requirement and will not let the waiting time block core engineering. Phase D therefore runs as a parallel external-validation track while v0.4 becomes the active mainline.
+Phase D still depends on three distinct external users and remains a parallel external-validation track. Its waiting time does not block Codex conformance engineering.
 
-### Active v0.4 objective
+### Verified v0.4 result
 
-Turn the existing Codex conformance corpus from a current-state validator into a **change-over-time observatory**:
+| Gate | Verified evidence | Status |
+| --- | --- | --- |
+| ≥50 Codex semantic cases | 50 manifest rules: 42 compatible, 3 unsupported, 5 unresolved | satisfied |
+| ≥5 regression/change records | 5 records in `conformance/regressions.json` using the v2 provenance schema | satisfied |
+| ≥2 retained upstream snapshots | 3 retained snapshots in snapshot-index v2 | satisfied |
+| Machine-readable compatibility history | `conformance/compatibility-history.json` generated deterministically | satisfied |
+| Deterministic drift detector | `unchanged`, `behavior_drift`, `evidence_gap`, `support_boundary_change`, `added_rule`, `removed_rule`, `tool_error` | satisfied |
+| ≥1 post-2026-09-24 upstream finding | network-policy extension HTTP-client fix at `1d87af5f...` | satisfied |
+| Maintainer-facing feedback loop | source-level recheck recorded against `openai/codex#34193` | satisfied |
+| Zero known false-certainty blocker | no known blocker in the supported deterministic subset | satisfied |
+| Clean checkout / package verification | CI enforces tests, observatory checks, `npm pack`, and `npm publish --dry-run` | satisfied |
 
-```text
-upstream Codex snapshot
-→ evidence-backed semantic rules
-→ deterministic fixtures
-→ compare with prior snapshot
-→ classify same / behavior_drift / evidence_gap
-→ update compatibility history
-→ upstream issue/fix/docs correction
-→ release when warranted
-```
+The old 2026-09-22 and earlier 2026-09-24 snapshot files remain retained evidence. The current snapshot was added rather than created by silently rewriting those files. Snapshot-index v2 makes lifecycle roles index-authoritative so a previously current immutable snapshot can become historical without file mutation.
 
-### v0.4 exit gate
+The regression corpus is also machine-bound to exact upstream commit/date, manifest fixture path, assertion count, compatibility classification, and explicit coverage limitations. The multi-environment project-doc budget semantic remains unresolved outside the deterministic supported boundary rather than being simulated.
 
-- **≥50** evidence-backed Codex semantic cases;
-- **≥5** regression / behavior-change records;
-- **≥2** retained pinned Codex upstream evidence snapshots;
-- machine-readable compatibility history across snapshots;
-- deterministic upstream drift detector;
-- **≥1 new post-2026-09-24** upstream discrepancy, ambiguity, semantic change, or evidence correction captured durably;
-- zero known false-certainty blockers;
-- full clean-checkout CI, package verification, `npm pack`, and `npm publish --dry-run` pass.
+Coverage and readiness records:
 
-### Current baseline
+- [`docs/research/codex-conformance-coverage.md`](docs/research/codex-conformance-coverage.md)
+- [`docs/release/v0.4-readiness.md`](docs/release/v0.4-readiness.md)
 
-As of the strategy change:
+Publication is a separate release action. Completing the v0.4 engineering gate does not claim an npm release occurred.
 
-- Codex semantic corpus: **32 / 50**;
-- regression / behavior-change records: **4 / 5**;
-- retained current pinned evidence snapshot: **1 / 2 minimum**;
-- compatibility matrix for the current snapshot: **present**;
-- snapshot-to-snapshot compatibility history: **not yet implemented**;
-- dedicated upstream drift detector across retained snapshots: **not yet implemented**;
-- new post-2026-09-24 upstream finding: **0 / 1**;
-- known false-certainty blockers in the supported subset: **0**.
-
-### Engineering priorities
-
-1. expand the Codex corpus only where official docs/source provide reproducible semantics;
-2. introduce retained upstream evidence snapshots without silently rewriting historical evidence;
-3. add machine-readable compatibility history and deterministic snapshot diffing;
-4. convert verified drift/ambiguity into upstream feedback or evidence corrections;
-5. keep `inspect`, `instructions`, `config`, `why`, and the V0.1 JSON contract stable;
-6. do not add a third adapter until the separate expansion gate is satisfied.
-
-External adoption remains useful evidence, but it is **not** the gate for v0.4 core progress.
 ## COMPLETED CORE GATES — Phase A + Phase B
 
 Phase A established the neutral static adapter seam without changing the V0.1 Codex resolver contract.

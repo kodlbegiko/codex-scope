@@ -76,6 +76,23 @@ The v0.4 mainline is complete only when all of the following are true:
 
 Progress toward this gate is evidence-counted. External user adoption may strengthen the case for the project, but it does not block v0.4 engineering.
 
+### v0.4 completion record — 2026-09-24
+
+The v0.4 engineering exit gate is now satisfied:
+
+- 50 deterministic Codex semantic cases;
+- 5 regression/change records with exact upstream provenance and manifest-linked test bindings;
+- 3 retained snapshots and 2 deterministic comparison edges;
+- deterministic compatibility-history generation and drift detection;
+- an evidence-backed post-2026-09-24 upstream finding;
+- a machine-verifiable maintainer-facing feedback artifact for `openai/codex#34193`;
+- zero known false-certainty blockers in the supported subset;
+- clean package gates including `npm pack` and `npm publish --dry-run`.
+
+This completion does **not** change Phase D's independent proof requirement. Phase D remains at 0 / 3 qualifying external-user cases and PR #17 remains unmerged until its own gate is met.
+
+Historical snapshots remain immutable; the v2 index owns lifecycle role transitions so a retained file is not rewritten merely because it is no longer current. Carried-forward evidence remains explicit `evidence_gap` where appropriate.
+
 ## 1. Problem
 
 Repositories increasingly carry overlapping AI coding-agent configuration:

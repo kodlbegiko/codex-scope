@@ -26,6 +26,11 @@ jobs:
       - run: npm run build
       - run: npm run conformance:matrix:check
       - run: npm run conformance:validate
+      - run: npm run conformance:snapshots:check
+      - run: npm run conformance:history:check
+      - run: npm run conformance:drift
+      - run: npm run conformance:findings:check
+      - run: npm run conformance:feedback:check
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
       - run: npm pack

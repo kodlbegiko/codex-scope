@@ -1,0 +1,25 @@
+{
+  "schema_version": "codex-scope.upstream-feedback.v1",
+  "artifacts": [
+    {
+      "feedback_id": "codex-agents-home-project-root-duplication-source-recheck-2026-09-22",
+      "date": "2026-09-22",
+      "upstream_repository": "openai/codex",
+      "interaction_type": "issue_comment",
+      "status": "submitted",
+      "issue_url": "https://github.com/openai/codex/issues/34193",
+      "interaction_url": "https://github.com/openai/codex/issues/34193#issuecomment-5773697356",
+      "tested_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+      "rule_id": "codex.instructions.codex_home_project_root_duplication",
+      "regression_id": "codex-agents-home-project-root-duplication",
+      "summary": "Source-level recheck reported that current Codex still loads CODEX_HOME instructions separately from project-discovered instructions without cross-source canonical-path deduplication, with an independent deterministic Codex Scope fixture linked for maintainers.",
+      "verification_boundary": "Source-level recheck against openai/codex@94174e44cbc54cece45f6052328ca0c2cd7a8a2a plus the existing upstream runtime reproductions. No fresh current Codex binary was executed by Codex Scope, and the feedback explicitly states that limitation.",
+      "evidence": [
+        "https://github.com/openai/codex/issues/34193",
+        "https://github.com/openai/codex/issues/34193#issuecomment-5773697356",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/core/src/agents_md.rs",
+        "https://github.com/openai/codex/blob/94174e44cbc54cece45f6052328ca0c2cd7a8a2a/codex-rs/codex-home/src/instructions/mod.rs"
+      ]
+    }
+  ]
+}

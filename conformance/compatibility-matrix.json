@@ -3,18 +3,35 @@
   "codex_scope_version": "0.3.0",
   "resolver_version": "codex-resolver.v0.1",
   "adapter_version": "codex-adapter.v1",
-  "evidence_date": "2026-09-22",
+  "evidence_date": "2026-09-24",
   "tested_codex_version": "unknown",
   "tested_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
   "supported_rules": [
+    "codex.config.approval_policy_never",
+    "codex.config.approval_policy_on_request",
+    "codex.config.approval_policy_unknown_fail_closed",
     "codex.config.cli_precedence",
     "codex.config.closest_project_wins",
     "codex.config.codex_home_project_layer_exclusion",
+    "codex.config.default_project_doc_fallback_filenames",
+    "codex.config.default_project_root_markers",
+    "codex.config.empty_project_root_markers",
     "codex.config.malformed_toml_fail_closed",
+    "codex.config.model_non_string_fail_closed",
+    "codex.config.model_provider_non_string_fail_closed",
+    "codex.config.model_string_value",
     "codex.config.profile_precedence",
     "codex.config.project_config_trusted",
+    "codex.config.project_doc_fallback_filenames_type_fail_closed",
+    "codex.config.project_doc_max_bytes_negative_fail_closed",
+    "codex.config.project_doc_max_bytes_zero",
+    "codex.config.project_root_markers_type_fail_closed",
     "codex.config.protected_machine_local_key",
     "codex.config.repeated_cli_override",
+    "codex.config.sandbox_mode_danger_full_access",
+    "codex.config.sandbox_mode_read_only",
+    "codex.config.sandbox_mode_unknown_fail_closed",
+    "codex.config.sandbox_mode_workspace_write",
     "codex.config.system_config",
     "codex.config.untrusted_project",
     "codex.config.user_config",
@@ -40,6 +57,7 @@
   ],
   "unresolved_rules": [
     "codex.compatibility.unknown_version",
+    "codex.config.managed_configuration_uncertainty",
     "codex.config.unknown_trust",
     "codex.instructions.unknown_project_trust",
     "codex.invocation.incomplete"
@@ -78,6 +96,12 @@
       "rule_id": "codex.config.approval_policy_untrusted_removed",
       "kind": "upstream_semantic_change",
       "expected_result": "unsupported"
+    },
+    {
+      "regression_id": "codex-project-doc-budget-shared-across-environments",
+      "rule_id": "codex.instructions.cumulative_byte_limit",
+      "kind": "upstream_semantic_change",
+      "expected_result": "unresolved"
     }
   ],
   "known_upstream_discrepancies": [

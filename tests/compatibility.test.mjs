@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
@@ -8,6 +9,20 @@ const require = createRequire(import.meta.url);
 const { buildCompatibilitySummary } = require("../dist/compatibility.js");
 
 const cli = path.resolve("dist/cli.js");
+const conformanceManifest = JSON.parse(
+  fs.readFileSync(path.resolve("conformance/manifest.json"), "utf8"),
+);
+
+function expectedRuleSummary() {
+  const summary = { supported: 0, unsupported: 0, unresolved: 0, total: 0 };
+  for (const rule of conformanceManifest.rules) {
+    if (rule.expected_outcome === "compatible") summary.supported += 1;
+    else if (rule.expected_outcome === "unsupported") summary.unsupported += 1;
+    else if (rule.expected_outcome === "unresolved") summary.unresolved += 1;
+    summary.total += 1;
+  }
+  return summary;
+}
 
 function run(args) {
   return spawnSync(process.execPath, [cli, ...args], {
@@ -27,12 +42,7 @@ test("compatibility summary keeps unknown Codex version unresolved", () => {
   assert.equal(summary.versionSource, "unknown");
   assert.equal(summary.versionOutcome, "unresolved");
   assert.equal(summary.localVersionProbe, "not_performed");
-  assert.deepEqual(summary.rules, {
-    supported: 25,
-    unsupported: 3,
-    unresolved: 4,
-    total: 32,
-  });
+  assert.deepEqual(summary.rules, expectedRuleSummary());
 });
 
 test("supplied version is recorded without false compatibility certainty", () => {

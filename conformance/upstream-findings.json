@@ -1,0 +1,23 @@
+{
+  "schema_version": "codex-scope.upstream-findings.v1",
+  "findings": [
+    {
+      "finding_id": "codex-network-policy-extension-http-client-fix-2026-09-24",
+      "discovered_date": "2026-09-24",
+      "kind": "upstream_regression_fix",
+      "upstream_repository": "openai/codex",
+      "upstream_commit": "1d87af5faa75c2c09785cd088353d3236333673f",
+      "upstream_url": "https://github.com/openai/codex/commit/1d87af5faa75c2c09785cd088353d3236333673f",
+      "related_rule_ids": [
+        "codex.network.application_policy_extension_backends"
+      ],
+      "historical_behavior": "History-notes and image-generation extension requests used default HTTP clients that did not carry the configured application network policy.",
+      "current_behavior": "The upstream change passes Config::http_client_factory() into both extension backends and creates API-class transports so configured network restrictions and proxy behavior are honored.",
+      "codex_scope_impact": "Tracked as an evidence-backed unsupported runtime/network semantic. The deterministic core does not execute network requests, extensions, plugins, hooks, or MCP servers.",
+      "verification": "Verified from the upstream commit diff and its added regression coverage. Codex Scope does not claim a local runtime reproduction because runtime network execution is outside the safety contract.",
+      "evidence": [
+        "https://github.com/openai/codex/commit/1d87af5faa75c2c09785cd088353d3236333673f"
+      ]
+    }
+  ]
+}
