@@ -38,6 +38,8 @@ Look for three things:
 
 If the first run is confusing, or Codex behaves differently from the report, submit a **sanitized** [first-run feedback issue](https://github.com/kodlbegiko/codex-scope/issues/new?template=first_run_feedback.md) or [real-world conformance case](https://github.com/kodlbegiko/codex-scope/issues/new?template=real_world_case.md).
 
+If Codex and Gemini CLI behave differently in the same repository and that difference causes a real configuration problem, submit a sanitized [cross-agent configuration case](https://github.com/kodlbegiko/codex-scope/issues/new?template=cross_agent_configuration_case.md). You can report the case with the released v0.3.0 package; a maintainer will reproduce it with the Phase D draft comparison tool.
+
 ## See the answer, not the layer stack
 
 ```text
