@@ -1,0 +1,193 @@
+{
+  "schema_version": "codex-scope.phase-e-candidates.v1",
+  "evidence_date": "2026-09-24",
+  "policy": {
+    "product_direction": "conformance-first",
+    "primary_semantic_proof_rule": "Filename presence or config shape alone is never sufficient semantic proof.",
+    "runtime_authority_rule": "Native agent runtime diagnostics remain authoritative for live session state."
+  },
+  "candidates": [
+    {
+      "candidate_id": "claude-code",
+      "upstream_repository": "anthropics/claude-code",
+      "inspected_revision": "d78be9481b889e11186ec4578b4f5e9301396e25",
+      "official_documentation_evidence": [
+        {
+          "kind": "official_upstream_repository",
+          "url": "https://github.com/anthropics/claude-code/tree/d78be9481b889e11186ec4578b4f5e9301396e25/mods/agents-md",
+          "path": "mods/agents-md/README.md"
+        }
+      ],
+      "source_inspection": {
+        "status": "inspected",
+        "inspectability": "partial_engine_strong_agents_md_plugin",
+        "evidence": [
+          "mods/agents-md/hooks/register.ts",
+          "mods/agents-md/hooks/modes/mode-of.ts",
+          "mods/agents-md/hooks/modes/types/mode/mode.ts",
+          "mods/agents-md/hooks/hooks.json",
+          "mods/agents-md/.claude-plugin/plugin.json",
+          "mods/agents-md/tests/register.test.ts"
+        ]
+      },
+      "instruction_semantics_evidence": "Official upstream built-in agents-md plugin documents and tests claude-md, claude-md-or-agents-md, claude-md-and-agents-md, and managed-only modes, including ancestor and Read-triggered nested instruction behavior.",
+      "config_semantics_evidence": "Official repository exposes plugin option schema and managed/plugin integration evidence, but the complete engine settings/runtime resolution surface is broader than the inspected deterministic subset.",
+      "precedence_evidence": {
+        "classification": "documented_and_partially_source_inspected",
+        "notes": "Instruction mode precedence is inspectable in the built-in plugin; managed/user/plugin ordering extends into runtime hook machinery."
+      },
+      "applicability_evidence": {
+        "classification": "partly_runtime_triggered",
+        "notes": "Nested instruction attachment can occur on Read/tool context and is affected by attachment/session modes."
+      },
+      "runtime_model_dependent_surfaces": [
+        "Read-triggered nested instruction attachment",
+        "hook execution",
+        "plugin lifecycle",
+        "managed organization state",
+        "session attachments",
+        "tool access"
+      ],
+      "version_determinism": {
+        "classification": "caller_supplied_only_for_codex_scope",
+        "notes": "No agent binary execution is authorized for deterministic inspection."
+      },
+      "deterministic_resolution_feasibility": "bounded_but_not_selected",
+      "false_certainty_risk": "high",
+      "regression_provenance_availability": "available",
+      "native_runtime_authority_boundary": "Claude Code runtime and its native diagnostics are authoritative for live hook, attachment, managed, tool, and session state.",
+      "primary_semantic_proof": "official_docs_plus_upstream_source",
+      "evidence_provenance": [
+        "https://github.com/anthropics/claude-code/tree/d78be9481b889e11186ec4578b4f5e9301396e25/mods/agents-md"
+      ],
+      "selection_status": "not_selected",
+      "rationale": "Evidence quality is strong, but the currently relevant instruction surface is materially coupled to hooks, Read events, attachments, managed state, and plugin execution. That creates a larger false-certainty boundary for a static third adapter."
+    },
+    {
+      "candidate_id": "cursor",
+      "upstream_repository": "cursor/cursor",
+      "inspected_revision": "654b1b4775ca67aef473bd31a14c8c04a1abde2d",
+      "official_documentation_evidence": [
+        {
+          "kind": "official_docs",
+          "url": "https://cursor.com/docs/rules",
+          "path": "Rules documentation"
+        },
+        {
+          "kind": "official_public_repository",
+          "url": "https://github.com/cursor/cursor/tree/654b1b4775ca67aef473bd31a14c8c04a1abde2d",
+          "path": "README.md"
+        }
+      ],
+      "source_inspection": {
+        "status": "not_available_for_resolver",
+        "inspectability": "low",
+        "evidence": [
+          "The public cursor/cursor repository does not expose the production rule resolver implementation."
+        ]
+      },
+      "instruction_semantics_evidence": "Official docs describe .cursor/rules, user rules, team rules, AGENTS.md, path scoping, nested AGENTS.md, and applicability modes.",
+      "config_semantics_evidence": "Official docs describe rule storage and team/user/project layers, but the production resolver source is not available for deterministic source-level replay.",
+      "precedence_evidence": {
+        "classification": "documented_not_source_verified",
+        "notes": "Official docs state Team Rules > Project Rules > User Rules and describe merging of applicable rules."
+      },
+      "applicability_evidence": {
+        "classification": "runtime_model_context_selected",
+        "notes": "Apply Intelligently / Agent relevance and conversation context materially affect whether some rules apply."
+      },
+      "runtime_model_dependent_surfaces": [
+        "Apply Intelligently relevance selection",
+        "agent/model context selection",
+        "team rule service state",
+        "user account rule state",
+        "manual mentions"
+      ],
+      "version_determinism": {
+        "classification": "caller_supplied_only_for_codex_scope",
+        "notes": "The public repository revision is not a resolver implementation revision and must not be treated as product-version proof."
+      },
+      "deterministic_resolution_feasibility": "insufficient",
+      "false_certainty_risk": "high",
+      "regression_provenance_availability": "limited_for_resolver",
+      "native_runtime_authority_boundary": "Cursor Agent is authoritative for live relevance selection, account/team state, context, and final rule application.",
+      "primary_semantic_proof": "official_docs",
+      "evidence_provenance": [
+        "https://cursor.com/docs/rules",
+        "https://github.com/cursor/cursor/commit/654b1b4775ca67aef473bd31a14c8c04a1abde2d"
+      ],
+      "selection_status": "not_selected",
+      "rationale": "Official documentation is useful, but production resolver source inspectability is too weak and applicability is partly relevance/model/context selected. A conformance-first adapter would risk converting runtime judgment into static certainty."
+    },
+    {
+      "candidate_id": "opencode",
+      "upstream_repository": "anomalyco/opencode",
+      "inspected_revision": "0f549842ee746e400b1f72516b0b2e292e267e2c",
+      "official_documentation_evidence": [
+        {
+          "kind": "official_docs",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/rules.mdx",
+          "path": "packages/web/src/content/docs/rules.mdx"
+        },
+        {
+          "kind": "official_docs",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/config.mdx",
+          "path": "packages/web/src/content/docs/config.mdx"
+        },
+        {
+          "kind": "official_docs",
+          "url": "https://github.com/anomalyco/opencode/blob/0f549842ee746e400b1f72516b0b2e292e267e2c/packages/web/src/content/docs/permissions.mdx",
+          "path": "packages/web/src/content/docs/permissions.mdx"
+        }
+      ],
+      "source_inspection": {
+        "status": "inspected",
+        "inspectability": "high",
+        "evidence": [
+          "packages/core/src/instruction-context.ts",
+          "packages/opencode/src/config/config.ts",
+          "packages/opencode/src/config/paths.ts",
+          "packages/opencode/src/config/managed.ts",
+          "packages/opencode/src/permission/index.ts"
+        ]
+      },
+      "instruction_semantics_evidence": "Current source exposes upward project AGENTS.md discovery, global AGENTS.md inclusion, deduplication, project-read failure as unavailable, project-config disable behavior, and project-root containment.",
+      "config_semantics_evidence": "Current source exposes deep merge behavior and instruction-array concat/dedup while also making the live loader's remote/account/managed/plugin/network side effects explicit enough to exclude them from static replay.",
+      "precedence_evidence": {
+        "classification": "source_verified",
+        "notes": "Upstream change provenance and current source establish remote-as-base/local overrides plus explicit config layering for the bounded inert-snapshot subset."
+      },
+      "applicability_evidence": {
+        "classification": "source_verified_bounded_static_subset",
+        "notes": "Project instruction discovery is directory/project-root scoped; runtime-only channels remain explicitly unresolved or unsupported."
+      },
+      "runtime_model_dependent_surfaces": [
+        "remote .well-known retrieval",
+        "active account/org config",
+        "managed/MDM state",
+        "plugins",
+        "MCP",
+        "session approvals",
+        "provider/tool availability",
+        "model adherence"
+      ],
+      "version_determinism": {
+        "classification": "caller_supplied_only_for_codex_scope",
+        "notes": "Codex Scope will not execute the OpenCode binary. Evidence is pinned to the inspected upstream revision."
+      },
+      "deterministic_resolution_feasibility": "sufficient",
+      "false_certainty_risk": "bounded",
+      "regression_provenance_availability": "strong",
+      "native_runtime_authority_boundary": "Native OpenCode diagnostics/runtime state are authoritative for live session, account, managed, plugin, MCP, provider, tool, and approval state.",
+      "primary_semantic_proof": "official_docs_plus_upstream_source_plus_regression_commits",
+      "evidence_provenance": [
+        "https://github.com/anomalyco/opencode/commit/0f549842ee746e400b1f72516b0b2e292e267e2c",
+        "https://github.com/anomalyco/opencode/commit/4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+        "https://github.com/anomalyco/opencode/commit/0276885181da3a7f32491069e36836fbb4ae0dbc",
+        "https://github.com/anomalyco/opencode/commit/6daa962aaa38058a29d30fcfa824d61c128b8a19"
+      ],
+      "selection_status": "selected",
+      "rationale": "OpenCode has the best combination of source inspectability, explicit precedence/change provenance, deterministic static instruction/config/permission semantics, and a clean boundary around live loader/runtime behavior. It can support a fail-closed inert-snapshot adapter without executing OpenCode."
+    }
+  ]
+}

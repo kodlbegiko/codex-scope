@@ -1,0 +1,10 @@
+{
+  "model": "custom/model",
+  "nested": {
+    "custom": true,
+    "winner": "custom"
+  },
+  "instructions": [
+    "docs/custom.md"
+  ]
+}

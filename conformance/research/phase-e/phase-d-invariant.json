@@ -1,0 +1,7 @@
+{
+  "schema_version": "codex-scope.phase-d-invariant.v1",
+  "verified_external_users": 0,
+  "required_external_users": 3,
+  "status": "blocked_external_proof",
+  "source_of_truth_note": "Phase E does not merge Phase D draft PR #17 and does not count synthetic, maintainer, or public-repository cases as external proof."
+}

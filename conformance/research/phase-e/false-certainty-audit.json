@@ -1,0 +1,93 @@
+{
+  "schema_version": "codex-scope.phase-e-false-certainty-audit.v1",
+  "evidence_date": "2026-09-24",
+  "result": "pass",
+  "checks": [
+    {
+      "id": "compatible_requires_upstream_evidence",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json"
+      ]
+    },
+    {
+      "id": "no_filename_only_semantic_proof",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/phase-e/candidates.json",
+        "conformance/research/opencode/manifest.json"
+      ]
+    },
+    {
+      "id": "no_key_name_cross_agent_equivalence",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json"
+      ]
+    },
+    {
+      "id": "runtime_only_not_static_fact",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json",
+        "src/adapters/opencode.ts"
+      ]
+    },
+    {
+      "id": "unknown_version_not_known",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "unsupported_not_silently_ignored",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/compatibility.json",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "network_sources_not_treated_as_acquired",
+      "status": "pass",
+      "evidence": [
+        "src/adapters/opencode.ts",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "missing_snapshot_not_empty_config",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "missing_managed_session_state_not_absent",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "remote_instruction_content_not_fake_parsed",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/opencode/manifest.json",
+        "tests/opencode-adapter.test.mjs"
+      ]
+    },
+    {
+      "id": "phase_d_external_proof_unchanged",
+      "status": "pass",
+      "evidence": [
+        "conformance/research/phase-e/phase-d-invariant.json",
+        "docs/conformance-status.md"
+      ]
+    }
+  ]
+}

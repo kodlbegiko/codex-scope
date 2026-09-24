@@ -1,0 +1,10 @@
+{
+  "model": "inline/model",
+  "nested": {
+    "inline": true,
+    "winner": "inline"
+  },
+  "instructions": [
+    "CONTRIBUTING.md"
+  ]
+}

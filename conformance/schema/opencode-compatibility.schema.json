@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "agent",
+    "adapter_version",
+    "source_manifest",
+    "evidence",
+    "counts",
+    "compatible_rule_ids",
+    "conditional_rule_ids",
+    "unsupported_rule_ids",
+    "unresolved_rule_ids",
+    "tool_error_rule_ids",
+    "version_boundary",
+    "runtime_boundary",
+    "public_contract"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.opencode-compatibility.v1"
+    },
+    "agent": {
+      "const": "opencode"
+    },
+    "adapter_version": {
+      "const": "opencode-adapter.v1"
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "total",
+        "compatible",
+        "conditional",
+        "unsupported",
+        "unresolved",
+        "tool_error"
+      ]
+    },
+    "public_contract": {
+      "type": "object",
+      "required": [
+        "codex_json_schema",
+        "changed",
+        "adapter_artifact_visibility"
+      ],
+      "properties": {
+        "codex_json_schema": {
+          "const": "codex-scope.v0.1"
+        },
+        "changed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

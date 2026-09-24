@@ -385,19 +385,49 @@ Exit gate:
 - at least three **different external users** each provide an independent qualifying case where comparison finds a real configuration problem;
 - output remains actionable without requiring knowledge of adapter internals;
 - false certainty is treated as a release-blocking defect.
-### Phase E — additional adapters
+### Phase E — third adapter: evidence-gated OpenCode subset
 
-Evaluate Cursor, Gemini CLI, and OpenCode individually. Do not batch them into one milestone.
+Phase E runs in parallel with Phase D. Phase D remains blocked on its independent 3-user external proof gate; Phase E cannot alter or satisfy that count.
 
-Each decision considers:
+The third-adapter candidate set is:
 
-- official documentation quality;
-- inspectable implementation evidence;
-- conditional/task-dependent loading;
-- availability of sanitized fixtures;
-- native diagnostic overlap;
-- maintenance volatility;
-- ability to preserve the no-network/no-execution contract.
+1. Claude Code
+2. Cursor
+3. OpenCode
+
+Gemini CLI is already the bounded second adapter and is not a Phase E candidate.
+
+The machine-readable candidate matrix selected **OpenCode** at `anomalyco/opencode@0f549842ee746e400b1f72516b0b2e292e267e2c`. The decision is based on source inspectability, deterministic resolution feasibility, explicit regression provenance, and the ability to separate static semantics from live runtime state.
+
+Claude Code remains a strong later candidate, but the inspected upstream behavior includes hook-driven and Read-triggered instruction attachment plus managed/session/plugin state. Cursor's official rules documentation is detailed, but the public repository does not expose the production resolver needed for the same source-level conformance standard, and some applicability is relevance/model/context selected.
+
+The OpenCode adapter is authorized only for a bounded deterministic subset:
+
+- explicit project root and cwd;
+- project/global AGENTS.md discovery;
+- explicit custom config directory precedence;
+- explicitly supplied inert config snapshots;
+- supported deep-merge plus instructions concat/dedup behavior;
+- permission declaration order and last matching rule;
+- caller-supplied version/revision provenance;
+- shared neutral provenance and compatibility vocabulary.
+
+It does not execute or fetch:
+
+- OpenCode binaries/loaders;
+- remote .well-known config;
+- remote instruction content;
+- plugins or hooks;
+- MCP servers;
+- live session approvals;
+- managed/MDM/account/org state;
+- provider/tool availability or model adherence.
+
+Those surfaces remain conditional, unresolved, or unsupported. Native OpenCode diagnostics/runtime state are authoritative for live state.
+
+The checked-in Phase E corpus contains 31 semantic rules and 3 exact upstream change/regression records. E3 has completed candidate validation, corpus/fixture/regression validation, deterministic assertions, Codex/Gemini/OpenCode shared contract tests, generated compatibility data, the false-certainty audit, lint/format/typecheck/tests/build, `npm pack`, and `npm publish --dry-run`. Green PR-head CI Run #187 on `62cd1e6ff68389709c007c48a3e666dac15bb2b9` authorized the bounded adapter. The engineering gate is complete and release-ready for this bounded subset; npm publication and any GitHub release remain separate actions.
+
+This third-adapter gate does not rename the project, publish a new release, or change `codex-scope.v0.1`.
 
 ## 8. Backward compatibility
 

@@ -33,5 +33,12 @@ jobs:
       - run: npm run conformance:feedback:check
       - run: npm run research:gemini:validate
       - run: npm run research:gemini:assert
+      - run: npm run research:phase-e:validate
+      - run: npm run research:opencode:validate
+      - run: npm run research:opencode:assert
+      - run: npm run test:adapter-contracts
+      - run: npm run conformance:opencode:compatibility:check
+      - run: npm run audit:phase-e
+      - run: npm run phase-e:gate
       - run: npm pack
       - run: npm publish --dry-run

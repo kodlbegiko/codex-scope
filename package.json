@@ -19,7 +19,7 @@
     "lint": "node scripts/lint.mjs",
     "format:check": "node scripts/format-check.mjs",
     "test": "npm run build && node --test tests/*.test.mjs",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run conformance:matrix:check && npm run conformance:validate && npm run research:gemini:validate && npm run research:gemini:assert && npm run conformance:snapshots:check && npm run conformance:history:check && npm run conformance:drift && npm run conformance:findings:check && npm run conformance:feedback:check",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run conformance:matrix:check && npm run conformance:validate && npm run research:gemini:validate && npm run research:gemini:assert && npm run research:phase-e:validate && npm run research:opencode:validate && npm run research:opencode:assert && npm run conformance:snapshots:check && npm run conformance:history:check && npm run conformance:drift && npm run conformance:findings:check && npm run conformance:feedback:check && npm run test:adapter-contracts && npm run conformance:opencode:compatibility:check && npm run audit:phase-e && npm run phase-e:gate",
     "prepack": "npm run build",
     "conformance:validate": "node scripts/conformance-check.mjs",
     "conformance:validate:json": "node scripts/conformance-check.mjs --json",
@@ -32,7 +32,14 @@
     "conformance:history:check": "node scripts/generate-compatibility-history.mjs --check",
     "conformance:drift": "node scripts/detect-upstream-drift.mjs",
     "conformance:findings:check": "node scripts/upstream-findings-check.mjs",
-    "conformance:feedback:check": "node scripts/upstream-feedback-check.mjs"
+    "conformance:feedback:check": "node scripts/upstream-feedback-check.mjs",
+    "research:phase-e:validate": "node scripts/research-phase-e-check.mjs",
+    "research:opencode:validate": "node scripts/research-opencode-check.mjs",
+    "research:opencode:assert": "node --test tests/opencode-adapter.test.mjs",
+    "test:adapter-contracts": "node --test tests/adapter-contracts.test.mjs",
+    "conformance:opencode:compatibility:check": "node scripts/generate-opencode-compatibility.mjs --check",
+    "audit:phase-e": "node scripts/phase-e-false-certainty-check.mjs",
+    "phase-e:gate": "node scripts/phase-e-gate.mjs"
   },
   "engines": {
     "node": ">=20"

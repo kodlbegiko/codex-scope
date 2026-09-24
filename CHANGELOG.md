@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add the Phase E OpenCode candidate matrix, source-pinned selection record, 31-rule semantic manifest, deterministic fixtures/assertions, and three exact upstream regression/change records.
+- Add a bounded OpenCode adapter using the shared neutral adapter architecture, plus Codex/Gemini/OpenCode contract tests.
+- Add generated OpenCode compatibility data and a machine-enforced Phase E false-certainty/authorization gate.
 - Add the v0.4 Codex Conformance Observatory with three retained upstream evidence snapshots, deterministic compatibility history, and cross-snapshot drift classification.
 - Expand the Codex semantic corpus to 50 deterministic cases and the regression/change corpus to five records.
 - Add regression provenance schema v2 with exact upstream commit/date, compatibility classification, fixture binding, assertion count, and explicit partial-boundary limitations.
@@ -12,6 +15,9 @@
 
 ### Changed
 
+- Select OpenCode as the third conformance adapter candidate while keeping Claude Code and Cursor as documented non-selected candidates for this gate.
+- Extend CI with Phase E candidate, OpenCode corpus/regression/fixture, shared adapter contract, compatibility, and false-certainty checks.
+- Record the Phase E third-adapter engineering gate as complete and the bounded OpenCode adapter as authorized after green PR-head CI; no npm publication is implied.
 - Make snapshot lifecycle roles index-authoritative so retained immutable snapshots can be superseded without rewriting historical files.
 - Treat carried-forward evidence as `evidence_gap` rather than silently upgrading it to unchanged/reverified state.
 - Extend CI with snapshot, compatibility-history, drift, upstream-finding, and upstream-feedback gates plus `npm pack` and `npm publish --dry-run`.
@@ -19,6 +25,8 @@
 
 ### Safety properties
 
+- The OpenCode adapter only replays explicit inert state; it does not execute OpenCode, fetch remote config/instructions, run plugins/hooks/MCP, or invent live session/managed/account/org state.
+- Native OpenCode diagnostics/runtime state remain authoritative for live state.
 - The deterministic inspection runtime still performs no LLM calls, runtime network access, binary execution, hook/plugin/MCP execution, arbitrary shell execution, or inspected-repository mutation.
 - Runtime/network semantics discovered upstream remain evidence-only and unsupported unless they can be modeled inside the deterministic safety boundary.
 - Phase D external proof remains separate at 0 / 3 and is not counted as a v0.4 failure.

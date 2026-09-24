@@ -155,6 +155,31 @@ status: blocked_external_proof
 This state is truthful and non-blocking for v0.4. Public-repository scans, maintainer fixtures, sanitized demos, and synthetic examples cannot satisfy the gate. When a qualifying external report arrives, it is reproduced and validated independently; otherwise the count remains unchanged.
 
 Phase D becomes review-ready only after **3 / 3** distinct external user cases pass the repository validator and evidence review. Until then PR #17 remains Draft.
+## PHASE E — OpenCode third-adapter engineering gate
+
+Phase E is decoupled from Phase D's external-user proof gate. It does not weaken Phase D and does not use adapter breadth as a substitute for external validation.
+
+Candidate research evaluates exactly three third-adapter candidates:
+
+- **OpenCode** — selected because the instruction/config/permission implementation is source-inspectable and can be bounded to inert deterministic snapshots.
+- **Claude Code** — evidence-rich, but current instruction behavior has a larger hook/Read/attachment/managed runtime surface.
+- **Cursor** — documentation-rich, but the production resolver source is not sufficiently inspectable and some applicability is Agent/relevance/context selected.
+
+The selected OpenCode evidence revision is `0f549842ee746e400b1f72516b0b2e292e267e2c`. The implementation is constrained to the shared adapter architecture and preserves `codex-scope.v0.1`.
+
+Current checked-in gate:
+
+- E1 candidate matrix/selection: complete;
+- E2 semantic corpus: 31 rules with 3 verified regression/change records and deterministic fixtures/assertions;
+- E3 shared contracts, compatibility artifact, false-certainty audit, package gates: complete;
+- bounded OpenCode adapter authorization: complete, based on green PR-head CI Run #187 for `62cd1e6ff68389709c007c48a3e666dac15bb2b9`;
+- engineering gate: complete;
+- release-ready: true for this bounded subset; publication remains a separate action.
+
+Native OpenCode remains authoritative for live runtime/session state. No OpenCode binary, hook, plugin, MCP server, or remote configuration/instruction source is executed or fetched by the adapter.
+
+This gate does not imply npm publication or a GitHub release. Package version remains on the existing V0.3.x release line unless a separate release decision is made.
+
 ## SECONDARY CANDIDATES
 
 ### Sanitized diagnostic report
@@ -179,7 +204,7 @@ It must compare effective behavior, not arbitrary text. Candidate differences in
 
 ## LATER ADAPTER CANDIDATES
 
-Claude Code, Cursor, and OpenCode remain research candidates after the first validated second adapter. Gemini CLI is now the bounded preview adapter; every additional adapter requires its own decision gate.
+Claude Code and Cursor remain later research candidates after the first validated second adapter. OpenCode has passed its separate Phase E third-adapter engineering gate as a bounded deterministic subset. Gemini CLI remains the bounded preview adapter; every future additional adapter still requires its own decision gate.
 
 Cursor is especially sensitive to target files, rule types, manual invocation, and model-selected applicability. Gemini CLI and OpenCode include configurable or remote instruction sources that may conflict with no-runtime-network inspection. These behaviors must remain conditional, unresolved, or unsupported unless they can be modeled without violating the safety contract.
 

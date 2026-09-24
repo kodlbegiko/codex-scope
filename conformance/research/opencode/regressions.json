@@ -1,0 +1,48 @@
+{
+  "schema_version": "codex-scope.opencode-regressions.v1",
+  "upstream_repository": "anomalyco/opencode",
+  "records": [
+    {
+      "id": "opencode.config.local-overrides-remote",
+      "upstream_commit": "4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+      "date": "2026-01-07",
+      "message": "fix: config precedence now correctly allows local config to override remote (#7141)",
+      "changed_behavior": "Remote/well-known config became the base layer so local/global/custom/project/inline config can override it.",
+      "previous_behavior": "Remote config was merged after local config and could incorrectly override local intent.",
+      "new_behavior": "Remote config is loaded first as the lowest-precedence base; local layers override it.",
+      "affected_semantic_rule_id": "opencode.config.remote_base_precedence",
+      "affected_fixture_id": "fixtures/opencode/config/remote.json",
+      "affected_assertion_id": "assert.opencode.config.remote_base_precedence",
+      "provenance_url": "https://github.com/anomalyco/opencode/commit/4ba0b22b04fb593fde23ba72c75735af3cb29af6",
+      "verification_status": "verified_from_upstream_commit_diff"
+    },
+    {
+      "id": "opencode.permissions.preserve-key-order",
+      "upstream_commit": "0276885181da3a7f32491069e36836fbb4ae0dbc",
+      "date": "2026-01-05",
+      "message": "core: preserve permission config key order to maintain user-defined permission precedence",
+      "changed_behavior": "Permission config parsing now preserves user-declared key order.",
+      "previous_behavior": "Schema parsing could reorder permission keys and therefore alter precedence.",
+      "new_behavior": "Original key order is captured and reconstructed so last-matching-rule semantics remain user-defined.",
+      "affected_semantic_rule_id": "opencode.permissions.declaration_order",
+      "affected_fixture_id": "fixtures/opencode/permissions/config.json",
+      "affected_assertion_id": "assert.opencode.permissions.declaration_order",
+      "provenance_url": "https://github.com/anomalyco/opencode/commit/0276885181da3a7f32491069e36836fbb4ae0dbc",
+      "verification_status": "verified_from_upstream_commit_diff"
+    },
+    {
+      "id": "opencode.instructions.custom-config-dir-priority",
+      "upstream_commit": "6daa962aaa38058a29d30fcfa824d61c128b8a19",
+      "date": "2026-02-04",
+      "message": "fix: prioritize OPENCODE_CONFIG_DIR for AGENTS.md (#11536)",
+      "changed_behavior": "AGENTS.md from OPENCODE_CONFIG_DIR is checked before the ordinary global config AGENTS.md.",
+      "previous_behavior": "The ordinary global config AGENTS.md could win before the custom config directory source.",
+      "new_behavior": "The custom config directory AGENTS.md wins when present, with ordinary global AGENTS.md as fallback.",
+      "affected_semantic_rule_id": "opencode.instructions.custom_config_dir_precedence",
+      "affected_fixture_id": "fixtures/opencode/custom/AGENTS.md",
+      "affected_assertion_id": "assert.opencode.instructions.custom_config_dir_precedence",
+      "provenance_url": "https://github.com/anomalyco/opencode/commit/6daa962aaa38058a29d30fcfa824d61c128b8a19",
+      "verification_status": "verified_from_upstream_commit_diff"
+    }
+  ]
+}
