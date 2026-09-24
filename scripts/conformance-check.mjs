@@ -20,7 +20,14 @@ function loadCorpus() {
   manifest = readJson("conformance/manifest.json");
   manifestSchema = readJson("conformance/schema/manifest.schema.json");
   regressions = readJson("conformance/regressions.json");
-  regressionSchema = readJson("conformance/schema/regressions.schema.json");
+  const regressionSchemaPath = {
+    "codex-scope.regressions.v1": "conformance/schema/regressions.schema.json",
+    "codex-scope.regressions.v2": "conformance/schema/regressions-v2.schema.json"
+  }[regressions.schema_version];
+  if (!regressionSchemaPath) {
+    throw new Error("unsupported regression schema_version: " + regressions.schema_version);
+  }
+  regressionSchema = readJson(regressionSchemaPath);
   matrix = readJson("conformance/compatibility-matrix.json");
   matrixSchema = readJson("conformance/schema/compatibility.schema.json");
 }
@@ -45,13 +52,54 @@ function validateCorpus() {
     }
   }
 
-  if (manifest.rules.length < 20) throw new Error("conformance corpus requires at least 20 rules");
-  if (regressions.cases.length < 3) throw new Error("regression corpus requires at least 3 cases");
+  if (manifest.rules.length < 50) throw new Error("conformance corpus requires at least 50 rules");
+  if (regressions.cases.length < 5) throw new Error("regression corpus requires at least 5 cases");
 
   for (const item of regressions.cases) {
     const rule = manifest.rules.find((candidate) => candidate.rule_id === item.rule_id);
     if (!rule) throw new Error(item.regression_id + ": references unknown rule_id " + item.rule_id);
-    if (!rule.regression) throw new Error(item.regression_id + ": referenced rule is not marked regression=true");
+    if (!rule.regression) {
+      throw new Error(item.regression_id + ": referenced rule is not marked regression=true");
+    }
+    if (regressions.schema_version === "codex-scope.regressions.v2") {
+      if (item.upstream_repository !== regressions.upstream.repository) {
+        throw new Error(item.regression_id + ": upstream repository mismatch");
+      }
+      if (item.upstream_date > regressions.evidence_date) {
+        throw new Error(item.regression_id + ": upstream_date is newer than corpus evidence_date");
+      }
+      if (!item.evidence.some((url) => url.includes(item.upstream_commit))) {
+        throw new Error(item.regression_id + ": evidence does not pin upstream_commit");
+      }
+      if (item.test_binding.fixture_path !== rule.fixture.path) {
+        throw new Error(item.regression_id + ": fixture_path must match manifest fixture");
+      }
+      if (item.test_binding.assertion_count !== rule.assertions.length) {
+        throw new Error(item.regression_id + ": assertion_count must match manifest assertions");
+      }
+      if (item.current_implementation_expected_outcome !== rule.expected_outcome) {
+        throw new Error(
+          item.regression_id + ": current implementation outcome must match manifest rule"
+        );
+      }
+      if (item.compatibility_classification !== item.expected_result) {
+        throw new Error(
+          item.regression_id + ": compatibility_classification must match expected_result"
+        );
+      }
+      if (
+        item.test_binding.coverage === "partial_supported_boundary" &&
+        (!item.test_binding.limitation || item.test_binding.limitation.trim().length === 0)
+      ) {
+        throw new Error(item.regression_id + ": partial test binding requires a limitation");
+      }
+      if (
+        item.test_binding.coverage === "full_supported_boundary" &&
+        item.test_binding.limitation !== null
+      ) {
+        throw new Error(item.regression_id + ": full test binding must not declare a limitation");
+      }
+    }
   }
 
   const matrixIds = new Set([
