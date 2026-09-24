@@ -4,7 +4,7 @@ The published v0.4.0 package does **not** include `compare`. This guide runs the
 
 ## Try the deterministic example
 
-Requirements: Node.js 20+ and the source-build prerequisites in the [README](../README.md#build-from-source).
+Requirement: Node.js 20+. The command below obtains a pinned TypeScript compiler for the source build without changing project dependencies.
 
 ```bash
 git clone https://github.com/kodlbegiko/codex-scope.git
@@ -12,7 +12,7 @@ cd codex-scope
 git fetch origin pull/17/head:phase-d-field-test
 git switch phase-d-field-test
 npm ci
-npm run build
+npm exec --yes --package=typescript@5.8.3 -- npm run build
 node dist/cli.js compare codex gemini \
   --codex-input fixtures/comparison/cli-codex-input.json \
   --gemini-input fixtures/comparison/cli-gemini-input.json \
