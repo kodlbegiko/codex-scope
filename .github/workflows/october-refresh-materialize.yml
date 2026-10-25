@@ -1,0 +1,38 @@
+name: October refresh materializer
+
+on:
+  push:
+    branches: [conformance/october-2026-refresh]
+    paths:
+      - scripts/materialize-october-refresh.mjs
+      - .github/workflows/october-refresh-materialize.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: conformance/october-2026-refresh
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: node scripts/materialize-october-refresh.mjs
+      - run: npm run conformance:matrix
+      - run: npm run conformance:history
+      - run: npm run check
+      - name: Commit generated refresh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "conformance: materialize October 2026 evidence refresh"
+          git push origin HEAD:conformance/october-2026-refresh
