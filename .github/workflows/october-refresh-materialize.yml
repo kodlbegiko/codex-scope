@@ -27,6 +27,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: node scripts/materialize-october-refresh.mjs
+      - run: sed -i 's/[[:space:]]\+$//' docs/research/codex-conformance-coverage.md
       - run: npm run conformance:matrix
       - run: npm run conformance:history
       - run: npm run check
