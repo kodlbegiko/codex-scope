@@ -21,8 +21,9 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 22
           cache: npm
+      - run: npm install --global typescript@5.8.3
       - run: npm ci
       - run: npm run build
       - run: node scripts/materialize-october-refresh.mjs
