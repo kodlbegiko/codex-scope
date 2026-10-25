@@ -1,11 +1,11 @@
 {
   "schema_version": "codex-scope.compatibility.v1",
-  "codex_scope_version": "0.4.0",
+  "codex_scope_version": "0.4.1",
   "resolver_version": "codex-resolver.v0.1",
   "adapter_version": "codex-adapter.v1",
-  "evidence_date": "2026-09-24",
+  "evidence_date": "2026-10-26",
   "tested_codex_version": "unknown",
-  "tested_upstream_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+  "tested_upstream_commit": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
   "supported_rules": [
     "codex.config.approval_policy_never",
     "codex.config.approval_policy_on_request",
@@ -13,6 +13,7 @@
     "codex.config.cli_precedence",
     "codex.config.closest_project_wins",
     "codex.config.codex_home_project_layer_exclusion",
+    "codex.config.default_home_project_layer_when_codex_home_overridden",
     "codex.config.default_project_doc_fallback_filenames",
     "codex.config.default_project_root_markers",
     "codex.config.empty_project_root_markers",
@@ -48,12 +49,18 @@
     "codex.instructions.project_root_markers",
     "codex.instructions.project_root_to_cwd",
     "codex.instructions.untrusted_project_skips_project",
-    "codex.invocation.missing_profile"
+    "codex.invocation.missing_profile",
+    "codex.permissions.builtin_workspace",
+    "codex.permissions.legacy_sandbox_mode_override_boundary",
+    "codex.permissions.named_profile_selection",
+    "codex.permissions.profile_extends",
+    "codex.permissions.unknown_profile_fail_closed"
   ],
   "unsupported_rules": [
     "codex.config.approval_policy_on_failure_deprecated",
     "codex.config.approval_policy_untrusted_removed",
-    "codex.config.unsupported_key"
+    "codex.config.unsupported_key",
+    "codex.runtime.projectless_permission_defaults"
   ],
   "unresolved_rules": [
     "codex.compatibility.unknown_version",
@@ -110,7 +117,7 @@
       "status": "open",
       "summary": "AGENTS.md can be duplicated when CODEX_HOME is also the project root.",
       "evidence_url": "https://github.com/openai/codex/issues/34193",
-      "verified_against_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+      "verified_against_commit": "970111f6cb62cc02fe36a82ea7d71b37a2889c97"
     }
   ],
   "generated_from": [

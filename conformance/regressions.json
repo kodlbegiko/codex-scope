@@ -1,9 +1,9 @@
 {
   "schema_version": "codex-scope.regressions.v2",
-  "evidence_date": "2026-09-24",
+  "evidence_date": "2026-10-26",
   "upstream": {
     "repository": "openai/codex",
-    "current_commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+    "current_commit": "970111f6cb62cc02fe36a82ea7d71b37a2889c97"
   },
   "cases": [
     {

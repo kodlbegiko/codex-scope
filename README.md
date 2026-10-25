@@ -14,6 +14,11 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 >
 > **Unofficial project:** Codex Scope is an independent community tool and is not affiliated with or endorsed by OpenAI.
 
+
+### October 2026 Codex conformance refresh
+
+The v0.4.1 maintenance refresh is pinned to `openai/codex@970111f6cb62cc02fe36a82ea7d71b37a2889c97`. It adds bounded static Permission Profile coverage, records the CODEX_HOME/default-home project-layer interaction, and explicitly leaves projectless TUI/session permission defaults unsupported. Runtime permission enforcement is not simulated, and the public `codex-scope.v0.1` result contract is unchanged.
+
 ## Try it in 60 seconds
 
 From any Codex project directory:
