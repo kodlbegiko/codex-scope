@@ -10,7 +10,7 @@ The roadmap is evidence-gated. A feature appearing here does not authorize imple
 
 ## Shipped — V0.4.x Codex Conformance Observatory + bounded adapters
 
-Current release line: **V0.4.x**. Use [GitHub Releases](https://github.com/kodlbegiko/codex-scope/releases) or npm for the authoritative latest patch. V0.4 preserves the V0.1 Codex CLI/JSON contract while adding retained conformance evidence, compatibility history, drift detection, and a bounded OpenCode offline adapter alongside the Gemini CLI preview.
+Current release: **[v0.4.1](https://github.com/kodlbegiko/codex-scope/releases/tag/v0.4.1)**, published on [npm](https://www.npmjs.com/package/codex-scope-inspector/v/0.4.1). V0.4 preserves the V0.1 Codex CLI/JSON contract while adding retained conformance evidence, compatibility history, drift detection, and a bounded OpenCode offline adapter alongside the Gemini CLI preview.
 
 Shipped surfaces:
 
@@ -25,11 +25,11 @@ Shipped surfaces:
 - fail-closed TOML/config handling for the modeled subset
 - read-only, no-model, no-runtime-network inspection
 - conformance-oriented fixtures
-- a 50-rule Codex semantic corpus and 5 regression/change records
-- three retained Codex upstream evidence snapshots, compatibility history, and a deterministic drift detector
+- a 57-rule Codex semantic corpus and 5 regression/change records
+- four retained Codex upstream evidence snapshots, compatibility history, and a deterministic drift detector
 - generated compatibility matrix and `compatibility` command
 - neutral static adapter seam for evidence-gated expansion
-- 27 deterministic Gemini CLI research cases, for 59 combined semantic cases
+- 27 deterministic Gemini CLI research cases, for 84 combined Codex/Gemini semantic cases
 - a bounded Gemini adapter with explicit unresolved/unsupported boundaries
 - three sanitized real-repository validations and three external evidence records
 - machine-enforced Gemini research and implementation gates
@@ -37,6 +37,14 @@ Shipped surfaces:
 - machine-enforced OpenCode compatibility and false-certainty gates
 
 V0.4.x intentionally does **not** claim full Codex, Gemini CLI, or OpenCode compatibility, and does not yet expose a public cross-agent comparison command. The Gemini and OpenCode adapters are evidence-backed internal surfaces, not new public CLI commands.
+
+## Maintenance / observatory mode
+
+v0.4.1 completes the October maintenance release. Subsequent engineering starts when there is a verified Codex semantic change, reproducible regression, compatibility-boundary correction, security/correctness issue, external contributor PR, or qualifying Phase D report. A new minor version or another adapter is not the default next milestone.
+
+For an upstream change, verify source, documentation, and tests; reproduce the supported behavior with a deterministic fixture and assertion; then update the compatibility classification, retained snapshot, and history as warranted. Historical snapshots remain immutable. Release only when the resulting user-facing correction or evidence update warrants it.
+
+Phase D remains **0 / 3**, `blocked_external_proof`, with PR #17 Draft. It requires three distinct independent external reporters; internal fixtures and upstream interactions do not satisfy this gate. Maintenance checks are performed on demand; no recurring schedule is configured.
 
 ## Product direction — Codex conformance first, cross-agent later
 
@@ -70,7 +78,7 @@ The current product decision remains **C: conformance-first**.
 
 Phase D still depends on three distinct external users and remains a parallel external-validation track. Its waiting time does not block Codex conformance engineering.
 
-### Verified v0.4 result
+### Historical v0.4.0 engineering gate
 
 | Gate | Verified evidence | Status |
 | --- | --- | --- |

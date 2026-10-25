@@ -17,7 +17,9 @@ Codex Scope is a deterministic, read-only CLI that explains the supported Codex 
 
 ### October 2026 Codex conformance refresh
 
-The v0.4.1 maintenance refresh is pinned to `openai/codex@970111f6cb62cc02fe36a82ea7d71b37a2889c97`. It adds bounded static Permission Profile coverage, records the CODEX_HOME/default-home project-layer interaction, and explicitly leaves projectless TUI/session permission defaults unsupported. Runtime permission enforcement is not simulated, and the public `codex-scope.v0.1` result contract is unchanged.
+The [v0.4.1 maintenance release](https://github.com/kodlbegiko/codex-scope/releases/tag/v0.4.1) is published on [npm](https://www.npmjs.com/package/codex-scope-inspector/v/0.4.1) and pinned to `openai/codex@970111f6cb62cc02fe36a82ea7d71b37a2889c97`. Its Codex corpus contains **57 cases** (48 compatible, 4 unsupported, 5 unresolved), **5 regression/change records**, and **4 retained snapshots**. It adds bounded static Permission Profile coverage, records the CODEX_HOME/default-home project-layer interaction, and explicitly leaves projectless TUI/session permission defaults unsupported. Runtime permission enforcement is not simulated, and the public `codex-scope.v0.1` result contract is unchanged.
+
+The project is in upstream-driven maintenance mode. New work follows evidenced semantic changes, reproducible regressions, compatibility-boundary corrections, security/correctness issues, contributor PRs, or qualifying external Phase D cases. See the [maintenance policy](ROADMAP.md#maintenance--observatory-mode).
 
 ## Try it in 60 seconds
 
@@ -233,7 +235,7 @@ See [`docs/conformance-status.md`](docs/conformance-status.md) for the implement
 
 The **v0.4 engineering gate is complete** as of 2026-09-24 and is included in the v0.4.0 release.
 
-Verified v0.4 state:
+Historical v0.4.0 release state (the October v0.4.1 counts are above):
 
 - **50** deterministic Codex semantic cases: 42 compatible, 3 unsupported, 5 unresolved;
 - **5** regression/change records with exact upstream commit/date and deterministic test bindings;
