@@ -7,6 +7,10 @@ const require = createRequire(import.meta.url);
 const { buildEnvironment } = require("../dist/environment.js");
 const { defaultCodexHome, resolveConfig } = require("../dist/config.js");
 const { codexAdapter } = require("../dist/adapters/codex.js");
+const {
+  permissionProfileRecords,
+  projectlessPermissionDefaultsBoundary,
+} = require("../dist/permissions.js");
 
 const jsonMode = process.argv.includes("--json");
 let manifest;
@@ -142,6 +146,16 @@ function optionsFor(probe) {
 function runProbe(probe) {
   if (probe.kind === "environment") return buildEnvironment(optionsFor(probe));
   if (probe.kind === "config") return resolveConfig(optionsFor(probe));
+  if (probe.kind === "permissions") {
+    const config = resolveConfig(optionsFor(probe));
+    return {
+      config,
+      records: permissionProfileRecords(config.values)
+    };
+  }
+  if (probe.kind === "projectless_permission_boundary") {
+    return projectlessPermissionDefaultsBoundary();
+  }
   if (probe.kind === "json_file") return readJson(probe.path);
   if (probe.kind === "default_codex_home") {
     const previous = process.env.CODEX_HOME;
