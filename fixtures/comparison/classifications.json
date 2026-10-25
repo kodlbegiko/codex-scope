@@ -1,0 +1,123 @@
+{
+  "schema_version": "codex-scope.semantic-comparison-fixtures.v1",
+  "cases": [
+    {
+      "id": "same",
+      "dimension": "fixture.same",
+      "left": {
+        "status": "resolved",
+        "normalized_value": true,
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Left fixture resolves true."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": true,
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Right fixture resolves true."
+      },
+      "resolved_relation": "same",
+      "expected_classification": "same"
+    },
+    {
+      "id": "semantically_equivalent",
+      "dimension": "fixture.equivalent",
+      "left": {
+        "status": "resolved",
+        "normalized_value": "trusted",
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Codex-style trust representation."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": "trusted",
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Gemini-style trust representation."
+      },
+      "resolved_relation": "equivalent",
+      "expected_classification": "semantically_equivalent"
+    },
+    {
+      "id": "behaviorally_different",
+      "dimension": "fixture.different",
+      "left": {
+        "status": "resolved",
+        "normalized_value": [
+          "AGENTS.md"
+        ],
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Codex fixture filename."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": [
+          "GEMINI.md"
+        ],
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Gemini fixture filename."
+      },
+      "resolved_relation": "different",
+      "expected_classification": "behaviorally_different"
+    },
+    {
+      "id": "unsupported_on_one_side",
+      "dimension": "fixture.unsupported",
+      "left": {
+        "status": "unsupported",
+        "applicability": "unknown",
+        "runtime_dependency": "unsupported",
+        "reason": "Left side is formally unsupported."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": false,
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Right side is resolved."
+      },
+      "expected_classification": "unsupported_on_one_side"
+    },
+    {
+      "id": "unresolved",
+      "dimension": "fixture.unresolved",
+      "left": {
+        "status": "unresolved",
+        "applicability": "conditional",
+        "runtime_dependency": "trust",
+        "reason": "Left side requires trust input."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": true,
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Right side is resolved."
+      },
+      "expected_classification": "unresolved"
+    },
+    {
+      "id": "evidence_gap",
+      "dimension": "fixture.evidence_gap",
+      "left": {
+        "status": "evidence_gap",
+        "applicability": "unknown",
+        "runtime_dependency": "evidence_gap",
+        "reason": "No evidence-backed mapping exists."
+      },
+      "right": {
+        "status": "resolved",
+        "normalized_value": true,
+        "applicability": "active",
+        "runtime_dependency": "none",
+        "reason": "Right side is resolved."
+      },
+      "expected_classification": "evidence_gap"
+    }
+  ]
+}

@@ -1,0 +1,380 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/phase-d-status.schema.json",
+  "title": "Codex Scope Phase D status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "phase",
+    "phase_status",
+    "internal_deterministic_status",
+    "comparison_schema",
+    "normalization",
+    "ci_outcomes",
+    "classifications",
+    "integration",
+    "provenance",
+    "sanitized_demonstration",
+    "compare_cli",
+    "exit_semantics",
+    "structural_differences",
+    "real_repository_proof",
+    "package_verification",
+    "version_compatibility",
+    "safety",
+    "external_proof_of_value",
+    "false_certainty_blockers"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.phase-d-status.v1"
+    },
+    "phase": {
+      "const": "D"
+    },
+    "phase_status": {
+      "enum": [
+        "blocked_external_proof",
+        "complete"
+      ]
+    },
+    "internal_deterministic_status": {
+      "const": "pass"
+    },
+    "comparison_schema": {
+      "$ref": "#/$defs/versioned_gate"
+    },
+    "normalization": {
+      "$ref": "#/$defs/versioned_gate"
+    },
+    "classifications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same",
+        "semantically_equivalent",
+        "behaviorally_different",
+        "unsupported_on_one_side",
+        "unresolved",
+        "evidence_gap"
+      ],
+      "properties": {
+        "same": { "const": "pass" },
+        "semantically_equivalent": { "const": "pass" },
+        "behaviorally_different": { "const": "pass" },
+        "unsupported_on_one_side": { "const": "pass" },
+        "unresolved": { "const": "pass" },
+        "evidence_gap": { "const": "pass" }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codex",
+        "gemini",
+        "sanitized_repository_count",
+        "sanitized_repository_status"
+      ],
+      "properties": {
+        "codex": { "const": "pass" },
+        "gemini": { "const": "pass" },
+        "sanitized_repository_count": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "sanitized_repository_status": { "const": "pass" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "adapter_versions",
+        "upstream_commits",
+        "rule_ids",
+        "references"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "adapter_versions": { "const": "preserved" },
+        "upstream_commits": { "const": "preserved" },
+        "rule_ids": { "const": "preserved" },
+        "references": { "const": "preserved" }
+      }
+    },
+    "sanitized_demonstration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "path",
+        "ci_command"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "path": {
+          "const": "conformance/comparison/codex-gemini-demo.json"
+        },
+        "ci_command": {
+          "const": "npm run comparison:demo:check"
+        }
+      }
+    },
+    "compare_cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "schema_version",
+        "codex_input_schema",
+        "gemini_input_schema",
+        "supported_agents",
+        "explicit_input_required",
+        "json_only",
+        "deterministic",
+        "source_path",
+        "snapshot_path"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "schema_version": {
+          "const": "codex-scope.semantic-comparison-cli.v1"
+        },
+        "codex_input_schema": {
+          "const": "codex-scope.compare-input.codex.v1"
+        },
+        "gemini_input_schema": {
+          "const": "codex-scope.compare-input.gemini.v1"
+        },
+        "supported_agents": {
+          "const": ["codex", "gemini"]
+        },
+        "explicit_input_required": { "const": true },
+        "json_only": { "const": true },
+        "deterministic": { "const": true },
+        "source_path": { "const": "src/compare-cli.ts" },
+        "snapshot_path": {
+          "const": "conformance/comparison/cli-codex-gemini.json"
+        }
+      }
+    },
+    "exit_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "valid_comparison",
+        "internal_tool_error",
+        "input_or_usage_tool_error",
+        "semantic_non_clean_is_tool_error"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "valid_comparison": { "const": 0 },
+        "internal_tool_error": { "const": 1 },
+        "input_or_usage_tool_error": { "const": 2 },
+        "semantic_non_clean_is_tool_error": { "const": false }
+      }
+    },
+    "structural_differences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "ledger_path",
+        "proven_behaviorally_different_count",
+        "required_minimum"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "ledger_path": {
+          "const": "conformance/comparison/structural-differences.json"
+        },
+        "proven_behaviorally_different_count": {
+          "type": "integer",
+          "minimum": 5
+        },
+        "required_minimum": { "const": 5 }
+      }
+    },
+    "real_repository_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "repository_count",
+        "comparison_dimension_count",
+        "test_path"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "repository_count": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "comparison_dimension_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "test_path": {
+          "const": "tests/comparison-real-repositories.test.mjs"
+        }
+      }
+    },
+    "package_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "command",
+        "script_path",
+        "workflow_path",
+        "npm_pack_verification"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "command": { "const": "npm run package:contents:check" },
+        "script_path": { "const": "scripts/package-contents-check.mjs" },
+        "workflow_path": { "const": ".github/workflows/ci.yml" },
+        "npm_pack_verification": { "const": true }
+      }
+    },
+    "version_compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "contract_path",
+        "legacy_json_schema",
+        "comparison_schema",
+        "normalization_version",
+        "ci_summary_schema",
+        "cli_envelope_schema",
+        "codex_adapter_version",
+        "gemini_adapter_version",
+        "migration_policy",
+        "future_version_policy"
+      ],
+      "properties": {
+        "status": { "const": "pass" },
+        "contract_path": {
+          "const": "conformance/comparison/version-contract.json"
+        },
+        "legacy_json_schema": { "const": "codex-scope.v0.1" },
+        "comparison_schema": {
+          "const": "codex-scope.semantic-comparison.v1"
+        },
+        "normalization_version": {
+          "const": "codex-scope.semantic-normalization.v1"
+        },
+        "ci_summary_schema": {
+          "const": "codex-scope.semantic-comparison-ci.v1"
+        },
+        "cli_envelope_schema": {
+          "const": "codex-scope.semantic-comparison-cli.v1"
+        },
+        "codex_adapter_version": { "const": "codex-adapter.v1" },
+        "gemini_adapter_version": { "const": "gemini-adapter.v1" },
+        "migration_policy": { "const": "no_silent_mutation" },
+        "future_version_policy": { "const": "fail_closed" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_calls",
+        "runtime_network",
+        "agent_subprocess_probing",
+        "extension_execution",
+        "mcp_execution"
+      ],
+      "properties": {
+        "model_calls": { "const": false },
+        "runtime_network": { "const": false },
+        "agent_subprocess_probing": { "const": false },
+        "extension_execution": { "const": false },
+        "mcp_execution": { "const": false }
+      }
+    },
+    "external_proof_of_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_external_user_cases",
+        "verified_external_user_cases",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "required_external_user_cases": { "const": 3 },
+        "verified_external_user_cases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": ["blocked", "pass"]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "false_certainty_blockers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "status"],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": ["pass", "blocked"]
+        }
+      }
+    },
+    "ci_outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "status",
+        "demo_path",
+        "precedence",
+        "evidence_gap_maps_to"
+      ],
+      "properties": {
+        "version": {
+          "const": "codex-scope.semantic-comparison-ci.v1"
+        },
+        "status": { "const": "pass" },
+        "demo_path": {
+          "const": "conformance/comparison/codex-gemini-demo-ci.json"
+        },
+        "precedence": {
+          "const": "unresolved > unsupported > proven_drift > clean"
+        },
+        "evidence_gap_maps_to": { "const": "unresolved" }
+      }
+    }
+  },
+  "$defs": {
+    "versioned_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "status"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": { "const": "pass" }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/semantic-comparison-ci.schema.json",
+  "title": "Codex Scope semantic comparison CI summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "outcome",
+    "observed_outcomes",
+    "counts",
+    "reason"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.semantic-comparison-ci.v1"
+    },
+    "outcome": {
+      "enum": [
+        "clean",
+        "proven_drift",
+        "unresolved",
+        "unsupported",
+        "tool_error"
+      ]
+    },
+    "observed_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "clean",
+          "proven_drift",
+          "unresolved",
+          "unsupported",
+          "tool_error"
+        ]
+      }
+    },
+    "counts": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "semantic-comparison.schema.json#/$defs/counts"
+        }
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "tool_error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "counts": {
+            "const": null
+          },
+          "observed_outcomes": {
+            "const": [
+              "tool_error"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

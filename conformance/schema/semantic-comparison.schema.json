@@ -1,0 +1,545 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/semantic-comparison.schema.json",
+  "title": "Codex Scope semantic comparison document",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "normalization_version",
+    "counts",
+    "comparisons"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.semantic-comparison.v1"
+    },
+    "normalization_version": {
+      "const": "codex-scope.semantic-normalization.v1"
+    },
+    "counts": {
+      "$ref": "#/$defs/counts"
+    },
+    "comparisons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/comparison_record"
+      }
+    }
+  },
+  "$defs": {
+    "classification": {
+      "enum": [
+        "same",
+        "semantically_equivalent",
+        "behaviorally_different",
+        "unsupported_on_one_side",
+        "unresolved",
+        "evidence_gap"
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same",
+        "semantically_equivalent",
+        "behaviorally_different",
+        "unsupported_on_one_side",
+        "unresolved",
+        "evidence_gap",
+        "total"
+      ],
+      "properties": {
+        "same": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "semantically_equivalent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "behaviorally_different": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unsupported_on_one_side": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_gap": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "precedence": {
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left",
+        "right"
+      ],
+      "properties": {
+        "left": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "right": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        }
+      }
+    },
+    "agent_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_version",
+        "evidence_date",
+        "upstream_repository",
+        "upstream_commit",
+        "references",
+        "rule_ids"
+      ],
+      "properties": {
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "upstream_repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "upstream_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left",
+        "right"
+      ],
+      "properties": {
+        "left": {
+          "$ref": "#/$defs/agent_evidence"
+        },
+        "right": {
+          "$ref": "#/$defs/agent_evidence"
+        }
+      }
+    },
+    "comparison_side": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent",
+        "semantic_dimension",
+        "status",
+        "applicability",
+        "runtime_dependency",
+        "source_record_count",
+        "reason"
+      ],
+      "properties": {
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "semantic_dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "unsupported",
+            "unresolved",
+            "evidence_gap"
+          ]
+        },
+        "normalized_value": {},
+        "applicability": {
+          "enum": [
+            "active",
+            "inactive",
+            "conditional",
+            "unknown"
+          ]
+        },
+        "runtime_dependency": {
+          "enum": [
+            "none",
+            "trust",
+            "jit",
+            "runtime",
+            "missing_input",
+            "upstream_ambiguity",
+            "unsupported",
+            "evidence_gap"
+          ]
+        },
+        "source_record_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "unsupported_metadata": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "side",
+        "reason"
+      ],
+      "properties": {
+        "side": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "unresolved_metadata": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "sides",
+        "reasons",
+        "dependencies"
+      ],
+      "properties": {
+        "sides": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "left",
+              "right"
+            ]
+          }
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "trust",
+              "jit",
+              "runtime",
+              "missing_input",
+              "upstream_ambiguity"
+            ]
+          }
+        }
+      }
+    },
+    "comparison_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparison_id",
+        "agent_a",
+        "agent_b",
+        "semantic_dimension",
+        "left",
+        "right",
+        "classification",
+        "normalized_relation",
+        "reason",
+        "provenance",
+        "evidence",
+        "unsupported_metadata",
+        "unresolved_metadata"
+      ],
+      "properties": {
+        "comparison_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "agent_a": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agent_b": {
+          "type": "string",
+          "minLength": 1
+        },
+        "semantic_dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "left": {
+          "$ref": "#/$defs/comparison_side"
+        },
+        "right": {
+          "$ref": "#/$defs/comparison_side"
+        },
+        "classification": {
+          "enum": [
+            "same",
+            "semantically_equivalent",
+            "behaviorally_different",
+            "unsupported_on_one_side",
+            "unresolved",
+            "evidence_gap"
+          ]
+        },
+        "normalized_relation": {
+          "enum": [
+            "same",
+            "equivalent",
+            "different",
+            "not_comparable"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "unsupported_metadata": {
+          "$ref": "#/$defs/unsupported_metadata"
+        },
+        "unresolved_metadata": {
+          "$ref": "#/$defs/unresolved_metadata"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "same"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "same"
+              },
+              "unsupported_metadata": {
+                "const": null
+              },
+              "unresolved_metadata": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "semantically_equivalent"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "equivalent"
+              },
+              "unsupported_metadata": {
+                "const": null
+              },
+              "unresolved_metadata": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "behaviorally_different"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "different"
+              },
+              "unsupported_metadata": {
+                "const": null
+              },
+              "unresolved_metadata": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "unsupported_on_one_side"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "not_comparable"
+              },
+              "unsupported_metadata": {
+                "type": "object"
+              },
+              "unresolved_metadata": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "unresolved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "not_comparable"
+              },
+              "unsupported_metadata": {
+                "const": null
+              },
+              "unresolved_metadata": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {
+                "const": "evidence_gap"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized_relation": {
+                "const": "not_comparable"
+              },
+              "unsupported_metadata": {
+                "const": null
+              },
+              "unresolved_metadata": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

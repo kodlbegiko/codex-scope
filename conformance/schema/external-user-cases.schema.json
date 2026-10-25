@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/external-user-cases.schema.json",
+  "title": "Codex Scope Phase D external user cases",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "gate", "cases"],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.external-user-cases.v1"
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_verified_cases", "verified_count", "status"],
+      "properties": {
+        "required_verified_cases": { "const": 3 },
+        "verified_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": ["blocked", "pass"]
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "case_identity",
+        "reporter",
+        "issue_url",
+        "repository_or_context",
+        "source_type",
+        "codex_input_reference",
+        "gemini_input_reference",
+        "comparison_reference",
+        "configuration_problem",
+        "independent_problem_evidence",
+        "reproduction_instructions",
+        "validation_status",
+        "unique_case",
+        "maintainer_validated",
+        "sanitization_confirmed"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "case_identity": { "type": "string", "minLength": 1 },
+        "reporter": { "type": "string", "minLength": 1 },
+        "issue_url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "repository_or_context": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "enum": [
+            "external_reporter",
+            "fixture",
+            "maintainer_synthetic"
+          ]
+        },
+        "codex_input_reference": { "type": "string" },
+        "gemini_input_reference": { "type": "string" },
+        "comparison_reference": { "type": "string" },
+        "configuration_problem": { "type": "string" },
+        "independent_problem_evidence": { "type": "string" },
+        "reproduction_instructions": { "type": "string" },
+        "validation_status": {
+          "enum": ["pending", "verified", "rejected"]
+        },
+        "unique_case": { "type": "boolean" },
+        "maintainer_validated": { "type": "boolean" },
+        "sanitization_confirmed": { "type": "boolean" }
+      }
+    }
+  }
+}

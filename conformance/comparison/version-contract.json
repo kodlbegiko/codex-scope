@@ -1,0 +1,13 @@
+{
+  "schema_version": "codex-scope.comparison-version-contract.v1",
+  "legacy_json_schema": "codex-scope.v0.1",
+  "comparison_schema": "codex-scope.semantic-comparison.v1",
+  "normalization_version": "codex-scope.semantic-normalization.v1",
+  "ci_summary_schema": "codex-scope.semantic-comparison-ci.v1",
+  "cli_envelope_schema": "codex-scope.semantic-comparison-cli.v1",
+  "codex_adapter_version": "codex-adapter.v1",
+  "gemini_adapter_version": "gemini-adapter.v1",
+  "migration_policy": "no_silent_mutation",
+  "future_version_policy": "fail_closed",
+  "comparison_vs_legacy": "separate"
+}

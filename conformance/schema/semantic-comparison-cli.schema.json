@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kodlbegiko/codex-scope/conformance/schema/semantic-comparison-cli.schema.json",
+  "title": "Codex Scope semantic comparison CLI envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "comparison",
+    "ci_summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "codex-scope.semantic-comparison-cli.v1"
+    },
+    "comparison": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "semantic-comparison.schema.json"
+        }
+      ]
+    },
+    "ci_summary": {
+      "$ref": "semantic-comparison-ci.schema.json"
+    }
+  }
+}
