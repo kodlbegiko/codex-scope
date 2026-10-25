@@ -29,6 +29,13 @@ function emptyProvenance() {
   };
 }
 
+function permissionStatus(value: ResolvedValue): NeutralInspectionRecord["status"] {
+  if (value.state === "unsupported" && value.key === "default_permissions") {
+    return "resolved";
+  }
+  return value.state;
+}
+
 function recordFromValue(
   subject: string,
   value: ResolvedValue,
@@ -39,7 +46,7 @@ function recordFromValue(
     agent: "codex",
     surface: "permissions",
     subject,
-    status: value.state,
+    status: permissionStatus(value),
     value: resolvedValue,
     provenance: {
       winner: value.winner ? sourceRef(value.winner) : undefined,
@@ -100,9 +107,10 @@ function resolveInheritanceChain(values: Record<string, ResolvedValue>, selected
     }
 
     if (!profileExists(values, current)) {
-      const message = current === selected
-        ? `default_permissions refers to undefined profile ${selected}.`
-        : `Permission profile ${selected} extends undefined profile ${current}.`;
+      const message =
+        current === selected
+          ? `default_permissions refers to undefined profile ${selected}.`
+          : `Permission profile ${selected} extends undefined profile ${current}.`;
       throw new CodexScopeError("UNSUPPORTED_CONFIG_VALUE", message);
     }
 
@@ -166,6 +174,7 @@ export function permissionProfileRecords(
   }
 
   const profileId = selected.effectiveValue;
+  const status = permissionStatus(selected);
   if (profileId.startsWith(":")) {
     const staticSandboxIdentity = BUILTIN_PERMISSION_PROFILES.get(
       profileId as ":read-only" | ":workspace" | ":danger-full-access",
@@ -185,17 +194,17 @@ export function permissionProfileRecords(
           kind: "builtin",
           staticSandboxIdentity,
         },
-        selected.state === "resolved"
+        status === "resolved"
           ? "Explicit built-in permission profile identity is deterministic; runtime enforcement remains outside Codex Scope."
           : "A known built-in profile candidate exists, but unresolved configuration inputs can still change the final selection.",
       ),
     ];
   }
 
-  if (profileId.length === 0 || profileId.startsWith(":")) {
+  if (profileId.length === 0) {
     throw new CodexScopeError(
       "UNSUPPORTED_CONFIG_VALUE",
-      "default_permissions contains an invalid profile identifier.",
+      "default_permissions contains an invalid empty profile identifier.",
     );
   }
 
@@ -210,7 +219,7 @@ export function permissionProfileRecords(
         extends: inheritance.length > 1 ? inheritance[1] : undefined,
         inheritance,
       },
-      selected.state === "resolved"
+      status === "resolved"
         ? "Explicit named permission profile identity and inheritance are deterministic from the loaded static configuration. Runtime enforcement remains outside Codex Scope."
         : "A known named profile candidate exists, but unresolved configuration inputs can still change the final selection.",
     ),
