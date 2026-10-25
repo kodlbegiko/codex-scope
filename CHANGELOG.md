@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+## 0.4.1 — 2026-10-26
+
+October 2026 Codex upstream conformance refresh.
+
+### Added
+
+- Add bounded static Permission Profile coverage for explicit built-in/named selection, inheritance identity, unknown-profile fail-closed behavior, and the current `sandbox_mode` / `default_permissions` invocation-override boundary.
+- Add an explicit CODEX_HOME converse fixture showing that a separate `$HOME/.codex` can still participate as a trusted project layer when the active CODEX_HOME points elsewhere.
+- Add a projectless trust/permission boundary record without simulating TUI/session runtime state.
+- Retain a fourth immutable upstream snapshot at `openai/codex@970111f6cb62cc02fe36a82ea7d71b37a2889c97` and add deterministic compatibility history from the September corpus.
+
+### Changed
+
+- Refresh Codex adapter evidence metadata to 2026-10-26.
+- Expand the Codex semantic corpus from 50 to 57 cases while keeping the true regression/change ledger at 5 records.
+- Preserve the existing Codex-facing commands and `codex-scope.v0.1` public JSON contract.
+
+### Safety properties
+
+- No filesystem/network permission enforcement, live approvals, thread/session permission state, Windows sandbox provisioning, hooks, plugins, MCP, LLM calls, Codex subprocess execution, runtime network inspection, or inspected-repository mutation is performed.
+- Phase D external proof remains 0 / 3.
+
 ## 0.4.0 — 2026-09-24
 
 Codex Conformance Observatory and a bounded OpenCode adapter, without changing the Codex-facing CLI contract.

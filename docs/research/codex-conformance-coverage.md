@@ -1,113 +1,66 @@
 # Codex Conformance Coverage
 
-Evidence date: **2026-09-24**
+Evidence date: **2026-10-26**
+Audited upstream: **openai/codex@970111f6cb62cc02fe36a82ea7d71b37a2889c97**
 
-This document records the verified v0.4 Codex Conformance Observatory coverage. It is derived from checked-in machine-readable artifacts and does not replace them.
+This document records the October 2026 bounded Codex conformance refresh. Machine-readable artifacts remain authoritative.
 
 ## Semantic corpus
 
-Source: `conformance/manifest.json`
-
 | Classification | Cases |
 | --- | ---: |
-| compatible | 42 |
-| unsupported | 3 |
+| compatible | 48 |
+| unsupported | 4 |
 | unresolved | 5 |
-| **total** | **50** |
+| **total** | **57** |
 
-Every manifest rule has a unique rule id, pinned upstream evidence, a deterministic fixture/probe, deterministic assertions, an explicit compatibility outcome, and a fail-closed execution path through `scripts/conformance-check.mjs`.
+The October delta adds seven evidence-backed rules: five bounded Permission Profile rules, the CODEX_HOME/default-home project-layer converse case, and one explicit unsupported projectless runtime boundary. Permission enforcement itself is not simulated.
 
-The current retained observatory snapshot contains **51 semantic records**: the 50 manifest rules plus the evidence-only unsupported network-policy finding `codex.network.application_policy_extension_backends`. That additional record does not expand the deterministic runtime support boundary.
+## Permission Profiles
+
+Supported static coverage now includes explicit built-in identity for `:workspace`, named profile selection, named `extends` ancestry, unknown-profile fail-closed behavior, and the current invocation-override boundary that rejects `sandbox_mode` together with `default_permissions`.
+
+Codex Scope still does not execute filesystem/network enforcement, approvals, live `/permissions` switching, resumed-thread permission state, Windows sandbox provisioning, hooks, plugins, or MCP.
+
+## CODEX_HOME converse case
+
+Current upstream source and `openai/codex#54599` confirm that setting CODEX_HOME to another directory does **not** isolate a separate `$HOME/.codex` from project-layer discovery. If cwd/project root is the home directory and that directory is trusted, `$HOME/.codex/config.toml` can participate as a project layer above the active user config. The existing active-CODEX_HOME self-duplication exclusion remains intact.
+
+## Projectless trust / permission defaults
+
+`openai/codex#49160` and current `tui/src/projectless.rs` make these defaults conditional on runtime project discovery, saved trust, explicit overrides, managed policy, execution locality, platform sandbox state, and session restoration. Codex Scope therefore records this surface as **unsupported** rather than inventing a static final state.
 
 ## Regression corpus
 
-Source: `conformance/regressions.json` (`codex-scope.regressions.v2`)
+The regression/change corpus remains at **5** records. The October Permission Profile work is added semantic support, not a fabricated regression. The CODEX_HOME converse case is expected current behavior, not an upstream fix/change record.
 
-| Regression | Kind | Upstream commit | Date | Compatibility | Binding |
-| --- | --- | --- | --- | --- | --- |
-| `codex-config-home-project-layer-exclusion` | upstream fix | `dd6c1d3787aa3c8032f6e6496e2bf25c47ddb37a` | 2026-01-30 | compatible | full supported boundary |
-| `codex-agents-home-project-root-duplication` | current upstream discrepancy | `94174e44cbc54cece45f6052328ca0c2cd7a8a2a` | 2026-09-22 | compatible parity record | full supported boundary |
-| `codex-profile-v2-file-selection` | upstream behavior change | `8a511d5881e9e8c449aeb53b471170111f859e48` | 2026-05-21 | compatible | full supported boundary |
-| `codex-approval-policy-untrusted-removed` | upstream semantic change | `942af8447b1d1addc81fb3c3135293497d479a06` | 2026-08-20 | unsupported | full supported boundary |
-| `codex-project-doc-budget-shared-across-environments` | upstream semantic change | `85e0661c3baacc62db7b006d2b8085b006d0795e` | 2026-08-07 | unresolved | partial supported boundary |
+## Retained snapshots
 
-The v2 regression schema requires exact upstream repository, commit, date, compatibility classification, fixture binding, assertion count, and coverage boundary. `scripts/conformance-check.mjs` cross-checks those fields against the manifest so a JSON-only regression entry cannot satisfy the gate.
+| Snapshot | Upstream commit | Evidence date | Lifecycle role |
+| --- | --- | --- | --- |
+| `codex-2026-09-22-94174e44` | `94174e44...` | 2026-09-22 | historical |
+| `codex-2026-09-24-e0ef5a1a` | `e0ef5a1a...` | 2026-09-24 | historical |
+| `codex-2026-09-24-e0ef5a1a-corpus50` | `e0ef5a1a...` | 2026-09-24 | historical |
+| `codex-2026-10-26-970111f6-corpus57` | `970111f6cb62cc02fe36a82ea7d71b37a2889c97` | 2026-10-26 | current |
 
-The multi-environment project-doc budget change remains intentionally **unresolved** beyond the single-environment deterministic fixture. Codex Scope does not simulate unsupported multi-environment runtime composition.
+The new snapshot carries forward older rules unless they were specifically reverified. Carried-forward evidence is intentionally classified as `evidence_gap`, not silently promoted to unchanged.
 
-## Retained historical evidence
+## October drift edge
 
-Source: `conformance/snapshots/index.json` (`codex-scope.snapshot-index.v2`)
+Expected deterministic classification for `codex-2026-09-24-e0ef5a1a-corpus50` → `codex-2026-10-26-970111f6-corpus57`:
 
-| Snapshot | Upstream commit | Evidence date | Lifecycle role | Semantic records |
-| --- | --- | --- | --- | ---: |
-| `codex-2026-09-22-94174e44` | `94174e44cbc54cece45f6052328ca0c2cd7a8a2a` | 2026-09-22 | historical | 32 |
-| `codex-2026-09-24-e0ef5a1a` | `e0ef5a1a0f6421601baaa679fb37eddaa4e9c8c1` | 2026-09-24 | historical | 33 |
-| `codex-2026-09-24-e0ef5a1a-corpus50` | `e0ef5a1a0f6421601baaa679fb37eddaa4e9c8c1` | 2026-09-24 | current | 51 |
-
-Retained snapshot files are immutable evidence. Lifecycle role changes are authoritative in the v2 index so superseding a current snapshot does not require rewriting the older retained file.
-
-## Compatibility history and drift
-
-Source: `conformance/compatibility-history.json`
-
-### `codex-2026-09-22-94174e44` → `codex-2026-09-24-e0ef5a1a`
-
-- unchanged: 0
+- unchanged: 2
 - behavior_drift: 0
-- evidence_gap: 32
+- evidence_gap: 49
 - support_boundary_change: 0
-- added_rule: 1
+- added_rule: 7
 - removed_rule: 0
 - tool_error: 0
 
-### `codex-2026-09-24-e0ef5a1a` → `codex-2026-09-24-e0ef5a1a-corpus50`
+The two reverified existing rules are the active CODEX_HOME project-layer exclusion and the compatibility metadata pin. The 49 evidence gaps are deliberate: this refresh did not pretend to fully revalidate every older semantic rule against 1272 upstream commits.
 
-- unchanged: 1
-- behavior_drift: 0
-- evidence_gap: 32
-- support_boundary_change: 0
-- added_rule: 18
-- removed_rule: 0
-- tool_error: 0
+## Safety / false-certainty boundary
 
-`evidence_gap` is not treated as `unchanged`. `tool_error` is reserved for Codex Scope parser/generator/validation/runtime failure and is not used to hide upstream semantic changes or missing evidence.
+The deterministic inspector still performs no LLM calls, Codex subprocess execution, runtime network inspection, hooks, plugins, MCP execution, arbitrary inspected-repository code execution, or inspected-repository mutation. Unknown runtime/session state remains unresolved or unsupported.
 
-## Upstream finding
-
-`conformance/upstream-findings.json` records:
-
-- `codex-network-policy-extension-http-client-fix-2026-09-24`
-- upstream commit `1d87af5faa75c2c09785cd088353d3236333673f`
-- evidence date 2026-09-24
-- related rule `codex.network.application_policy_extension_backends`
-
-This remains an evidence-backed **unsupported runtime/network semantic**. The deterministic inspector does not execute extension HTTP clients, network requests, hooks, plugins, or MCP servers.
-
-## Maintainer-facing upstream feedback
-
-`conformance/upstream-feedback.json` records the source-level recheck posted to `openai/codex#34193` on 2026-09-22:
-
-- interaction: <https://github.com/openai/codex/issues/34193#issuecomment-5773697356>
-- tested upstream commit: `94174e44cbc54cece45f6052328ca0c2cd7a8a2a`
-- rule: `codex.instructions.codex_home_project_root_duplication`
-- regression: `codex-agents-home-project-root-duplication`
-
-The feedback explicitly states its verification boundary: source-level recheck plus existing upstream runtime reproductions, not a fresh current binary execution by Codex Scope. No duplicate upstream issue was created to satisfy a milestone.
-
-## v0.4 engineering gate
-
-The v0.4 Observatory engineering gate is satisfied when the PR head passes the repository CI workflow:
-
-- semantic cases ≥ 50
-- true regression/change records ≥ 5
-- retained snapshots ≥ 2
-- deterministic compatibility history
-- deterministic drift classification
-- evidence-backed upstream finding
-- machine-verifiable maintainer-facing feedback
-- zero known false-certainty blocker in the supported subset
-- `npm pack`
-- `npm publish --dry-run`
-
-Phase D external proof remains a separate non-blocking track at **0 / 3** verified external-user cases.
+Phase D external proof remains **0 / 3** and is not changed by upstream issues, maintainer comments, public-repository scans, or maintainer-authored fixtures.

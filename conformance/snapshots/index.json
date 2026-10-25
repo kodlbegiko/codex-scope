@@ -1,7 +1,7 @@
 {
   "schema_version": "codex-scope.snapshot-index.v2",
   "agent": "codex",
-  "current_snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50",
+  "current_snapshot_id": "codex-2026-10-26-970111f6-corpus57",
   "role_semantics": "index_authoritative",
   "snapshots": [
     {
@@ -17,6 +17,11 @@
     {
       "snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50",
       "path": "conformance/snapshots/codex-2026-09-24-e0ef5a1a-corpus50.json",
+      "role": "historical"
+    },
+    {
+      "snapshot_id": "codex-2026-10-26-970111f6-corpus57",
+      "path": "conformance/snapshots/codex-2026-10-26-970111f6-corpus57.json",
       "role": "current"
     }
   ],
@@ -28,6 +33,10 @@
     {
       "from_snapshot_id": "codex-2026-09-24-e0ef5a1a",
       "to_snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50"
+    },
+    {
+      "from_snapshot_id": "codex-2026-09-24-e0ef5a1a-corpus50",
+      "to_snapshot_id": "codex-2026-10-26-970111f6-corpus57"
     }
   ],
   "migration": {

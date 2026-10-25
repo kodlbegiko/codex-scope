@@ -1,0 +1,7 @@
+default_permissions = "child"
+
+[permissions.base]
+extends = ":read-only"
+
+[permissions.child]
+extends = "base"

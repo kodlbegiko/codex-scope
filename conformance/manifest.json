@@ -1,10 +1,10 @@
 {
   "schema_version": "codex-scope.conformance.v1",
-  "evidence_date": "2026-09-24",
+  "evidence_date": "2026-10-26",
   "resolver_version": "codex-resolver.v0.1",
   "upstream": {
     "repository": "openai/codex",
-    "commit": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+    "commit": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
     "tested_codex_version": "unknown"
   },
   "outcome_taxonomy": {
@@ -1750,7 +1750,7 @@
       "agent": "codex",
       "surface": "compatibility",
       "description": "Codex version remains unknown unless supplied or safely detected; configuration shape is not used as a version guess.",
-      "evidence_date": "2026-09-22",
+      "evidence_date": "2026-10-26",
       "upstream": {
         "docs": [
           "https://developers.openai.com/codex/cli/reference"
@@ -1784,7 +1784,7 @@
             "tested_upstream_commit"
           ],
           "operator": "equals",
-          "value": "94174e44cbc54cece45f6052328ca0c2cd7a8a2a"
+          "value": "970111f6cb62cc02fe36a82ea7d71b37a2889c97"
         }
       ],
       "expected_outcome": "unresolved",
@@ -2645,6 +2645,372 @@
       },
       "assertions": [],
       "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.permissions.builtin_workspace",
+      "agent": "codex",
+      "surface": "permissions",
+      "description": "An explicit default_permissions=:workspace selection has a deterministic built-in profile identity.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/core/src/config/permissions.rs",
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/config/src/permissions_toml.rs",
+          "https://github.com/openai/codex/pull/54383"
+        ]
+      },
+      "expected_behavior": "An explicit :workspace selection is identified as the built-in workspace permission profile with workspace-write sandbox identity.",
+      "supported_boundary": "Static profile selection, provenance, and built-in identity from supplied local configuration.",
+      "unsupported_boundary": "Filesystem/network enforcement, approvals, Windows sandbox provisioning, and live permission switching are not executed or simulated.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "permissions",
+          "cwd": "fixtures/config/permission-profiles/project",
+          "codex_home": "fixtures/config/permission-profiles/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "default_permissions=\":workspace\""
+          ],
+          "managed_config_paths": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "records",
+            0,
+            "status"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        },
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "id"
+          ],
+          "operator": "equals",
+          "value": ":workspace"
+        },
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "staticSandboxIdentity"
+          ],
+          "operator": "equals",
+          "value": "workspace-write"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.permissions.named_profile_selection",
+      "agent": "codex",
+      "surface": "permissions",
+      "description": "An explicit named default_permissions profile can be selected from [permissions.<id>] static configuration.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/core/src/config/permissions.rs",
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/config/src/permissions_toml.rs",
+          "https://github.com/openai/codex/pull/54383"
+        ]
+      },
+      "expected_behavior": "The configured child permission profile is selected by identity from the loaded local configuration.",
+      "supported_boundary": "Static named-profile discovery, selection, and provenance.",
+      "unsupported_boundary": "Runtime enforcement and live /permissions selection remain outside the deterministic inspector.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "permissions",
+          "cwd": "fixtures/config/permission-profiles/project",
+          "codex_home": "fixtures/config/permission-profiles/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "managed_config_paths": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "records",
+            0,
+            "status"
+          ],
+          "operator": "equals",
+          "value": "resolved"
+        },
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "id"
+          ],
+          "operator": "equals",
+          "value": "child"
+        },
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "kind"
+          ],
+          "operator": "equals",
+          "value": "named"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.permissions.profile_extends",
+      "agent": "codex",
+      "surface": "permissions",
+      "description": "Named permission profiles preserve deterministic extends ancestry, including supported built-in parents.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/core/src/config/permissions.rs",
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/config/src/permissions_toml.rs",
+          "https://github.com/openai/codex/pull/54383"
+        ]
+      },
+      "expected_behavior": "The child profile resolves the static inheritance chain child -> base -> :read-only, with child identity retained.",
+      "supported_boundary": "Static inheritance identity and cycle/undefined-parent validation.",
+      "unsupported_boundary": "Codex Scope does not claim to compile or enforce the merged filesystem/network permission policy.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "permissions",
+          "cwd": "fixtures/config/permission-profiles/project",
+          "codex_home": "fixtures/config/permission-profiles/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "managed_config_paths": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "extends"
+          ],
+          "operator": "equals",
+          "value": "base"
+        },
+        {
+          "path": [
+            "records",
+            0,
+            "value",
+            "inheritance"
+          ],
+          "operator": "array_equals",
+          "value": [
+            "child",
+            "base",
+            ":read-only"
+          ]
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.permissions.unknown_profile_fail_closed",
+      "agent": "codex",
+      "surface": "permissions",
+      "description": "An explicit default_permissions reference to an undefined named profile fails closed.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/core/src/config/permissions.rs",
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/config/src/permissions_toml.rs",
+          "https://github.com/openai/codex/pull/54383"
+        ]
+      },
+      "expected_behavior": "Selecting an undefined permission profile raises UNSUPPORTED_CONFIG_VALUE instead of inventing a fallback profile.",
+      "supported_boundary": "Deterministic validation of explicit static profile identity.",
+      "unsupported_boundary": "No fallback or runtime profile discovery is inferred after an invalid explicit selection.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "permissions",
+          "cwd": "fixtures/config/permission-profiles/project",
+          "codex_home": "fixtures/config/permission-profiles/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "default_permissions=\"missing\""
+          ],
+          "managed_config_paths": [],
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.permissions.legacy_sandbox_mode_override_boundary",
+      "agent": "codex",
+      "surface": "permissions",
+      "description": "Codex invocation overrides do not permit sandbox_mode and default_permissions to be set together.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/core/src/config/mod.rs"
+        ]
+      },
+      "expected_behavior": "Supplying both invocation overrides fails with UNSUPPORTED_CONFIG_VALUE instead of composing legacy sandbox_mode with a permission-profile selection.",
+      "supported_boundary": "The current explicit invocation-override exclusivity check.",
+      "unsupported_boundary": "This rule does not claim that all file-layer legacy keys are mutually exclusive with permission-profile configuration.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "permissions",
+          "cwd": "fixtures/config/permission-profiles/project",
+          "codex_home": "fixtures/config/permission-profiles/home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [
+            "sandbox_mode=\"workspace-write\"",
+            "default_permissions=\":workspace\""
+          ],
+          "managed_config_paths": [],
+          "expected_error_code": "UNSUPPORTED_CONFIG_VALUE"
+        }
+      },
+      "assertions": [],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.config.default_home_project_layer_when_codex_home_overridden",
+      "agent": "codex",
+      "surface": "config",
+      "description": "Overriding CODEX_HOME does not isolate a separate $HOME/.codex directory from project-layer discovery when cwd/project root is $HOME.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/config/src/loader/mod.rs",
+          "https://github.com/openai/codex/issues/54599",
+          "https://github.com/openai/codex/issues/54599#issuecomment-6273516550"
+        ]
+      },
+      "expected_behavior": "With active CODEX_HOME elsewhere and a trusted cwd at the synthetic home directory, home/.codex/config.toml is discovered as a project layer and can override the active user config.",
+      "supported_boundary": "Deterministic local project-layer discovery for an explicitly supplied cwd, CODEX_HOME, and trust state.",
+      "unsupported_boundary": "Codex Scope does not infer the operating-system user home, saved trust, hooks, plugins, MCP, or runtime thread state beyond supplied inspection inputs.",
+      "fixture": {
+        "path": "fixtures/config/codex-home-converse",
+        "probe": {
+          "kind": "config",
+          "cwd": "fixtures/config/codex-home-converse/home",
+          "codex_home": "fixtures/config/codex-home-converse/active-home",
+          "trust": "trusted",
+          "invocation_complete": true,
+          "cli_overrides": [],
+          "managed_config_paths": []
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "effectiveValue"
+          ],
+          "operator": "equals",
+          "value": "never"
+        },
+        {
+          "path": [
+            "values",
+            "approval_policy",
+            "winner",
+            "type"
+          ],
+          "operator": "equals",
+          "value": "project"
+        },
+        {
+          "path": [
+            "projectConfigPaths",
+            0
+          ],
+          "operator": "ends_with",
+          "value": "fixtures/config/codex-home-converse/home/.codex/config.toml"
+        }
+      ],
+      "expected_outcome": "compatible",
+      "regression": false
+    },
+    {
+      "rule_id": "codex.runtime.projectless_permission_defaults",
+      "agent": "codex",
+      "surface": "runtime",
+      "description": "Projectless TUI workspace permission defaults are an explicit runtime/session-dependent boundary.",
+      "evidence_date": "2026-10-26",
+      "upstream": {
+        "docs": [],
+        "repository": "openai/codex",
+        "commit_or_version": "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
+        "source": [
+          "https://github.com/openai/codex/blob/970111f6cb62cc02fe36a82ea7d71b37a2889c97/codex-rs/tui/src/projectless.rs",
+          "https://github.com/openai/codex/pull/49160"
+        ]
+      },
+      "expected_behavior": "Codex Scope reports projectless permission defaults as unsupported rather than inferring a final workspace/trust state from static files alone.",
+      "supported_boundary": "Evidence-backed recognition that the upstream semantic surface exists and depends on runtime conditions.",
+      "unsupported_boundary": "TUI session state, saved trust, restored task permissions, live /cd transitions, Windows sandbox setup, managed policy, and execution-locality checks are not simulated.",
+      "fixture": {
+        "path": "fixtures/config/permission-profiles",
+        "probe": {
+          "kind": "projectless_permission_boundary"
+        }
+      },
+      "assertions": [
+        {
+          "path": [
+            "status"
+          ],
+          "operator": "equals",
+          "value": "unsupported"
+        }
+      ],
+      "expected_outcome": "unsupported",
       "regression": false
     }
   ]

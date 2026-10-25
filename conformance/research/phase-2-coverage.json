@@ -5,23 +5,25 @@
   "threshold": 50,
   "status": "pass",
   "calculation": {
-    "codex_rule_fixture_cases": 50,
+    "codex_rule_fixture_cases": 57,
     "gemini_research_cases": 27,
-    "total": 77
+    "total": 84
   },
   "codex": {
     "manifest": "conformance/manifest.json",
-    "rule_fixture_cases": 50,
-    "unique_fixture_paths": 18,
-    "unique_fixture_probe_shapes": 42,
-    "assertions": 82,
+    "rule_fixture_cases": 57,
+    "unique_fixture_paths": 20,
+    "unique_fixture_probe_shapes": 48,
+    "assertions": 94,
     "regression_rules": 9,
     "surfaces": {
       "instructions": 12,
       "trust": 4,
-      "config": 31,
+      "config": 32,
       "invocation": 2,
-      "compatibility": 1
+      "compatibility": 1,
+      "permissions": 5,
+      "runtime": 1
     }
   },
   "gemini": {
