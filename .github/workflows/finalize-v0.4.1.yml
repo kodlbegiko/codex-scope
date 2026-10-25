@@ -1,4 +1,4 @@
-name: Finalize v0.4.1
+name: Diagnose npm package state
 
 on:
   push:
@@ -6,119 +6,25 @@ on:
       - "release/v0.4.1-finalize"
 
 permissions:
-  contents: write
-  id-token: write
-
-env:
-  RELEASE_VERSION: "0.4.1"
-  RELEASE_TAG: "v0.4.1"
-  TARGET_SHA: "f5cd3f92fc58443657d3d475757b0cdf9272e635"
+  contents: read
 
 jobs:
-  finalize:
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
-      - name: Check out release commit
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Verify release candidate
+      - name: Query public npm registry state
         run: |
-          npm install --global typescript@5.8.3
-          npm run check
-          test "$(node -p "require('./package.json').version")" = "$RELEASE_VERSION"
-          test -f "docs/releases/$RELEASE_TAG.md"
-
-      - name: Use current npm CLI
-        run: npm install --global npm@latest
-
-      - name: Publish npm package if needed
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          if [ "$(npm view "codex-scope-inspector@$RELEASE_VERSION" version 2>/dev/null || true)" = "$RELEASE_VERSION" ]; then
-            echo "codex-scope-inspector@$RELEASE_VERSION is already published; skipping npm publish."
-            exit 0
-          fi
-
-          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            unset NODE_AUTH_TOKEN
-            echo "NPM_TOKEN is not configured; attempting npm trusted publishing via GitHub OIDC."
-          else
-            echo "NPM_TOKEN is configured; publishing with repository secret credentials."
-          fi
-
-          npm publish --access public --provenance
-
-      - name: Verify npm publication
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 12); do
-            published="$(npm view "codex-scope-inspector@$RELEASE_VERSION" version 2>/dev/null || true)"
-            if [ "$published" = "$RELEASE_VERSION" ]; then
-              echo "Verified codex-scope-inspector@$RELEASE_VERSION on npm."
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "npm registry did not confirm codex-scope-inspector@$RELEASE_VERSION." >&2
-          exit 1
-
-      - name: Create and push release tag
-        run: |
-          set -euo pipefail
-          remote_sha="$(git ls-remote --tags origin "refs/tags/$RELEASE_TAG^{}" | awk '{print $1}')"
-          if [ -z "$remote_sha" ]; then
-            remote_sha="$(git ls-remote --tags origin "refs/tags/$RELEASE_TAG" | awk '{print $1}')"
-          fi
-
-          if [ -n "$remote_sha" ]; then
-            if [ "$remote_sha" != "$TARGET_SHA" ]; then
-              echo "$RELEASE_TAG already exists but does not resolve to $TARGET_SHA." >&2
-              exit 1
-            fi
-            echo "$RELEASE_TAG already points to the release commit."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "$RELEASE_TAG" "$TARGET_SHA" -m "Codex Scope $RELEASE_TAG"
-          git push origin "refs/tags/$RELEASE_TAG"
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json url >/dev/null 2>&1; then
-            echo "GitHub Release $RELEASE_TAG already exists; leaving it unchanged."
-          else
-            gh release create "$RELEASE_TAG" \
-              --repo "$GITHUB_REPOSITORY" \
-              --title "Codex Scope $RELEASE_TAG" \
-              --notes-file "docs/releases/$RELEASE_TAG.md" \
-              --verify-tag
-          fi
-
-      - name: Final verification
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          test "$(npm view "codex-scope-inspector@$RELEASE_VERSION" version)" = "$RELEASE_VERSION"
-          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,targetCommitish
+          set +e
+          echo "PACKAGE_LOOKUP_BEGIN"
+          npm view codex-scope-inspector version --json
+          echo "PACKAGE_VERSION_EXIT=$?"
+          npm view codex-scope-inspector versions --json
+          echo "PACKAGE_VERSIONS_EXIT=$?"
+          npm view codex-scope-inspector repository.url --json
+          echo "PACKAGE_REPOSITORY_EXIT=$?"
+          echo "PACKAGE_LOOKUP_END"
+          exit 0
