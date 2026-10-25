@@ -4,29 +4,182 @@ on:
   push:
     tags:
       - "v*"
+    branches:
+      - "release/v*-finalize"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, for example v0.4.1"
+        required: true
+        type: string
 
 permissions:
   contents: write
+  id-token: write
+
+env:
+  PACKAGE_NAME: codex-scope-inspector
 
 jobs:
-  github-release:
+  release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out triggering ref
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-      - name: Verify release notes
-        run: test -f "docs/releases/${GITHUB_REF_NAME}.md"
+      - name: Resolve release tag and target commit
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            release_tag='${{ inputs.tag }}'
+            git fetch origin main
+            target_sha="$(git rev-parse origin/main)"
+          elif [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            release_tag="$GITHUB_REF_NAME"
+            target_sha="$GITHUB_SHA"
+          else
+            case "$GITHUB_REF_NAME" in
+              release/v*-finalize)
+                release_tag="${GITHUB_REF_NAME#release/}"
+                release_tag="${release_tag%-finalize}"
+                ;;
+              *)
+                echo "Unsupported release branch: $GITHUB_REF_NAME" >&2
+                exit 1
+                ;;
+            esac
+            git fetch origin main
+            target_sha="$(git rev-parse origin/main)"
+          fi
+
+          case "$release_tag" in
+            v[0-9]*.[0-9]*.[0-9]*) ;;
+            *)
+              echo "Release tag must look like vX.Y.Z; got $release_tag" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "version=${release_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "target_sha=$target_sha" >> "$GITHUB_OUTPUT"
+
+          git checkout --detach "$target_sha"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify release candidate
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          npm install --global typescript@5.8.3
+          npm run check
+          test "$(node -p "require('./package.json').version")" = "$RELEASE_VERSION"
+          test -f "docs/releases/$RELEASE_TAG.md"
+
+      - name: Use current npm CLI
+        run: npm install --global npm@latest
+
+      - name: Publish npm package if needed
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          published="$(npm view "$PACKAGE_NAME@$RELEASE_VERSION" version 2>/dev/null || true)"
+          if [ "$published" = "$RELEASE_VERSION" ]; then
+            echo "$PACKAGE_NAME@$RELEASE_VERSION is already published; skipping npm publish."
+            exit 0
+          fi
+
+          # Trusted publishing uses GitHub OIDC. Do not fall back to a long-lived token.
+          unset NODE_AUTH_TOKEN
+          npm publish --access public
+
+      - name: Verify npm publication
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 18); do
+            published="$(npm view "$PACKAGE_NAME@$RELEASE_VERSION" version 2>/dev/null || true)"
+            if [ "$published" = "$RELEASE_VERSION" ]; then
+              echo "Verified $PACKAGE_NAME@$RELEASE_VERSION on npm."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "npm registry did not confirm $PACKAGE_NAME@$RELEASE_VERSION." >&2
+          exit 1
+
+      - name: Create and push release tag if needed
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          TARGET_SHA: ${{ steps.release.outputs.target_sha }}
+        run: |
+          set -euo pipefail
+
+          peeled_sha="$(git ls-remote --tags origin "refs/tags/$RELEASE_TAG^{}" | awk '{print $1}')"
+          direct_sha="$(git ls-remote --tags origin "refs/tags/$RELEASE_TAG" | awk '{print $1}')"
+
+          if [ -n "$peeled_sha" ]; then
+            existing_sha="$peeled_sha"
+          else
+            existing_sha="$direct_sha"
+          fi
+
+          if [ -n "$existing_sha" ]; then
+            if [ "$existing_sha" != "$TARGET_SHA" ]; then
+              echo "$RELEASE_TAG already exists but resolves to $existing_sha instead of $TARGET_SHA." >&2
+              exit 1
+            fi
+            echo "$RELEASE_TAG already points to the release commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$RELEASE_TAG" "$TARGET_SHA" -m "Codex Scope $RELEASE_TAG"
+          git push origin "refs/tags/$RELEASE_TAG"
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json url >/dev/null 2>&1; then
-            echo "GitHub Release $GITHUB_REF_NAME already exists; leaving it unchanged."
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json url >/dev/null 2>&1; then
+            echo "GitHub Release $RELEASE_TAG already exists; leaving it unchanged."
           else
-            gh release create "$GITHUB_REF_NAME" \
+            gh release create "$RELEASE_TAG" \
               --repo "$GITHUB_REPOSITORY" \
-              --title "Codex Scope $GITHUB_REF_NAME" \
-              --notes-file "docs/releases/$GITHUB_REF_NAME.md" \
+              --title "Codex Scope $RELEASE_TAG" \
+              --notes-file "docs/releases/$RELEASE_TAG.md" \
               --verify-tag
           fi
+
+      - name: Final verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          test "$(npm view "$PACKAGE_NAME@$RELEASE_VERSION" version)" = "$RELEASE_VERSION"
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json tagName,url,targetCommitish
