@@ -8,6 +8,7 @@ import type {
   NeutralInspectionRecord,
   NeutralSourceRef,
 } from "../core";
+import { permissionProfileRecords } from "../permissions";
 import type {
   EffectiveCodexEnvironment,
   InstructionSource,
@@ -22,8 +23,8 @@ export const CODEX_ADAPTER_VERSION = "codex-adapter.v1";
 const CODEX_COMPATIBILITY = {
   codexScopeVersion: VERSION,
   target:
-    "OpenAI Codex documentation plus openai/codex implementation evidence at 94174e44cbc54cece45f6052328ca0c2cd7a8a2a, observed on 2026-09-22",
-  evidenceDate: "2026-09-22",
+    "OpenAI Codex documentation plus openai/codex implementation evidence at 970111f6cb62cc02fe36a82ea7d71b37a2889c97, observed on 2026-10-26",
+  evidenceDate: "2026-10-26",
   localCodexDetected: false,
 } as const;
 
@@ -37,11 +38,17 @@ const capabilities: AdapterCapabilities = {
 };
 
 const evidence: AdapterEvidence = {
-  evidenceDate: "2026-09-22",
+  evidenceDate: "2026-10-26",
   upstreamRepository: "openai/codex",
-  upstreamCommit: "94174e44cbc54cece45f6052328ca0c2cd7a8a2a",
+  upstreamCommit: "970111f6cb62cc02fe36a82ea7d71b37a2889c97",
   testedUpstreamVersion: "unknown",
-  references: ["conformance/manifest.json", "conformance/regressions.json", "docs/semantics.md", "docs/compatibility.md"],
+  references: [
+    "conformance/manifest.json",
+    "conformance/regressions.json",
+    "docs/semantics.md",
+    "docs/compatibility.md",
+    "docs/research/codex-conformance-coverage.md",
+  ],
 };
 
 function sourceRef(source: ResolutionSource): NeutralSourceRef {
@@ -124,6 +131,8 @@ function buildNeutralRecords(environment: EffectiveCodexEnvironment): NeutralIns
   for (const key of Object.keys(environment.config).sort()) {
     records.push(configRecord(environment.config[key]));
   }
+
+  records.push(...permissionProfileRecords(environment.config));
 
   records.push({
     agent: "codex",
