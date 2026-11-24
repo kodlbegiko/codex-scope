@@ -72,6 +72,18 @@ Core constraints remain:
 
 See [`docs/research/cross-agent-evolution-blueprint.md`](docs/research/cross-agent-evolution-blueprint.md) for the revised conformance-first architecture and gates.
 
+## PROPOSED — Phase F human–agent engineering reliability research
+
+The long-term research question is whether evidence-backed agent context improves human engineering judgment, not whether more agents or features can be added. Conformance remains the product foundation; this proposed research track is separate from maintenance and Phase D.
+
+- F0: freeze one bounded conformance problem, matched baseline, scoring rubric, privacy/ethics plan and analysis protocol.
+- F1: run a reproducible maintainer-only feasibility pilot, then consider an appropriately reviewed external study; measure comprehension, false certainty, error detection, independent transfer and review effort.
+- F2 (conditional): investigate test adequacy, review/rework cost and later independent maintenance in bounded engineering tasks, only after reviewing F1 evidence.
+
+No new public CLI, runtime execution, telemetry, additional adapter, or release is authorized by this roadmap entry. The deterministic inspection and versioned JSON contracts remain unchanged. Phase D remains independently gated at 0 / 3. Human-study results and product claims require their own evidence; an internal pilot is not independent external validation.
+
+See the [research protocol and acceptance gates](docs/research/human-agent-reliability.md). The first target is a small, reproducible pilot within 90 days of starting active research, not a new release.
+
 ## SHIPPED — v0.4 Codex Conformance Observatory
 
 The current product decision remains **C: conformance-first**.
