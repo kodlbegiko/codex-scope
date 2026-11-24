@@ -21,6 +21,14 @@ The [v0.4.1 maintenance release](https://github.com/kodlbegiko/codex-scope/relea
 
 The project is in upstream-driven maintenance mode. New work follows evidenced semantic changes, reproducible regressions, compatibility-boundary corrections, security/correctness issues, contributor PRs, or qualifying external Phase D cases. See the [maintenance policy](ROADMAP.md#maintenance--observatory-mode).
 
+## Research direction — human–agent engineering reliability
+
+Codex Scope's existing conformance-first foundation supports a broader **proposed research direction**: can auditable configuration provenance and explicit uncertainty help developers understand, control, and independently verify AI-assisted engineering work?
+
+The next research step is a small, reproducible human-oversight pilot comparing existing diagnostics and manual inspection with Codex Scope's evidence output. Candidate outcomes include comprehension, false certainty, error detection, independent transfer and review effort. This is a research proposal, not a shipped capability or an empirical claim. The deterministic CLI, offline safety contract, compatibility boundaries and Phase D external-proof gate remain unchanged.
+
+See [Human–Agent Engineering Reliability Research](docs/research/human-agent-reliability.md) for the protocol, baselines, metrics and proposed Phase F gates.
+
 ## Try it in 60 seconds
 
 From any Codex project directory:
